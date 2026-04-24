@@ -5,13 +5,13 @@ from typing import Self
 
 class _BaseLayout(Element):
     __slots__ = ['children', 'spacing']
-    def __init__(self, children: list[Element|NormalisedOp] = None, spacing: float = 10):
-        self.children: list[Element] = children or []
+    def __init__(self, *children: tuple[Element], spacing: float = 10):
+        self.children: list[Element] = list(children)
         self.spacing = spacing
-    def __add__(self, oth: 'Element') -> Self:
+    def append(self, oth: 'Element') -> Self:
         self.children.append(oth)
         return self
-    def __sub__(self, oth: 'Element') -> Self:
+    def remove(self, oth: 'Element') -> Self:
         self.children.remove(oth)
         return self
     def _apply(self, comb, crop):
