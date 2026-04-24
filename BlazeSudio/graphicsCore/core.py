@@ -88,7 +88,7 @@ class _SurfaceBase:
         return self
 
 
-_PIXFMT = sdl2.SDL_PIXELFORMAT_ABGR8888 # NOTE: This *may* display funny on big-endian systems (hopefully none run this)
+_PIXFMT = sdl2.SDL_PIXELFORMAT_ABGR8888 # NOTE: This *may* display funny on big-endian systems
 class _CoreCls(_SurfaceBase):
     def __new__(cls): # Incase someone weird gets ahold of this class
         if not hasattr(cls, '_instance'):

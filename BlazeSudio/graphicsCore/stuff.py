@@ -9,7 +9,7 @@ class Clock():
         self.dt = 0
         self._lastTime = None
 
-    def tick(self, maxfps: int|float = None):
+    def tick(self, maxfps: float = None):
         """
         Ticks the clock, updating FPS count and optionally enforcing a maximum FPS.
 
@@ -24,9 +24,10 @@ class Clock():
             # enforce max FPS if requested
             if maxfps is not None:
                 target_dt = 1.0 / maxfps
-                if delta < target_dt:
+                target = target_dt - delta - 0.001
+                if target > 0.1:
                     slept = True
-                    time.sleep(target_dt - delta - 0.001)
+                    time.sleep(target)
                     t = time.perf_counter()
                     delta = t - self._lastTime
             self.dt = delta
@@ -41,7 +42,7 @@ class Clock():
         return 0 if self.dt == 0 else 1.0 / self.dt
 
 class AvgClock(Clock):
-    def __init__(self, secs: int|float = 5):
+    def __init__(self, secs: float = 5):
         """
         An average Clock, averaging the fps over a set time.
 
@@ -53,7 +54,7 @@ class AvgClock(Clock):
         self._frameTimes = deque()
         super().__init__()
 
-    def tick(self, maxfps: int|float = None):
+    def tick(self, maxfps: float = None):
         """
         Ticks the clock, updating FPS count and optionally enforcing a maximum FPS.
 
@@ -84,13 +85,13 @@ class AvgClock(Clock):
         """
         return super().get_fps()
 
-colourType = Tuple[int, int, int, int]
 class Col:
     """
     A Colour is an rgb tuple.
     
     This class gives some helper functions for creating these tuples based off of different colour types.
     """
+    colourType = Tuple[int, int, int, int]
     _RGBHEXFMT = "#{0:02x}{1:02x}{2:02x}"
     # TODO: Different hex values (e.g. rgba hex or 3 char hex)
     
