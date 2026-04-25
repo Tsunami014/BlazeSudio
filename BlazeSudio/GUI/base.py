@@ -86,32 +86,44 @@ class TransformedElm(Element, Base):
         self.elm: Element = elm
         self.oth: Trans = oth
     def _op(self, mat, mxsze):
-        crop = [0, 0, *mxsze]
-        nmat, ncrop, _ = self.oth.apply(mat, crop, False)
-        r = self._warpbbx(nmat, ncrop, [0,0,0,0])
-        return self.elm._op(nmat, (min(ncrop[2]-ncrop[0], mxsze[0]), min(ncrop[3]-ncrop[1], mxsze[1]))) @ Vec2(-r[0], -r[1])
+        out = self.elm._op(mat, mxsze)
+        rpos1 = getattr(out, "rpos", None)
+        out @= self.oth
+        rpos2 = getattr(out, "rpos", None)
+        if rpos2 is not None:
+            if rpos1 is not None:
+                return out @ (rpos1-rpos2)
+            return out @ -rpos2
+        return out
     def _minsze(self, mat):
+        out = self.elm._op(mat, (None, None)) @ self.oth
+        rsze = out.rsze
+        if rsze is not None:
+            return rsze
+        # Fallback to bounding rect
         crop = [0, 0, *self.elm._minsze(mat)]
         nmat, ncrop, _ = self.oth.apply(mat, crop, False)
         r = self._warpbbx(nmat, ncrop, [0,0,0,0])
         return r[2]-r[0], r[3]-r[1]
 
 class OpElm(Element):
-    __slots__ = ['__op']
+    __slots__ = ['op']
     def __init__(self, op: Op):
         self.op = op
-    @property
-    def op(self): return self.__op
-    @op.setter
-    def op(self, new):
-        self.__op = new
-        if hasattr(new, 'getNormalisedPos'):
-            new._translate(*(-new.getNormalisedPos(0, 0)))
     def _op(self, mat, mxsze):
-        return (self.__op @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
+        op = self.op if not hasattr(self.op, "getNormalisedPos") else self.op @ -self.op.getNormalisedPos(0, 0)
+        if any(i is None for i in mxsze):
+            if hasattr(op, "rsze") and any(i is not None for i in mxsze):
+                rsze = op.rsze
+                return (op @ Crop(0, 0,
+                                    (mxsze[0] if mxsze[0] is not None else rsze[0]),
+                                    (mxsze[1] if mxsze[1] is not None else rsze[1])
+                            )) @ T.MatTrans(mat)
+            return op @ T.MatTrans(mat)
+        return (op @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
     def _minsze(self, mat):
-        if hasattr(self.__op, "rect"):
-            r = self.__op.rect()
+        if hasattr(self.op, "rect"):
+            r = self.op.rect()
             if r[0] is not None:
                 return (r[2]-r[0], r[3]-r[1])
         return (0, 0)

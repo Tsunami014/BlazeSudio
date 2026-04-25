@@ -422,6 +422,8 @@ class TransOp(Op, _basey.Base, NormalisedBase):
         if args is None:
             return None, None, None, None
         r = self.op.rect()
+        if r[0] is None:
+            return None, None, None, None
         box = self._warpbbx(args[0], (r[0], r[1], r[2]+r[0],r[3]+r[1]), (0,0,0,0))
         return box[0], box[1], box[2]-box[0], box[3]-box[1]
 

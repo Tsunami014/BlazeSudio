@@ -84,7 +84,10 @@ class HLayout(_BaseLayout):
         spread = sum(i[2] for i in self._children if i[2] is not None)
         sze = sum(minszes[i[0]]+self.spacing for i in self._children if (not i[1]) and i[0] is not None) + \
                 sum(i[0]+self.spacing for i in self._children if i[1]) - self.spacing
-        each = max(mxsze[0]-sze, 0)/spread if spread != 0 else 0
+        if mxsze[0] is None:
+            each = 0
+        else:
+            each = max(mxsze[0]-sze, 0)/spread if spread != 0 else 0
         li = OpList()
         offs = 0
         for elm, isSpace, stretch in self._children:
@@ -93,7 +96,10 @@ class HLayout(_BaseLayout):
             else:
                 if elm is not None:
                     sze = minszes[elm]
-                    li += elm._op(mat @ Vec2(offs, 0).mat, (sze, mxsze[1]))
+                    if mxsze[0] is None:
+                        li += elm._op(mat @ Vec2(offs, 0).mat, (sze, None))
+                    else:
+                        li += elm._op(mat @ Vec2(offs, 0).mat, (sze, mxsze[1]))
                     offs += sze + self.spacing
                 offs += (0 if stretch is None else each)
         return li
