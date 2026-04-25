@@ -1150,6 +1150,7 @@ static int __Pyx_init_co_variables(void) {
 #define __PYX_HAVE_API__BlazeSudio__graphicsCore___calcs__init
 /* Early includes */
 #include <string.h>
+#include <stdlib.h>
 #include <stdio.h>
 
     /* Using NumPy API declarations from "numpy/__init__.cython-30.pxd" */
@@ -1160,7 +1161,6 @@ static int __Pyx_init_co_variables(void) {
 #include "numpy/arrayscalars.h"
 #include "numpy/ufuncobject.h"
 #include "pythread.h"
-#include <stdlib.h>
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -3182,6 +3182,8 @@ static CYTHON_INLINE char *__pyx_f_5numpy_7ndarray_4data_data(PyArrayObject *__p
 
 /* Module declarations from "libc.string" */
 
+/* Module declarations from "libc.stdlib" */
+
 /* Module declarations from "libc.stdio" */
 
 /* Module declarations from "__builtin__" */
@@ -3209,6 +3211,7 @@ static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
 static CYTHON_INLINE long __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(long, long, long); /*proto*/
 static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyArrayObject *, __Pyx_memviewslice, __Pyx_memviewslice, double, PyArrayObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
+static void __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fillPolygon(PyArrayObject *, __Pyx_memviewslice, PyArrayObject *, PyObject *); /*proto*/
 static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawPolyLine(PyArrayObject *, __Pyx_memviewslice, double, PyArrayObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
 static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArrayObject *, long, long, long, long, long, long, long, long); /*proto*/
 static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyArrayObject *, __Pyx_memviewslice, __Pyx_memviewslice, double, double, PyArrayObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
@@ -18610,7 +18613,7 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-/* "BlazeSudio/graphicsCore/_calcs/init.pyx":6
+/* "BlazeSudio/graphicsCore/_calcs/init.pyx":7
  * __cimport_types__ = [cnp.ndarray]
  * 
  * cdef inline long clip(long v, long lo, long hi):             # <<<<<<<<<<<<<<
@@ -18622,7 +18625,7 @@ static CYTHON_INLINE long __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip
   long __pyx_r;
   int __pyx_t_1;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":7
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":8
  * 
  * cdef inline long clip(long v, long lo, long hi):
  *     if v < lo:             # <<<<<<<<<<<<<<
@@ -18632,7 +18635,7 @@ static CYTHON_INLINE long __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip
   __pyx_t_1 = (__pyx_v_v < __pyx_v_lo);
   if (__pyx_t_1) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":8
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":9
  * cdef inline long clip(long v, long lo, long hi):
  *     if v < lo:
  *         return lo             # <<<<<<<<<<<<<<
@@ -18642,7 +18645,7 @@ static CYTHON_INLINE long __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip
     __pyx_r = __pyx_v_lo;
     goto __pyx_L0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":7
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":8
  * 
  * cdef inline long clip(long v, long lo, long hi):
  *     if v < lo:             # <<<<<<<<<<<<<<
@@ -18651,7 +18654,7 @@ static CYTHON_INLINE long __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":9
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":10
  *     if v < lo:
  *         return lo
  *     if v > hi:             # <<<<<<<<<<<<<<
@@ -18661,7 +18664,7 @@ static CYTHON_INLINE long __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip
   __pyx_t_1 = (__pyx_v_v > __pyx_v_hi);
   if (__pyx_t_1) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":10
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":11
  *         return lo
  *     if v > hi:
  *         return hi             # <<<<<<<<<<<<<<
@@ -18671,7 +18674,7 @@ static CYTHON_INLINE long __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip
     __pyx_r = __pyx_v_hi;
     goto __pyx_L0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":9
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":10
  *     if v < lo:
  *         return lo
  *     if v > hi:             # <<<<<<<<<<<<<<
@@ -18680,7 +18683,7 @@ static CYTHON_INLINE long __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":11
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":12
  *     if v > hi:
  *         return hi
  *     return v             # <<<<<<<<<<<<<<
@@ -18690,7 +18693,7 @@ static CYTHON_INLINE long __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip
   __pyx_r = __pyx_v_v;
   goto __pyx_L0;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":6
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":7
  * __cimport_types__ = [cnp.ndarray]
  * 
  * cdef inline long clip(long v, long lo, long hi):             # <<<<<<<<<<<<<<
@@ -18703,7 +18706,7 @@ static CYTHON_INLINE long __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip
   return __pyx_r;
 }
 
-/* "BlazeSudio/graphicsCore/_calcs/init.pyx":14
+/* "BlazeSudio/graphicsCore/_calcs/init.pyx":15
  * 
  * 
  * cpdef drawLine(             # <<<<<<<<<<<<<<
@@ -18772,16 +18775,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 14, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 14, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":21
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":22
  *         cnp.ndarray[cnp.uint8_t, ndim=1] col,
  *         crop):
  *     cdef long x = <long>p1[0]             # <<<<<<<<<<<<<<
@@ -18791,7 +18794,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
   __pyx_t_1 = 0;
   __pyx_v_x = ((long)(*((double *) ( /* dim=0 */ (__pyx_v_p1.data + __pyx_t_1 * __pyx_v_p1.strides[0]) ))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":22
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":23
  *         crop):
  *     cdef long x = <long>p1[0]
  *     cdef long y = <long>p1[1]             # <<<<<<<<<<<<<<
@@ -18801,7 +18804,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
   __pyx_t_1 = 1;
   __pyx_v_y = ((long)(*((double *) ( /* dim=0 */ (__pyx_v_p1.data + __pyx_t_1 * __pyx_v_p1.strides[0]) ))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":23
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":24
  *     cdef long x = <long>p1[0]
  *     cdef long y = <long>p1[1]
  *     cdef long x1 = <long>p2[0]             # <<<<<<<<<<<<<<
@@ -18811,7 +18814,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
   __pyx_t_1 = 0;
   __pyx_v_x1 = ((long)(*((double *) ( /* dim=0 */ (__pyx_v_p2.data + __pyx_t_1 * __pyx_v_p2.strides[0]) ))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":24
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":25
  *     cdef long y = <long>p1[1]
  *     cdef long x1 = <long>p2[0]
  *     cdef long y1 = <long>p2[1]             # <<<<<<<<<<<<<<
@@ -18821,7 +18824,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
   __pyx_t_1 = 1;
   __pyx_v_y1 = ((long)(*((double *) ( /* dim=0 */ (__pyx_v_p2.data + __pyx_t_1 * __pyx_v_p2.strides[0]) ))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":25
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":26
  *     cdef long x1 = <long>p2[0]
  *     cdef long y1 = <long>p2[1]
  *     cdef long half = <long>(thickness) >> 1             # <<<<<<<<<<<<<<
@@ -18830,27 +18833,27 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
   __pyx_v_half = (((long)__pyx_v_thickness) >> 1);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":27
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":28
  *     cdef long half = <long>(thickness) >> 1
  * 
  *     cdef long dx = abs(x1 - x)             # <<<<<<<<<<<<<<
  *     cdef long dy = abs(y1 - y)
  *     cdef long err
 */
-  __pyx_t_2 = labs((__pyx_v_x1 - __pyx_v_x)); if (unlikely(__pyx_t_2 == ((long)-1))) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_t_2 = labs((__pyx_v_x1 - __pyx_v_x)); if (unlikely(__pyx_t_2 == ((long)-1))) __PYX_ERR(0, 28, __pyx_L1_error)
   __pyx_v_dx = __pyx_t_2;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":28
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":29
  * 
  *     cdef long dx = abs(x1 - x)
  *     cdef long dy = abs(y1 - y)             # <<<<<<<<<<<<<<
  *     cdef long err
  *     cdef long sx, sy
 */
-  __pyx_t_2 = labs((__pyx_v_y1 - __pyx_v_y)); if (unlikely(__pyx_t_2 == ((long)-1))) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_2 = labs((__pyx_v_y1 - __pyx_v_y)); if (unlikely(__pyx_t_2 == ((long)-1))) __PYX_ERR(0, 29, __pyx_L1_error)
   __pyx_v_dy = __pyx_t_2;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":34
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":35
  *     cdef long i
  * 
  *     cdef unsigned char rcol = col[0]             # <<<<<<<<<<<<<<
@@ -18860,7 +18863,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
   __pyx_t_1 = 0;
   __pyx_v_rcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":35
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":36
  * 
  *     cdef unsigned char rcol = col[0]
  *     cdef unsigned char gcol = col[1]             # <<<<<<<<<<<<<<
@@ -18870,7 +18873,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
   __pyx_t_1 = 1;
   __pyx_v_gcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":36
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":37
  *     cdef unsigned char rcol = col[0]
  *     cdef unsigned char gcol = col[1]
  *     cdef unsigned char bcol = col[2]             # <<<<<<<<<<<<<<
@@ -18880,7 +18883,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
   __pyx_t_1 = 2;
   __pyx_v_bcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":37
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":38
  *     cdef unsigned char gcol = col[1]
  *     cdef unsigned char bcol = col[2]
  *     cdef unsigned char acol = col[3]             # <<<<<<<<<<<<<<
@@ -18890,59 +18893,59 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
   __pyx_t_1 = 3;
   __pyx_v_acol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":39
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":40
  *     cdef unsigned char acol = col[3]
  * 
  *     cdef long cLeft = <long>crop[0]             # <<<<<<<<<<<<<<
  *     cdef long cTop = <long>crop[1]
  *     cdef long cRight = <long>crop[2]
 */
-  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_2 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_2 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_cLeft = ((long)__pyx_t_2);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":40
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":41
  * 
  *     cdef long cLeft = <long>crop[0]
  *     cdef long cTop = <long>crop[1]             # <<<<<<<<<<<<<<
  *     cdef long cRight = <long>crop[2]
  *     cdef long cBot = <long>crop[3]
 */
-  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_2 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_2 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_cTop = ((long)__pyx_t_2);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":41
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":42
  *     cdef long cLeft = <long>crop[0]
  *     cdef long cTop = <long>crop[1]
  *     cdef long cRight = <long>crop[2]             # <<<<<<<<<<<<<<
  *     cdef long cBot = <long>crop[3]
  * 
 */
-  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_2 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_2 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_cRight = ((long)__pyx_t_2);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":42
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":43
  *     cdef long cTop = <long>crop[1]
  *     cdef long cRight = <long>crop[2]
  *     cdef long cBot = <long>crop[3]             # <<<<<<<<<<<<<<
  * 
  *     if dx > dy:
 */
-  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 3, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 3, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_2 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_2 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_cBot = ((long)__pyx_t_2);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":44
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":45
  *     cdef long cBot = <long>crop[3]
  * 
  *     if dx > dy:             # <<<<<<<<<<<<<<
@@ -18952,7 +18955,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
   __pyx_t_4 = (__pyx_v_dx > __pyx_v_dy);
   if (__pyx_t_4) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":45
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":46
  * 
  *     if dx > dy:
  *         if x > x1:             # <<<<<<<<<<<<<<
@@ -18962,7 +18965,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
     __pyx_t_4 = (__pyx_v_x > __pyx_v_x1);
     if (__pyx_t_4) {
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":46
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":47
  *     if dx > dy:
  *         if x > x1:
  *             x, x1 = x1, x             # <<<<<<<<<<<<<<
@@ -18974,7 +18977,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
       __pyx_v_x = __pyx_t_2;
       __pyx_v_x1 = __pyx_t_5;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":47
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":48
  *         if x > x1:
  *             x, x1 = x1, x
  *             y, y1 = y1, y             # <<<<<<<<<<<<<<
@@ -18986,7 +18989,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
       __pyx_v_y = __pyx_t_5;
       __pyx_v_y1 = __pyx_t_2;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":45
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":46
  * 
  *     if dx > dy:
  *         if x > x1:             # <<<<<<<<<<<<<<
@@ -18995,7 +18998,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
     }
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":48
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":49
  *             x, x1 = x1, x
  *             y, y1 = y1, y
  *         sy = 1 if y < y1 else -1             # <<<<<<<<<<<<<<
@@ -19010,7 +19013,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
     }
     __pyx_v_sy = __pyx_t_2;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":49
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":50
  *             y, y1 = y1, y
  *         sy = 1 if y < y1 else -1
  *         err = dx // 2             # <<<<<<<<<<<<<<
@@ -19019,7 +19022,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
     __pyx_v_err = (__pyx_v_dx / 2);
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":50
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":51
  *         sy = 1 if y < y1 else -1
  *         err = dx // 2
  *         while x <= x1:             # <<<<<<<<<<<<<<
@@ -19030,7 +19033,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
       __pyx_t_4 = (__pyx_v_x <= __pyx_v_x1);
       if (!__pyx_t_4) break;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":51
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":52
  *         err = dx // 2
  *         while x <= x1:
  *             if x >= cLeft and x <= cRight:             # <<<<<<<<<<<<<<
@@ -19048,7 +19051,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
       __pyx_L8_bool_binop_done:;
       if (__pyx_t_4) {
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":52
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":53
  *         while x <= x1:
  *             if x >= cLeft and x <= cRight:
  *                 ys = max(y - half, cTop)             # <<<<<<<<<<<<<<
@@ -19065,7 +19068,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
         }
         __pyx_v_ys = __pyx_t_7;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":53
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":54
  *             if x >= cLeft and x <= cRight:
  *                 ys = max(y - half, cTop)
  *                 ye = min(y + half + 1, cBot)             # <<<<<<<<<<<<<<
@@ -19082,7 +19085,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
         }
         __pyx_v_ye = __pyx_t_5;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":54
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":55
  *                 ys = max(y - half, cTop)
  *                 ye = min(y + half + 1, cBot)
  *                 xs = min(max(x, cLeft), cRight)             # <<<<<<<<<<<<<<
@@ -19107,7 +19110,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
         }
         __pyx_v_xs = __pyx_t_8;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":56
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":57
  *                 xs = min(max(x, cLeft), cRight)
  * 
  *                 if ys < ye:             # <<<<<<<<<<<<<<
@@ -19117,7 +19120,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
         __pyx_t_4 = (__pyx_v_ys < __pyx_v_ye);
         if (__pyx_t_4) {
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":57
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":58
  * 
  *                 if ys < ye:
  *                     for i in range(ys, ye):             # <<<<<<<<<<<<<<
@@ -19129,7 +19132,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
           for (__pyx_t_7 = __pyx_v_ys; __pyx_t_7 < __pyx_t_5; __pyx_t_7+=1) {
             __pyx_v_i = __pyx_t_7;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":58
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":59
  *                 if ys < ye:
  *                     for i in range(ys, ye):
  *                         arr[i, xs, 0] = rcol             # <<<<<<<<<<<<<<
@@ -19141,7 +19144,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
             __pyx_t_10 = 0;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_9, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_rcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":59
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":60
  *                     for i in range(ys, ye):
  *                         arr[i, xs, 0] = rcol
  *                         arr[i, xs, 1] = gcol             # <<<<<<<<<<<<<<
@@ -19153,7 +19156,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
             __pyx_t_1 = 1;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_9, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_gcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":60
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":61
  *                         arr[i, xs, 0] = rcol
  *                         arr[i, xs, 1] = gcol
  *                         arr[i, xs, 2] = bcol             # <<<<<<<<<<<<<<
@@ -19165,7 +19168,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
             __pyx_t_10 = 2;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_9, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_bcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":61
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":62
  *                         arr[i, xs, 1] = gcol
  *                         arr[i, xs, 2] = bcol
  *                         arr[i, xs, 3] = acol             # <<<<<<<<<<<<<<
@@ -19178,7 +19181,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_9, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_acol;
           }
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":56
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":57
  *                 xs = min(max(x, cLeft), cRight)
  * 
  *                 if ys < ye:             # <<<<<<<<<<<<<<
@@ -19187,7 +19190,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
         }
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":51
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":52
  *         err = dx // 2
  *         while x <= x1:
  *             if x >= cLeft and x <= cRight:             # <<<<<<<<<<<<<<
@@ -19196,7 +19199,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
       }
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":63
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":64
  *                         arr[i, xs, 3] = acol
  * 
  *             err -= dy             # <<<<<<<<<<<<<<
@@ -19205,7 +19208,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
       __pyx_v_err = (__pyx_v_err - __pyx_v_dy);
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":64
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":65
  * 
  *             err -= dy
  *             if err < 0:             # <<<<<<<<<<<<<<
@@ -19215,7 +19218,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
       __pyx_t_4 = (__pyx_v_err < 0);
       if (__pyx_t_4) {
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":65
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":66
  *             err -= dy
  *             if err < 0:
  *                 y += sy             # <<<<<<<<<<<<<<
@@ -19224,7 +19227,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
         __pyx_v_y = (__pyx_v_y + __pyx_v_sy);
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":66
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":67
  *             if err < 0:
  *                 y += sy
  *                 err += dx             # <<<<<<<<<<<<<<
@@ -19233,7 +19236,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
         __pyx_v_err = (__pyx_v_err + __pyx_v_dx);
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":64
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":65
  * 
  *             err -= dy
  *             if err < 0:             # <<<<<<<<<<<<<<
@@ -19242,7 +19245,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
       }
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":67
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":68
  *                 y += sy
  *                 err += dx
  *             x += 1             # <<<<<<<<<<<<<<
@@ -19252,7 +19255,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
       __pyx_v_x = (__pyx_v_x + 1);
     }
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":44
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":45
  *     cdef long cBot = <long>crop[3]
  * 
  *     if dx > dy:             # <<<<<<<<<<<<<<
@@ -19262,7 +19265,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
     goto __pyx_L3;
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":69
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":70
  *             x += 1
  *     else:
  *         if y > y1:             # <<<<<<<<<<<<<<
@@ -19273,7 +19276,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
     __pyx_t_4 = (__pyx_v_y > __pyx_v_y1);
     if (__pyx_t_4) {
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":70
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":71
  *     else:
  *         if y > y1:
  *             x, x1 = x1, x             # <<<<<<<<<<<<<<
@@ -19285,7 +19288,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
       __pyx_v_x = __pyx_t_8;
       __pyx_v_x1 = __pyx_t_5;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":71
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":72
  *         if y > y1:
  *             x, x1 = x1, x
  *             y, y1 = y1, y             # <<<<<<<<<<<<<<
@@ -19297,7 +19300,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
       __pyx_v_y = __pyx_t_5;
       __pyx_v_y1 = __pyx_t_8;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":69
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":70
  *             x += 1
  *     else:
  *         if y > y1:             # <<<<<<<<<<<<<<
@@ -19306,7 +19309,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
     }
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":72
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":73
  *             x, x1 = x1, x
  *             y, y1 = y1, y
  *         sx = 1 if x < x1 else -1             # <<<<<<<<<<<<<<
@@ -19321,7 +19324,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
     }
     __pyx_v_sx = __pyx_t_8;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":73
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":74
  *             y, y1 = y1, y
  *         sx = 1 if x < x1 else -1
  *         err = dy // 2             # <<<<<<<<<<<<<<
@@ -19330,7 +19333,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
     __pyx_v_err = (__pyx_v_dy / 2);
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":74
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":75
  *         sx = 1 if x < x1 else -1
  *         err = dy // 2
  *         while y <= y1:             # <<<<<<<<<<<<<<
@@ -19341,7 +19344,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
       __pyx_t_4 = (__pyx_v_y <= __pyx_v_y1);
       if (!__pyx_t_4) break;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":75
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":76
  *         err = dy // 2
  *         while y <= y1:
  *             if y >= cTop and y <= cBot:             # <<<<<<<<<<<<<<
@@ -19359,7 +19362,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
       __pyx_L18_bool_binop_done:;
       if (__pyx_t_4) {
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":76
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":77
  *         while y <= y1:
  *             if y >= cTop and y <= cBot:
  *                 xs = max(x - half, cLeft)             # <<<<<<<<<<<<<<
@@ -19376,7 +19379,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
         }
         __pyx_v_xs = __pyx_t_7;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":77
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":78
  *             if y >= cTop and y <= cBot:
  *                 xs = max(x - half, cLeft)
  *                 xe = min(x + half + 1, cRight)             # <<<<<<<<<<<<<<
@@ -19393,7 +19396,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
         }
         __pyx_v_xe = __pyx_t_5;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":78
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":79
  *                 xs = max(x - half, cLeft)
  *                 xe = min(x + half + 1, cRight)
  *                 ys = min(max(y, cTop), cBot)             # <<<<<<<<<<<<<<
@@ -19418,7 +19421,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
         }
         __pyx_v_ys = __pyx_t_2;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":80
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":81
  *                 ys = min(max(y, cTop), cBot)
  * 
  *                 if xs < xe:             # <<<<<<<<<<<<<<
@@ -19428,7 +19431,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
         __pyx_t_4 = (__pyx_v_xs < __pyx_v_xe);
         if (__pyx_t_4) {
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":81
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":82
  * 
  *                 if xs < xe:
  *                     for i in range(xs, xe):             # <<<<<<<<<<<<<<
@@ -19440,7 +19443,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
           for (__pyx_t_7 = __pyx_v_xs; __pyx_t_7 < __pyx_t_5; __pyx_t_7+=1) {
             __pyx_v_i = __pyx_t_7;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":82
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":83
  *                 if xs < xe:
  *                     for i in range(xs, xe):
  *                         arr[ys, i, 0] = rcol             # <<<<<<<<<<<<<<
@@ -19452,7 +19455,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
             __pyx_t_10 = 0;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_9, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_rcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":83
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":84
  *                     for i in range(xs, xe):
  *                         arr[ys, i, 0] = rcol
  *                         arr[ys, i, 1] = gcol             # <<<<<<<<<<<<<<
@@ -19464,7 +19467,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
             __pyx_t_1 = 1;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_9, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_gcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":84
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":85
  *                         arr[ys, i, 0] = rcol
  *                         arr[ys, i, 1] = gcol
  *                         arr[ys, i, 2] = bcol             # <<<<<<<<<<<<<<
@@ -19476,7 +19479,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
             __pyx_t_10 = 2;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_9, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_bcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":85
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":86
  *                         arr[ys, i, 1] = gcol
  *                         arr[ys, i, 2] = bcol
  *                         arr[ys, i, 3] = acol             # <<<<<<<<<<<<<<
@@ -19489,7 +19492,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_9, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_acol;
           }
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":80
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":81
  *                 ys = min(max(y, cTop), cBot)
  * 
  *                 if xs < xe:             # <<<<<<<<<<<<<<
@@ -19498,7 +19501,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
         }
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":75
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":76
  *         err = dy // 2
  *         while y <= y1:
  *             if y >= cTop and y <= cBot:             # <<<<<<<<<<<<<<
@@ -19507,7 +19510,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
       }
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":87
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":88
  *                         arr[ys, i, 3] = acol
  * 
  *             err -= dx             # <<<<<<<<<<<<<<
@@ -19516,7 +19519,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
       __pyx_v_err = (__pyx_v_err - __pyx_v_dx);
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":88
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":89
  * 
  *             err -= dx
  *             if err < 0:             # <<<<<<<<<<<<<<
@@ -19526,7 +19529,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
       __pyx_t_4 = (__pyx_v_err < 0);
       if (__pyx_t_4) {
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":89
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":90
  *             err -= dx
  *             if err < 0:
  *                 x += sx             # <<<<<<<<<<<<<<
@@ -19535,7 +19538,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
         __pyx_v_x = (__pyx_v_x + __pyx_v_sx);
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":90
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":91
  *             if err < 0:
  *                 x += sx
  *                 err += dy             # <<<<<<<<<<<<<<
@@ -19544,7 +19547,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
         __pyx_v_err = (__pyx_v_err + __pyx_v_dy);
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":88
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":89
  * 
  *             err -= dx
  *             if err < 0:             # <<<<<<<<<<<<<<
@@ -19553,19 +19556,19 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(PyAr
 */
       }
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":91
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":92
  *                 x += sx
  *                 err += dy
  *             y += 1             # <<<<<<<<<<<<<<
  * 
- * cpdef drawPolyLine(
+ * 
 */
       __pyx_v_y = (__pyx_v_y + 1);
     }
   }
   __pyx_L3:;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":14
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":15
  * 
  * 
  * cpdef drawLine(             # <<<<<<<<<<<<<<
@@ -19640,67 +19643,67 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_arr,&__pyx_mstate_global->__pyx_n_u_p1,&__pyx_mstate_global->__pyx_n_u_p2,&__pyx_mstate_global->__pyx_n_u_thickness,&__pyx_mstate_global->__pyx_n_u_col,&__pyx_mstate_global->__pyx_n_u_crop,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 14, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 15, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  6:
         values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 14, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 15, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 14, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 15, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 14, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 15, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 14, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 15, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 14, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 15, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 14, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 15, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "drawLine", 0) < (0)) __PYX_ERR(0, 14, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "drawLine", 0) < (0)) __PYX_ERR(0, 15, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 6; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("drawLine", 1, 6, 6, i); __PYX_ERR(0, 14, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("drawLine", 1, 6, 6, i); __PYX_ERR(0, 15, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 6)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 14, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 15, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 14, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 15, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 14, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 15, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 14, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 15, __pyx_L3_error)
       values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 14, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 15, __pyx_L3_error)
       values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 14, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 15, __pyx_L3_error)
     }
     __pyx_v_arr = ((PyArrayObject *)values[0]);
-    __pyx_v_p1 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_p1.memview)) __PYX_ERR(0, 16, __pyx_L3_error)
-    __pyx_v_p2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_p2.memview)) __PYX_ERR(0, 17, __pyx_L3_error)
-    __pyx_v_thickness = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_thickness == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 18, __pyx_L3_error)
+    __pyx_v_p1 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_p1.memview)) __PYX_ERR(0, 17, __pyx_L3_error)
+    __pyx_v_p2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_p2.memview)) __PYX_ERR(0, 18, __pyx_L3_error)
+    __pyx_v_thickness = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_thickness == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L3_error)
     __pyx_v_col = ((PyArrayObject *)values[4]);
     __pyx_v_crop = values[5];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("drawLine", 1, 6, 6, __pyx_nargs); __PYX_ERR(0, 14, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("drawLine", 1, 6, 6, __pyx_nargs); __PYX_ERR(0, 15, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -19713,8 +19716,8 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 15, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 19, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 16, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 20, __pyx_L1_error)
   __pyx_r = __pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(__pyx_self, __pyx_v_arr, __pyx_v_p1, __pyx_v_p2, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop);
 
   /* function exit code */
@@ -19758,18 +19761,18 @@ static PyObject *__pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(CYT
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 14, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 14, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_p1.memview)) { __Pyx_RaiseUnboundLocalError("p1"); __PYX_ERR(0, 14, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_p2.memview)) { __Pyx_RaiseUnboundLocalError("p2"); __PYX_ERR(0, 14, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(__pyx_v_arr, __pyx_v_p1, __pyx_v_p2, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 14, __pyx_L1_error)
+  if (unlikely(!__pyx_v_p1.memview)) { __Pyx_RaiseUnboundLocalError("p1"); __PYX_ERR(0, 15, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_p2.memview)) { __Pyx_RaiseUnboundLocalError("p2"); __PYX_ERR(0, 15, __pyx_L1_error) }
+  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(__pyx_v_arr, __pyx_v_p1, __pyx_v_p2, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 15, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -19797,8 +19800,817 @@ static PyObject *__pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(CYT
   return __pyx_r;
 }
 
-/* "BlazeSudio/graphicsCore/_calcs/init.pyx":93
- *             y += 1
+/* "BlazeSudio/graphicsCore/_calcs/init.pyx":95
+ * 
+ * 
+ * cdef void fillPolygon(             # <<<<<<<<<<<<<<
+ *         cnp.ndarray[cnp.uint8_t, ndim=3] arr,
+ *         double[:, :] points,
+*/
+
+static void __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fillPolygon(PyArrayObject *__pyx_v_arr, __Pyx_memviewslice __pyx_v_points, PyArrayObject *__pyx_v_col, PyObject *__pyx_v_crop) {
+  long __pyx_v_n;
+  unsigned char __pyx_v_rcol;
+  unsigned char __pyx_v_gcol;
+  unsigned char __pyx_v_bcol;
+  unsigned char __pyx_v_acol;
+  long __pyx_v_cLeft;
+  long __pyx_v_cTop;
+  long __pyx_v_cRight;
+  long __pyx_v_cBot;
+  long __pyx_v_i;
+  long __pyx_v_j;
+  long __pyx_v_y;
+  long __pyx_v_x;
+  long __pyx_v_k;
+  long __pyx_v_m;
+  long __pyx_v_yMin;
+  long __pyx_v_yMax;
+  double __pyx_v_yi;
+  double __pyx_v_yj;
+  double __pyx_v_xi;
+  double __pyx_v_xj;
+  double __pyx_v_t;
+  double __pyx_v_xint_d;
+  long __pyx_v_xint;
+  long *__pyx_v_inters;
+  unsigned char *__pyx_v_cell;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_arr;
+  __Pyx_Buffer __pyx_pybuffer_arr;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_col;
+  __Pyx_Buffer __pyx_pybuffer_col;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  long __pyx_t_4;
+  long __pyx_t_5;
+  long __pyx_t_6;
+  Py_ssize_t __pyx_t_7;
+  long __pyx_t_8;
+  long __pyx_t_9;
+  long __pyx_t_10;
+  int __pyx_t_11;
+  Py_ssize_t __pyx_t_12;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("fillPolygon", 0);
+  __pyx_pybuffer_arr.pybuffer.buf = NULL;
+  __pyx_pybuffer_arr.refcount = 0;
+  __pyx_pybuffernd_arr.data = NULL;
+  __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
+  __pyx_pybuffer_col.pybuffer.buf = NULL;
+  __pyx_pybuffer_col.refcount = 0;
+  __pyx_pybuffernd_col.data = NULL;
+  __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 95, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 95, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":100
+ *         cnp.ndarray[cnp.uint8_t, ndim=1] col,
+ *         crop):
+ *     cdef long n = points.shape[0]             # <<<<<<<<<<<<<<
+ *     if n < 3:
+ *         return
+*/
+  __pyx_v_n = (__pyx_v_points.shape[0]);
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":101
+ *         crop):
+ *     cdef long n = points.shape[0]
+ *     if n < 3:             # <<<<<<<<<<<<<<
+ *         return
+ * 
+*/
+  __pyx_t_1 = (__pyx_v_n < 3);
+  if (__pyx_t_1) {
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":102
+ *     cdef long n = points.shape[0]
+ *     if n < 3:
+ *         return             # <<<<<<<<<<<<<<
+ * 
+ *     cdef unsigned char rcol = col[0]
+*/
+    goto __pyx_L0;
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":101
+ *         crop):
+ *     cdef long n = points.shape[0]
+ *     if n < 3:             # <<<<<<<<<<<<<<
+ *         return
+ * 
+*/
+  }
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":104
+ *         return
+ * 
+ *     cdef unsigned char rcol = col[0]             # <<<<<<<<<<<<<<
+ *     cdef unsigned char gcol = col[1]
+ *     cdef unsigned char bcol = col[2]
+*/
+  __pyx_t_2 = 0;
+  __pyx_v_rcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_2, __pyx_pybuffernd_col.diminfo[0].strides));
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":105
+ * 
+ *     cdef unsigned char rcol = col[0]
+ *     cdef unsigned char gcol = col[1]             # <<<<<<<<<<<<<<
+ *     cdef unsigned char bcol = col[2]
+ *     cdef unsigned char acol = col[3]
+*/
+  __pyx_t_2 = 1;
+  __pyx_v_gcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_2, __pyx_pybuffernd_col.diminfo[0].strides));
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":106
+ *     cdef unsigned char rcol = col[0]
+ *     cdef unsigned char gcol = col[1]
+ *     cdef unsigned char bcol = col[2]             # <<<<<<<<<<<<<<
+ *     cdef unsigned char acol = col[3]
+ * 
+*/
+  __pyx_t_2 = 2;
+  __pyx_v_bcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_2, __pyx_pybuffernd_col.diminfo[0].strides));
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":107
+ *     cdef unsigned char gcol = col[1]
+ *     cdef unsigned char bcol = col[2]
+ *     cdef unsigned char acol = col[3]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef long cLeft = <long>crop[0]
+*/
+  __pyx_t_2 = 3;
+  __pyx_v_acol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_2, __pyx_pybuffernd_col.diminfo[0].strides));
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":109
+ *     cdef unsigned char acol = col[3]
+ * 
+ *     cdef long cLeft = <long>crop[0]             # <<<<<<<<<<<<<<
+ *     cdef long cTop = <long>crop[1]
+ *     cdef long cRight = <long>crop[2]
+*/
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 109, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_4 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 109, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_v_cLeft = ((long)__pyx_t_4);
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":110
+ * 
+ *     cdef long cLeft = <long>crop[0]
+ *     cdef long cTop = <long>crop[1]             # <<<<<<<<<<<<<<
+ *     cdef long cRight = <long>crop[2]
+ *     cdef long cBot = <long>crop[3]
+*/
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 110, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_4 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 110, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_v_cTop = ((long)__pyx_t_4);
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":111
+ *     cdef long cLeft = <long>crop[0]
+ *     cdef long cTop = <long>crop[1]
+ *     cdef long cRight = <long>crop[2]             # <<<<<<<<<<<<<<
+ *     cdef long cBot = <long>crop[3]
+ * 
+*/
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 111, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_4 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 111, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_v_cRight = ((long)__pyx_t_4);
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":112
+ *     cdef long cTop = <long>crop[1]
+ *     cdef long cRight = <long>crop[2]
+ *     cdef long cBot = <long>crop[3]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef long i, j, y, x, k, m
+*/
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_crop, 3, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 112, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_PyLong_As_long(__pyx_t_3); if (unlikely((__pyx_t_4 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 112, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_v_cBot = ((long)__pyx_t_4);
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":115
+ * 
+ *     cdef long i, j, y, x, k, m
+ *     cdef long yMin = cBot             # <<<<<<<<<<<<<<
+ *     cdef long yMax = cTop
+ *     cdef double yi, yj, xi, xj, t, xint_d
+*/
+  __pyx_v_yMin = __pyx_v_cBot;
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":116
+ *     cdef long i, j, y, x, k, m
+ *     cdef long yMin = cBot
+ *     cdef long yMax = cTop             # <<<<<<<<<<<<<<
+ *     cdef double yi, yj, xi, xj, t, xint_d
+ *     cdef long xint
+*/
+  __pyx_v_yMax = __pyx_v_cTop;
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":119
+ *     cdef double yi, yj, xi, xj, t, xint_d
+ *     cdef long xint
+ *     cdef long* inters = <long*>malloc(n * sizeof(long))             # <<<<<<<<<<<<<<
+ *     if inters == NULL:
+ *         return
+*/
+  __pyx_v_inters = ((long *)malloc((__pyx_v_n * (sizeof(long)))));
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":120
+ *     cdef long xint
+ *     cdef long* inters = <long*>malloc(n * sizeof(long))
+ *     if inters == NULL:             # <<<<<<<<<<<<<<
+ *         return
+ * 
+*/
+  __pyx_t_1 = (__pyx_v_inters == NULL);
+  if (__pyx_t_1) {
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":121
+ *     cdef long* inters = <long*>malloc(n * sizeof(long))
+ *     if inters == NULL:
+ *         return             # <<<<<<<<<<<<<<
+ * 
+ *     # polygon bbox in y, clipped to crop
+*/
+    goto __pyx_L0;
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":120
+ *     cdef long xint
+ *     cdef long* inters = <long*>malloc(n * sizeof(long))
+ *     if inters == NULL:             # <<<<<<<<<<<<<<
+ *         return
+ * 
+*/
+  }
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":124
+ * 
+ *     # polygon bbox in y, clipped to crop
+ *     for i in range(n):             # <<<<<<<<<<<<<<
+ *         y = <long>points[i, 1]
+ *         if y < yMin: yMin = y
+*/
+  __pyx_t_4 = __pyx_v_n;
+  __pyx_t_5 = __pyx_t_4;
+  for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+    __pyx_v_i = __pyx_t_6;
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":125
+ *     # polygon bbox in y, clipped to crop
+ *     for i in range(n):
+ *         y = <long>points[i, 1]             # <<<<<<<<<<<<<<
+ *         if y < yMin: yMin = y
+ *         if y > yMax: yMax = y
+*/
+    __pyx_t_2 = __pyx_v_i;
+    __pyx_t_7 = 1;
+    __pyx_v_y = ((long)(*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_points.data + __pyx_t_2 * __pyx_v_points.strides[0]) ) + __pyx_t_7 * __pyx_v_points.strides[1]) ))));
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":126
+ *     for i in range(n):
+ *         y = <long>points[i, 1]
+ *         if y < yMin: yMin = y             # <<<<<<<<<<<<<<
+ *         if y > yMax: yMax = y
+ * 
+*/
+    __pyx_t_1 = (__pyx_v_y < __pyx_v_yMin);
+    if (__pyx_t_1) {
+      __pyx_v_yMin = __pyx_v_y;
+    }
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":127
+ *         y = <long>points[i, 1]
+ *         if y < yMin: yMin = y
+ *         if y > yMax: yMax = y             # <<<<<<<<<<<<<<
+ * 
+ *     if yMin < cTop: yMin = cTop
+*/
+    __pyx_t_1 = (__pyx_v_y > __pyx_v_yMax);
+    if (__pyx_t_1) {
+      __pyx_v_yMax = __pyx_v_y;
+    }
+  }
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":129
+ *         if y > yMax: yMax = y
+ * 
+ *     if yMin < cTop: yMin = cTop             # <<<<<<<<<<<<<<
+ *     if yMax > cBot: yMax = cBot
+ * 
+*/
+  __pyx_t_1 = (__pyx_v_yMin < __pyx_v_cTop);
+  if (__pyx_t_1) {
+    __pyx_v_yMin = __pyx_v_cTop;
+  }
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":130
+ * 
+ *     if yMin < cTop: yMin = cTop
+ *     if yMax > cBot: yMax = cBot             # <<<<<<<<<<<<<<
+ * 
+ *     cdef unsigned char *cell
+*/
+  __pyx_t_1 = (__pyx_v_yMax > __pyx_v_cBot);
+  if (__pyx_t_1) {
+    __pyx_v_yMax = __pyx_v_cBot;
+  }
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":135
+ * 
+ *     # scanline fill (even-odd rule)
+ *     for y in range(yMin, yMax + 1):             # <<<<<<<<<<<<<<
+ *         k = 0
+ *         for i in range(n):
+*/
+  __pyx_t_4 = (__pyx_v_yMax + 1);
+  __pyx_t_5 = __pyx_t_4;
+  for (__pyx_t_6 = __pyx_v_yMin; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+    __pyx_v_y = __pyx_t_6;
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":136
+ *     # scanline fill (even-odd rule)
+ *     for y in range(yMin, yMax + 1):
+ *         k = 0             # <<<<<<<<<<<<<<
+ *         for i in range(n):
+ *             j = (i + 1) % n
+*/
+    __pyx_v_k = 0;
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":137
+ *     for y in range(yMin, yMax + 1):
+ *         k = 0
+ *         for i in range(n):             # <<<<<<<<<<<<<<
+ *             j = (i + 1) % n
+ *             yi = points[i, 1]
+*/
+    __pyx_t_8 = __pyx_v_n;
+    __pyx_t_9 = __pyx_t_8;
+    for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
+      __pyx_v_i = __pyx_t_10;
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":138
+ *         k = 0
+ *         for i in range(n):
+ *             j = (i + 1) % n             # <<<<<<<<<<<<<<
+ *             yi = points[i, 1]
+ *             yj = points[j, 1]
+*/
+      __pyx_v_j = ((__pyx_v_i + 1) % __pyx_v_n);
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":139
+ *         for i in range(n):
+ *             j = (i + 1) % n
+ *             yi = points[i, 1]             # <<<<<<<<<<<<<<
+ *             yj = points[j, 1]
+ * 
+*/
+      __pyx_t_7 = __pyx_v_i;
+      __pyx_t_2 = 1;
+      __pyx_v_yi = (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_points.data + __pyx_t_7 * __pyx_v_points.strides[0]) ) + __pyx_t_2 * __pyx_v_points.strides[1]) )));
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":140
+ *             j = (i + 1) % n
+ *             yi = points[i, 1]
+ *             yj = points[j, 1]             # <<<<<<<<<<<<<<
+ * 
+ *             # include edges crossing this scanline; avoids double-count at vertices
+*/
+      __pyx_t_2 = __pyx_v_j;
+      __pyx_t_7 = 1;
+      __pyx_v_yj = (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_points.data + __pyx_t_2 * __pyx_v_points.strides[0]) ) + __pyx_t_7 * __pyx_v_points.strides[1]) )));
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":143
+ * 
+ *             # include edges crossing this scanline; avoids double-count at vertices
+ *             if ((yi <= y and y < yj) or (yj <= y and y < yi)):             # <<<<<<<<<<<<<<
+ *                 xi = points[i, 0]
+ *                 xj = points[j, 0]
+*/
+      __pyx_t_11 = (__pyx_v_yi <= __pyx_v_y);
+      if (!__pyx_t_11) {
+        goto __pyx_L17_next_or;
+      } else {
+      }
+      __pyx_t_11 = (__pyx_v_y < __pyx_v_yj);
+      if (!__pyx_t_11) {
+      } else {
+        __pyx_t_1 = __pyx_t_11;
+        goto __pyx_L16_bool_binop_done;
+      }
+      __pyx_L17_next_or:;
+      __pyx_t_11 = (__pyx_v_yj <= __pyx_v_y);
+      if (__pyx_t_11) {
+      } else {
+        __pyx_t_1 = __pyx_t_11;
+        goto __pyx_L16_bool_binop_done;
+      }
+      __pyx_t_11 = (__pyx_v_y < __pyx_v_yi);
+      __pyx_t_1 = __pyx_t_11;
+      __pyx_L16_bool_binop_done:;
+      if (__pyx_t_1) {
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":144
+ *             # include edges crossing this scanline; avoids double-count at vertices
+ *             if ((yi <= y and y < yj) or (yj <= y and y < yi)):
+ *                 xi = points[i, 0]             # <<<<<<<<<<<<<<
+ *                 xj = points[j, 0]
+ *                 t = (y - yi) / (yj - yi)
+*/
+        __pyx_t_7 = __pyx_v_i;
+        __pyx_t_2 = 0;
+        __pyx_v_xi = (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_points.data + __pyx_t_7 * __pyx_v_points.strides[0]) ) + __pyx_t_2 * __pyx_v_points.strides[1]) )));
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":145
+ *             if ((yi <= y and y < yj) or (yj <= y and y < yi)):
+ *                 xi = points[i, 0]
+ *                 xj = points[j, 0]             # <<<<<<<<<<<<<<
+ *                 t = (y - yi) / (yj - yi)
+ *                 xint_d = xi + t * (xj - xi)
+*/
+        __pyx_t_2 = __pyx_v_j;
+        __pyx_t_7 = 0;
+        __pyx_v_xj = (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_points.data + __pyx_t_2 * __pyx_v_points.strides[0]) ) + __pyx_t_7 * __pyx_v_points.strides[1]) )));
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":146
+ *                 xi = points[i, 0]
+ *                 xj = points[j, 0]
+ *                 t = (y - yi) / (yj - yi)             # <<<<<<<<<<<<<<
+ *                 xint_d = xi + t * (xj - xi)
+ *                 xint = <long>xint_d
+*/
+        __pyx_v_t = ((__pyx_v_y - __pyx_v_yi) / (__pyx_v_yj - __pyx_v_yi));
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":147
+ *                 xj = points[j, 0]
+ *                 t = (y - yi) / (yj - yi)
+ *                 xint_d = xi + t * (xj - xi)             # <<<<<<<<<<<<<<
+ *                 xint = <long>xint_d
+ *                 if xint < cLeft:
+*/
+        __pyx_v_xint_d = (__pyx_v_xi + (__pyx_v_t * (__pyx_v_xj - __pyx_v_xi)));
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":148
+ *                 t = (y - yi) / (yj - yi)
+ *                 xint_d = xi + t * (xj - xi)
+ *                 xint = <long>xint_d             # <<<<<<<<<<<<<<
+ *                 if xint < cLeft:
+ *                     xint = cLeft
+*/
+        __pyx_v_xint = ((long)__pyx_v_xint_d);
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":149
+ *                 xint_d = xi + t * (xj - xi)
+ *                 xint = <long>xint_d
+ *                 if xint < cLeft:             # <<<<<<<<<<<<<<
+ *                     xint = cLeft
+ *                 elif xint > cRight:
+*/
+        __pyx_t_1 = (__pyx_v_xint < __pyx_v_cLeft);
+        if (__pyx_t_1) {
+
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":150
+ *                 xint = <long>xint_d
+ *                 if xint < cLeft:
+ *                     xint = cLeft             # <<<<<<<<<<<<<<
+ *                 elif xint > cRight:
+ *                     xint = cRight
+*/
+          __pyx_v_xint = __pyx_v_cLeft;
+
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":149
+ *                 xint_d = xi + t * (xj - xi)
+ *                 xint = <long>xint_d
+ *                 if xint < cLeft:             # <<<<<<<<<<<<<<
+ *                     xint = cLeft
+ *                 elif xint > cRight:
+*/
+          goto __pyx_L20;
+        }
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":151
+ *                 if xint < cLeft:
+ *                     xint = cLeft
+ *                 elif xint > cRight:             # <<<<<<<<<<<<<<
+ *                     xint = cRight
+ *                 inters[k] = xint
+*/
+        __pyx_t_1 = (__pyx_v_xint > __pyx_v_cRight);
+        if (__pyx_t_1) {
+
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":152
+ *                     xint = cLeft
+ *                 elif xint > cRight:
+ *                     xint = cRight             # <<<<<<<<<<<<<<
+ *                 inters[k] = xint
+ *                 k += 1
+*/
+          __pyx_v_xint = __pyx_v_cRight;
+
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":151
+ *                 if xint < cLeft:
+ *                     xint = cLeft
+ *                 elif xint > cRight:             # <<<<<<<<<<<<<<
+ *                     xint = cRight
+ *                 inters[k] = xint
+*/
+        }
+        __pyx_L20:;
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":153
+ *                 elif xint > cRight:
+ *                     xint = cRight
+ *                 inters[k] = xint             # <<<<<<<<<<<<<<
+ *                 k += 1
+ * 
+*/
+        (__pyx_v_inters[__pyx_v_k]) = __pyx_v_xint;
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":154
+ *                     xint = cRight
+ *                 inters[k] = xint
+ *                 k += 1             # <<<<<<<<<<<<<<
+ * 
+ *         # insertion sort intersections
+*/
+        __pyx_v_k = (__pyx_v_k + 1);
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":143
+ * 
+ *             # include edges crossing this scanline; avoids double-count at vertices
+ *             if ((yi <= y and y < yj) or (yj <= y and y < yi)):             # <<<<<<<<<<<<<<
+ *                 xi = points[i, 0]
+ *                 xj = points[j, 0]
+*/
+      }
+    }
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":157
+ * 
+ *         # insertion sort intersections
+ *         for i in range(1, k):             # <<<<<<<<<<<<<<
+ *             x = inters[i]
+ *             m = i - 1
+*/
+    __pyx_t_8 = __pyx_v_k;
+    __pyx_t_9 = __pyx_t_8;
+    for (__pyx_t_10 = 1; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
+      __pyx_v_i = __pyx_t_10;
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":158
+ *         # insertion sort intersections
+ *         for i in range(1, k):
+ *             x = inters[i]             # <<<<<<<<<<<<<<
+ *             m = i - 1
+ *             while m >= 0 and inters[m] > x:
+*/
+      __pyx_v_x = (__pyx_v_inters[__pyx_v_i]);
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":159
+ *         for i in range(1, k):
+ *             x = inters[i]
+ *             m = i - 1             # <<<<<<<<<<<<<<
+ *             while m >= 0 and inters[m] > x:
+ *                 inters[m + 1] = inters[m]
+*/
+      __pyx_v_m = (__pyx_v_i - 1);
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":160
+ *             x = inters[i]
+ *             m = i - 1
+ *             while m >= 0 and inters[m] > x:             # <<<<<<<<<<<<<<
+ *                 inters[m + 1] = inters[m]
+ *                 m -= 1
+*/
+      while (1) {
+        __pyx_t_11 = (__pyx_v_m >= 0);
+        if (__pyx_t_11) {
+        } else {
+          __pyx_t_1 = __pyx_t_11;
+          goto __pyx_L25_bool_binop_done;
+        }
+        __pyx_t_11 = ((__pyx_v_inters[__pyx_v_m]) > __pyx_v_x);
+        __pyx_t_1 = __pyx_t_11;
+        __pyx_L25_bool_binop_done:;
+        if (!__pyx_t_1) break;
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":161
+ *             m = i - 1
+ *             while m >= 0 and inters[m] > x:
+ *                 inters[m + 1] = inters[m]             # <<<<<<<<<<<<<<
+ *                 m -= 1
+ *             inters[m + 1] = x
+*/
+        (__pyx_v_inters[(__pyx_v_m + 1)]) = (__pyx_v_inters[__pyx_v_m]);
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":162
+ *             while m >= 0 and inters[m] > x:
+ *                 inters[m + 1] = inters[m]
+ *                 m -= 1             # <<<<<<<<<<<<<<
+ *             inters[m + 1] = x
+ * 
+*/
+        __pyx_v_m = (__pyx_v_m - 1);
+      }
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":163
+ *                 inters[m + 1] = inters[m]
+ *                 m -= 1
+ *             inters[m + 1] = x             # <<<<<<<<<<<<<<
+ * 
+ *         # fill pairs
+*/
+      (__pyx_v_inters[(__pyx_v_m + 1)]) = __pyx_v_x;
+    }
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":166
+ * 
+ *         # fill pairs
+ *         i = 0             # <<<<<<<<<<<<<<
+ *         while i + 1 < k:
+ *             xi = inters[i]
+*/
+    __pyx_v_i = 0;
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":167
+ *         # fill pairs
+ *         i = 0
+ *         while i + 1 < k:             # <<<<<<<<<<<<<<
+ *             xi = inters[i]
+ *             xj = inters[i + 1]
+*/
+    while (1) {
+      __pyx_t_1 = ((__pyx_v_i + 1) < __pyx_v_k);
+      if (!__pyx_t_1) break;
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":168
+ *         i = 0
+ *         while i + 1 < k:
+ *             xi = inters[i]             # <<<<<<<<<<<<<<
+ *             xj = inters[i + 1]
+ *             if xi < cLeft: xi = cLeft
+*/
+      __pyx_v_xi = (__pyx_v_inters[__pyx_v_i]);
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":169
+ *         while i + 1 < k:
+ *             xi = inters[i]
+ *             xj = inters[i + 1]             # <<<<<<<<<<<<<<
+ *             if xi < cLeft: xi = cLeft
+ *             if xj > cRight: xj = cRight
+*/
+      __pyx_v_xj = (__pyx_v_inters[(__pyx_v_i + 1)]);
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":170
+ *             xi = inters[i]
+ *             xj = inters[i + 1]
+ *             if xi < cLeft: xi = cLeft             # <<<<<<<<<<<<<<
+ *             if xj > cRight: xj = cRight
+ *             for x in range(<long>xi, <long>xj + 1):
+*/
+      __pyx_t_1 = (__pyx_v_xi < __pyx_v_cLeft);
+      if (__pyx_t_1) {
+        __pyx_v_xi = __pyx_v_cLeft;
+      }
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":171
+ *             xj = inters[i + 1]
+ *             if xi < cLeft: xi = cLeft
+ *             if xj > cRight: xj = cRight             # <<<<<<<<<<<<<<
+ *             for x in range(<long>xi, <long>xj + 1):
+ *                 cell = &arr[y, x, 0]
+*/
+      __pyx_t_1 = (__pyx_v_xj > __pyx_v_cRight);
+      if (__pyx_t_1) {
+        __pyx_v_xj = __pyx_v_cRight;
+      }
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":172
+ *             if xi < cLeft: xi = cLeft
+ *             if xj > cRight: xj = cRight
+ *             for x in range(<long>xi, <long>xj + 1):             # <<<<<<<<<<<<<<
+ *                 cell = &arr[y, x, 0]
+ *                 cell[0] = rcol
+*/
+      __pyx_t_8 = (((long)__pyx_v_xj) + 1);
+      __pyx_t_9 = __pyx_t_8;
+      for (__pyx_t_10 = ((long)__pyx_v_xi); __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
+        __pyx_v_x = __pyx_t_10;
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":173
+ *             if xj > cRight: xj = cRight
+ *             for x in range(<long>xi, <long>xj + 1):
+ *                 cell = &arr[y, x, 0]             # <<<<<<<<<<<<<<
+ *                 cell[0] = rcol
+ *                 cell[1] = gcol
+*/
+        __pyx_t_7 = __pyx_v_y;
+        __pyx_t_2 = __pyx_v_x;
+        __pyx_t_12 = 0;
+        __pyx_v_cell = (&(*__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_2, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides)));
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":174
+ *             for x in range(<long>xi, <long>xj + 1):
+ *                 cell = &arr[y, x, 0]
+ *                 cell[0] = rcol             # <<<<<<<<<<<<<<
+ *                 cell[1] = gcol
+ *                 cell[2] = bcol
+*/
+        (__pyx_v_cell[0]) = __pyx_v_rcol;
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":175
+ *                 cell = &arr[y, x, 0]
+ *                 cell[0] = rcol
+ *                 cell[1] = gcol             # <<<<<<<<<<<<<<
+ *                 cell[2] = bcol
+ *                 cell[3] = acol
+*/
+        (__pyx_v_cell[1]) = __pyx_v_gcol;
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":176
+ *                 cell[0] = rcol
+ *                 cell[1] = gcol
+ *                 cell[2] = bcol             # <<<<<<<<<<<<<<
+ *                 cell[3] = acol
+ *             i += 2
+*/
+        (__pyx_v_cell[2]) = __pyx_v_bcol;
+
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":177
+ *                 cell[1] = gcol
+ *                 cell[2] = bcol
+ *                 cell[3] = acol             # <<<<<<<<<<<<<<
+ *             i += 2
+ * 
+*/
+        (__pyx_v_cell[3]) = __pyx_v_acol;
+      }
+
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":178
+ *                 cell[2] = bcol
+ *                 cell[3] = acol
+ *             i += 2             # <<<<<<<<<<<<<<
+ * 
+ *     free(inters)
+*/
+      __pyx_v_i = (__pyx_v_i + 2);
+    }
+  }
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":180
+ *             i += 2
+ * 
+ *     free(inters)             # <<<<<<<<<<<<<<
+ * 
+ * 
+*/
+  free(__pyx_v_inters);
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":95
+ * 
+ * 
+ * cdef void fillPolygon(             # <<<<<<<<<<<<<<
+ *         cnp.ndarray[cnp.uint8_t, ndim=3] arr,
+ *         double[:, :] points,
+*/
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_3);
+  { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_arr.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_col.rcbuffer->pybuffer);
+  __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
+  __Pyx_AddTraceback("BlazeSudio.graphicsCore._calcs.init.fillPolygon", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  goto __pyx_L2;
+  __pyx_L0:;
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_arr.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_col.rcbuffer->pybuffer);
+  __pyx_L2:;
+  __Pyx_RefNannyFinishContext();
+}
+
+/* "BlazeSudio/graphicsCore/_calcs/init.pyx":183
+ * 
  * 
  * cpdef drawPolyLine(             # <<<<<<<<<<<<<<
  *         cnp.ndarray[cnp.uint8_t, ndim=3] arr,
@@ -19813,8 +20625,8 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
 static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawPolyLine(PyArrayObject *__pyx_v_arr, __Pyx_memviewslice __pyx_v_points, double __pyx_v_thickness, PyArrayObject *__pyx_v_col, PyObject *__pyx_v_crop, PyObject *__pyx_v_round, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  long __pyx_v_ht;
   long __pyx_v_n;
+  long __pyx_v_ht;
   long __pyx_v_i;
   __Pyx_memviewslice __pyx_v_p1 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_p2 = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -19846,46 +20658,115 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawPolyLine(
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 93, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 183, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 93, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 183, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":99
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":189
  *         cnp.ndarray[cnp.uint8_t, ndim=1] col,
  *         crop, bool round):
- *     cdef long ht = <long>(thickness // 2)             # <<<<<<<<<<<<<<
- *     cdef long n = len(points)
- *     if round:
-*/
-  __pyx_v_ht = ((long)floor(__pyx_v_thickness / 2.0));
-
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":100
- *         crop, bool round):
- *     cdef long ht = <long>(thickness // 2)
  *     cdef long n = len(points)             # <<<<<<<<<<<<<<
- *     if round:
- *         for i in range(n):
+ *     if n < 2:
+ *         return
 */
   __pyx_t_1 = __Pyx_MemoryView_Len(__pyx_v_points); 
   __pyx_v_n = __pyx_t_1;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":101
- *     cdef long ht = <long>(thickness // 2)
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":190
+ *         crop, bool round):
  *     cdef long n = len(points)
+ *     if n < 2:             # <<<<<<<<<<<<<<
+ *         return
+ *     if thickness <= 0:
+*/
+  __pyx_t_2 = (__pyx_v_n < 2);
+  if (__pyx_t_2) {
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":191
+ *     cdef long n = len(points)
+ *     if n < 2:
+ *         return             # <<<<<<<<<<<<<<
+ *     if thickness <= 0:
+ *         fillPolygon(arr, points, col, crop)
+*/
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+    goto __pyx_L0;
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":190
+ *         crop, bool round):
+ *     cdef long n = len(points)
+ *     if n < 2:             # <<<<<<<<<<<<<<
+ *         return
+ *     if thickness <= 0:
+*/
+  }
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":192
+ *     if n < 2:
+ *         return
+ *     if thickness <= 0:             # <<<<<<<<<<<<<<
+ *         fillPolygon(arr, points, col, crop)
+ *         return
+*/
+  __pyx_t_2 = (__pyx_v_thickness <= 0.0);
+  if (__pyx_t_2) {
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":193
+ *         return
+ *     if thickness <= 0:
+ *         fillPolygon(arr, points, col, crop)             # <<<<<<<<<<<<<<
+ *         return
+ * 
+*/
+    __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fillPolygon(((PyArrayObject *)__pyx_v_arr), __pyx_v_points, ((PyArrayObject *)__pyx_v_col), __pyx_v_crop); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 193, __pyx_L1_error)
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":194
+ *     if thickness <= 0:
+ *         fillPolygon(arr, points, col, crop)
+ *         return             # <<<<<<<<<<<<<<
+ * 
+ *     cdef long ht = <long>(thickness // 2)
+*/
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+    goto __pyx_L0;
+
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":192
+ *     if n < 2:
+ *         return
+ *     if thickness <= 0:             # <<<<<<<<<<<<<<
+ *         fillPolygon(arr, points, col, crop)
+ *         return
+*/
+  }
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":196
+ *         return
+ * 
+ *     cdef long ht = <long>(thickness // 2)             # <<<<<<<<<<<<<<
+ *     if round:
+ *         for i in range(n):
+*/
+  __pyx_v_ht = ((long)floor(__pyx_v_thickness / 2.0));
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":197
+ * 
+ *     cdef long ht = <long>(thickness // 2)
  *     if round:             # <<<<<<<<<<<<<<
  *         for i in range(n):
  *             drawCirc(arr, points[i], ht, 0, col, crop)
 */
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_round); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 101, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_round); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 197, __pyx_L1_error)
   if (__pyx_t_2) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":102
- *     cdef long n = len(points)
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":198
+ *     cdef long ht = <long>(thickness // 2)
  *     if round:
  *         for i in range(n):             # <<<<<<<<<<<<<<
  *             drawCirc(arr, points[i], ht, 0, col, crop)
@@ -19896,7 +20777,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawPolyLine(
     for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
       __pyx_v_i = __pyx_t_5;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":103
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":199
  *     if round:
  *         for i in range(n):
  *             drawCirc(arr, points[i], ht, 0, col, crop)             # <<<<<<<<<<<<<<
@@ -19916,23 +20797,23 @@ __pyx_t_6.shape[0] = __pyx_v_points.shape[1];
 __pyx_t_6.strides[0] = __pyx_v_points.strides[1];
     __pyx_t_6.suboffsets[0] = -1;
 
-__pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(((PyArrayObject *)__pyx_v_arr), __pyx_t_6, __pyx_v_ht, 0.0, ((PyArrayObject *)__pyx_v_col), __pyx_v_crop, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 103, __pyx_L1_error)
+__pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(((PyArrayObject *)__pyx_v_arr), __pyx_t_6, __pyx_v_ht, 0.0, ((PyArrayObject *)__pyx_v_col), __pyx_v_crop, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 199, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __PYX_XCLEAR_MEMVIEW(&__pyx_t_6, 1);
       __pyx_t_6.memview = NULL; __pyx_t_6.data = NULL;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     }
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":101
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":197
+ * 
  *     cdef long ht = <long>(thickness // 2)
- *     cdef long n = len(points)
  *     if round:             # <<<<<<<<<<<<<<
  *         for i in range(n):
  *             drawCirc(arr, points[i], ht, 0, col, crop)
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":104
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":200
  *         for i in range(n):
  *             drawCirc(arr, points[i], ht, 0, col, crop)
  *     if n == 2:             # <<<<<<<<<<<<<<
@@ -19942,7 +20823,7 @@ __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(((PyArray
   __pyx_t_2 = (__pyx_v_n == 2);
   if (__pyx_t_2) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":105
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":201
  *             drawCirc(arr, points[i], ht, 0, col, crop)
  *     if n == 2:
  *         drawLine(arr, points[0], points[1], thickness, col, crop)             # <<<<<<<<<<<<<<
@@ -19975,7 +20856,7 @@ __pyx_t_8.shape[0] = __pyx_v_points.shape[1];
 __pyx_t_8.strides[0] = __pyx_v_points.strides[1];
     __pyx_t_8.suboffsets[0] = -1;
 
-__pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(((PyArrayObject *)__pyx_v_arr), __pyx_t_6, __pyx_t_8, __pyx_v_thickness, ((PyArrayObject *)__pyx_v_col), __pyx_v_crop, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 105, __pyx_L1_error)
+__pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(((PyArrayObject *)__pyx_v_arr), __pyx_t_6, __pyx_t_8, __pyx_v_thickness, ((PyArrayObject *)__pyx_v_col), __pyx_v_crop, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 201, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __PYX_XCLEAR_MEMVIEW(&__pyx_t_6, 1);
     __pyx_t_6.memview = NULL; __pyx_t_6.data = NULL;
@@ -19983,7 +20864,7 @@ __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(((PyArray
     __pyx_t_8.memview = NULL; __pyx_t_8.data = NULL;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":106
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":202
  *     if n == 2:
  *         drawLine(arr, points[0], points[1], thickness, col, crop)
  *         return             # <<<<<<<<<<<<<<
@@ -19994,7 +20875,7 @@ __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(((PyArray
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":104
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":200
  *         for i in range(n):
  *             drawCirc(arr, points[i], ht, 0, col, crop)
  *     if n == 2:             # <<<<<<<<<<<<<<
@@ -20003,7 +20884,7 @@ __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(((PyArray
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":107
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":203
  *         drawLine(arr, points[0], points[1], thickness, col, crop)
  *         return
  *     p1 = points[0]             # <<<<<<<<<<<<<<
@@ -20027,7 +20908,7 @@ __pyx_v_p1 = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":108
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":204
  *         return
  *     p1 = points[0]
  *     for i in range(1, n):             # <<<<<<<<<<<<<<
@@ -20039,7 +20920,7 @@ __pyx_v_p1 = __pyx_t_8;
   for (__pyx_t_5 = 1; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
     __pyx_v_i = __pyx_t_5;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":109
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":205
  *     p1 = points[0]
  *     for i in range(1, n):
  *         p2 = points[i]             # <<<<<<<<<<<<<<
@@ -20064,18 +20945,18 @@ __PYX_XCLEAR_MEMVIEW(&__pyx_v_p2, 1);
     __pyx_t_8.memview = NULL;
     __pyx_t_8.data = NULL;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":110
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":206
  *     for i in range(1, n):
  *         p2 = points[i]
  *         drawLine(arr, p1, p2, thickness, col, crop)             # <<<<<<<<<<<<<<
  *         p1 = p2
  *     drawLine(arr, p1, points[0], thickness, col, crop)
 */
-    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(((PyArrayObject *)__pyx_v_arr), __pyx_v_p1, __pyx_v_p2, __pyx_v_thickness, ((PyArrayObject *)__pyx_v_col), __pyx_v_crop, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 110, __pyx_L1_error)
+    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(((PyArrayObject *)__pyx_v_arr), __pyx_v_p1, __pyx_v_p2, __pyx_v_thickness, ((PyArrayObject *)__pyx_v_col), __pyx_v_crop, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 206, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":111
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":207
  *         p2 = points[i]
  *         drawLine(arr, p1, p2, thickness, col, crop)
  *         p1 = p2             # <<<<<<<<<<<<<<
@@ -20087,7 +20968,7 @@ __PYX_XCLEAR_MEMVIEW(&__pyx_v_p2, 1);
     __pyx_v_p1 = __pyx_v_p2;
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":112
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":208
  *         drawLine(arr, p1, p2, thickness, col, crop)
  *         p1 = p2
  *     drawLine(arr, p1, points[0], thickness, col, crop)             # <<<<<<<<<<<<<<
@@ -20107,14 +20988,14 @@ __pyx_t_8.shape[0] = __pyx_v_points.shape[1];
 __pyx_t_8.strides[0] = __pyx_v_points.strides[1];
     __pyx_t_8.suboffsets[0] = -1;
 
-__pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(((PyArrayObject *)__pyx_v_arr), __pyx_v_p1, __pyx_t_8, __pyx_v_thickness, ((PyArrayObject *)__pyx_v_col), __pyx_v_crop, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 112, __pyx_L1_error)
+__pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawLine(((PyArrayObject *)__pyx_v_arr), __pyx_v_p1, __pyx_t_8, __pyx_v_thickness, ((PyArrayObject *)__pyx_v_col), __pyx_v_crop, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 208, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_8, 1);
   __pyx_t_8.memview = NULL; __pyx_t_8.data = NULL;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":93
- *             y += 1
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":183
+ * 
  * 
  * cpdef drawPolyLine(             # <<<<<<<<<<<<<<
  *         cnp.ndarray[cnp.uint8_t, ndim=3] arr,
@@ -20192,67 +21073,67 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_arr,&__pyx_mstate_global->__pyx_n_u_points,&__pyx_mstate_global->__pyx_n_u_thickness,&__pyx_mstate_global->__pyx_n_u_col,&__pyx_mstate_global->__pyx_n_u_crop,&__pyx_mstate_global->__pyx_n_u_round,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 93, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 183, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  6:
         values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 93, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 183, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 93, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 183, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 93, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 183, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 93, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 183, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 93, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 183, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 93, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 183, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "drawPolyLine", 0) < (0)) __PYX_ERR(0, 93, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "drawPolyLine", 0) < (0)) __PYX_ERR(0, 183, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 6; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("drawPolyLine", 1, 6, 6, i); __PYX_ERR(0, 93, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("drawPolyLine", 1, 6, 6, i); __PYX_ERR(0, 183, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 6)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 93, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 183, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 93, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 183, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 93, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 183, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 93, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 183, __pyx_L3_error)
       values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 93, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 183, __pyx_L3_error)
       values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 93, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 183, __pyx_L3_error)
     }
     __pyx_v_arr = ((PyArrayObject *)values[0]);
-    __pyx_v_points = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_points.memview)) __PYX_ERR(0, 95, __pyx_L3_error)
-    __pyx_v_thickness = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_thickness == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 96, __pyx_L3_error)
+    __pyx_v_points = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_points.memview)) __PYX_ERR(0, 185, __pyx_L3_error)
+    __pyx_v_thickness = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_thickness == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L3_error)
     __pyx_v_col = ((PyArrayObject *)values[3]);
     __pyx_v_crop = values[4];
     __pyx_v_round = ((PyObject*)values[5]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("drawPolyLine", 1, 6, 6, __pyx_nargs); __PYX_ERR(0, 93, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("drawPolyLine", 1, 6, 6, __pyx_nargs); __PYX_ERR(0, 183, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -20264,9 +21145,9 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 94, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 97, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_round), (&PyBool_Type), 1, "round", 1))) __PYX_ERR(0, 98, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 184, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 187, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_round), (&PyBool_Type), 1, "round", 1))) __PYX_ERR(0, 188, __pyx_L1_error)
   __pyx_r = __pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_2drawPolyLine(__pyx_self, __pyx_v_arr, __pyx_v_points, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop, __pyx_v_round);
 
   /* function exit code */
@@ -20309,17 +21190,17 @@ static PyObject *__pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_2drawPolyLin
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 93, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 183, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 93, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 183, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_points.memview)) { __Pyx_RaiseUnboundLocalError("points"); __PYX_ERR(0, 93, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawPolyLine(__pyx_v_arr, __pyx_v_points, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop, __pyx_v_round, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
+  if (unlikely(!__pyx_v_points.memview)) { __Pyx_RaiseUnboundLocalError("points"); __PYX_ERR(0, 183, __pyx_L1_error) }
+  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawPolyLine(__pyx_v_arr, __pyx_v_points, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop, __pyx_v_round, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -20347,7 +21228,7 @@ static PyObject *__pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_2drawPolyLin
   return __pyx_r;
 }
 
-/* "BlazeSudio/graphicsCore/_calcs/init.pyx":115
+/* "BlazeSudio/graphicsCore/_calcs/init.pyx":211
  * 
  * 
  * cdef _fill(             # <<<<<<<<<<<<<<
@@ -20383,11 +21264,11 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArray
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 115, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 211, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":120
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":216
  *         long rcol, long gcol, long bcol, long acol):
  *     cdef long y, x
  *     cdef long diff = tox - fromx             # <<<<<<<<<<<<<<
@@ -20396,7 +21277,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArray
 */
   __pyx_v_diff = (__pyx_v_tox - __pyx_v_fromx);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":122
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":218
  *     cdef long diff = tox - fromx
  *     cdef unsigned char *cell
  *     for y in range(fromy, toy):             # <<<<<<<<<<<<<<
@@ -20408,7 +21289,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArray
   for (__pyx_t_3 = __pyx_v_fromy; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_y = __pyx_t_3;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":123
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":219
  *     cdef unsigned char *cell
  *     for y in range(fromy, toy):
  *         cell = &arr[y, fromx, 0]             # <<<<<<<<<<<<<<
@@ -20420,7 +21301,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArray
     __pyx_t_6 = 0;
     __pyx_v_cell = (&(*__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_5, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_6, __pyx_pybuffernd_arr.diminfo[2].strides)));
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":124
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":220
  *     for y in range(fromy, toy):
  *         cell = &arr[y, fromx, 0]
  *         for x in range(diff):             # <<<<<<<<<<<<<<
@@ -20432,7 +21313,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArray
     for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
       __pyx_v_x = __pyx_t_9;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":125
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":221
  *         cell = &arr[y, fromx, 0]
  *         for x in range(diff):
  *             cell[0] = rcol             # <<<<<<<<<<<<<<
@@ -20441,7 +21322,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArray
 */
       (__pyx_v_cell[0]) = __pyx_v_rcol;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":126
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":222
  *         for x in range(diff):
  *             cell[0] = rcol
  *             cell[1] = gcol             # <<<<<<<<<<<<<<
@@ -20450,7 +21331,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArray
 */
       (__pyx_v_cell[1]) = __pyx_v_gcol;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":127
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":223
  *             cell[0] = rcol
  *             cell[1] = gcol
  *             cell[2] = bcol             # <<<<<<<<<<<<<<
@@ -20459,7 +21340,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArray
 */
       (__pyx_v_cell[2]) = __pyx_v_bcol;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":128
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":224
  *             cell[1] = gcol
  *             cell[2] = bcol
  *             cell[3] = acol             # <<<<<<<<<<<<<<
@@ -20468,7 +21349,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArray
 */
       (__pyx_v_cell[3]) = __pyx_v_acol;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":129
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":225
  *             cell[2] = bcol
  *             cell[3] = acol
  *             cell += 4             # <<<<<<<<<<<<<<
@@ -20479,7 +21360,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArray
     }
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":115
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":211
  * 
  * 
  * cdef _fill(             # <<<<<<<<<<<<<<
@@ -20508,7 +21389,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(PyArray
   return __pyx_r;
 }
 
-/* "BlazeSudio/graphicsCore/_calcs/init.pyx":131
+/* "BlazeSudio/graphicsCore/_calcs/init.pyx":227
  *             cell += 4
  * 
  * cpdef drawRect(             # <<<<<<<<<<<<<<
@@ -20600,16 +21481,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 131, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 227, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 131, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 227, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":139
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":235
  *         cnp.ndarray[cnp.uint8_t, ndim=1] col,
  *         crop):
  *     cdef long t = <long>thickness             # <<<<<<<<<<<<<<
@@ -20618,7 +21499,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   __pyx_v_t = ((long)__pyx_v_thickness);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":141
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":237
  *     cdef long t = <long>thickness
  * 
  *     cdef long x0 = <long>pos[0]             # <<<<<<<<<<<<<<
@@ -20628,7 +21509,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_1 = 0;
   __pyx_v_x0 = ((long)(*((double *) ( /* dim=0 */ (__pyx_v_pos.data + __pyx_t_1 * __pyx_v_pos.strides[0]) ))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":142
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":238
  * 
  *     cdef long x0 = <long>pos[0]
  *     cdef long y0 = <long>pos[1]             # <<<<<<<<<<<<<<
@@ -20638,7 +21519,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_1 = 1;
   __pyx_v_y0 = ((long)(*((double *) ( /* dim=0 */ (__pyx_v_pos.data + __pyx_t_1 * __pyx_v_pos.strides[0]) ))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":143
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":239
  *     cdef long x0 = <long>pos[0]
  *     cdef long y0 = <long>pos[1]
  *     cdef long x1 = x0 + <long>sze[0]             # <<<<<<<<<<<<<<
@@ -20648,7 +21529,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_1 = 0;
   __pyx_v_x1 = (__pyx_v_x0 + ((long)(*((double *) ( /* dim=0 */ (__pyx_v_sze.data + __pyx_t_1 * __pyx_v_sze.strides[0]) )))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":144
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":240
  *     cdef long y0 = <long>pos[1]
  *     cdef long x1 = x0 + <long>sze[0]
  *     cdef long y1 = y0 + <long>sze[1]             # <<<<<<<<<<<<<<
@@ -20658,7 +21539,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_1 = 1;
   __pyx_v_y1 = (__pyx_v_y0 + ((long)(*((double *) ( /* dim=0 */ (__pyx_v_sze.data + __pyx_t_1 * __pyx_v_sze.strides[0]) )))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":146
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":242
  *     cdef long y1 = y0 + <long>sze[1]
  * 
  *     if x1 < x0:             # <<<<<<<<<<<<<<
@@ -20668,7 +21549,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_2 = (__pyx_v_x1 < __pyx_v_x0);
   if (__pyx_t_2) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":147
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":243
  * 
  *     if x1 < x0:
  *         x0, x1 = x1, x0             # <<<<<<<<<<<<<<
@@ -20680,7 +21561,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     __pyx_v_x0 = __pyx_t_3;
     __pyx_v_x1 = __pyx_t_4;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":146
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":242
  *     cdef long y1 = y0 + <long>sze[1]
  * 
  *     if x1 < x0:             # <<<<<<<<<<<<<<
@@ -20689,7 +21570,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":148
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":244
  *     if x1 < x0:
  *         x0, x1 = x1, x0
  *     if y1 < y0:             # <<<<<<<<<<<<<<
@@ -20699,7 +21580,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_2 = (__pyx_v_y1 < __pyx_v_y0);
   if (__pyx_t_2) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":149
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":245
  *         x0, x1 = x1, x0
  *     if y1 < y0:
  *         y0, y1 = y1, y0             # <<<<<<<<<<<<<<
@@ -20711,7 +21592,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     __pyx_v_y0 = __pyx_t_4;
     __pyx_v_y1 = __pyx_t_3;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":148
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":244
  *     if x1 < x0:
  *         x0, x1 = x1, x0
  *     if y1 < y0:             # <<<<<<<<<<<<<<
@@ -20720,59 +21601,59 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":151
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":247
  *         y0, y1 = y1, y0
  * 
  *     cdef long cLeft = <long>crop[0]             # <<<<<<<<<<<<<<
  *     cdef long cTop = <long>crop[1]
  *     cdef long cRight = <long>crop[2]
 */
-  __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_crop, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_crop, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_5); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_5); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_cLeft = ((long)__pyx_t_3);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":152
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":248
  * 
  *     cdef long cLeft = <long>crop[0]
  *     cdef long cTop = <long>crop[1]             # <<<<<<<<<<<<<<
  *     cdef long cRight = <long>crop[2]
  *     cdef long cBot = <long>crop[3]
 */
-  __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_crop, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_crop, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_5); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_5); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_cTop = ((long)__pyx_t_3);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":153
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":249
  *     cdef long cLeft = <long>crop[0]
  *     cdef long cTop = <long>crop[1]
  *     cdef long cRight = <long>crop[2]             # <<<<<<<<<<<<<<
  *     cdef long cBot = <long>crop[3]
  * 
 */
-  __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_crop, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_crop, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 249, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_5); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_5); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 249, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_cRight = ((long)__pyx_t_3);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":154
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":250
  *     cdef long cTop = <long>crop[1]
  *     cdef long cRight = <long>crop[2]
  *     cdef long cBot = <long>crop[3]             # <<<<<<<<<<<<<<
  * 
  *     cdef long w = x1 - x0
 */
-  __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_crop, 3, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 154, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_crop, 3, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 250, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_5); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 154, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_5); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 250, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_cBot = ((long)__pyx_t_3);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":156
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":252
  *     cdef long cBot = <long>crop[3]
  * 
  *     cdef long w = x1 - x0             # <<<<<<<<<<<<<<
@@ -20781,7 +21662,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   __pyx_v_w = (__pyx_v_x1 - __pyx_v_x0);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":157
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":253
  * 
  *     cdef long w = x1 - x0
  *     cdef long h = y1 - y0             # <<<<<<<<<<<<<<
@@ -20790,7 +21671,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   __pyx_v_h = (__pyx_v_y1 - __pyx_v_y0);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":159
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":255
  *     cdef long h = y1 - y0
  * 
  *     cdef long hwid = <long>(w * 0.5)             # <<<<<<<<<<<<<<
@@ -20799,7 +21680,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   __pyx_v_hwid = ((long)(__pyx_v_w * 0.5));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":160
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":256
  * 
  *     cdef long hwid = <long>(w * 0.5)
  *     cdef long hhei = <long>(h * 0.5)             # <<<<<<<<<<<<<<
@@ -20808,7 +21689,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   __pyx_v_hhei = ((long)(__pyx_v_h * 0.5));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":161
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":257
  *     cdef long hwid = <long>(w * 0.5)
  *     cdef long hhei = <long>(h * 0.5)
  *     cdef long r = <long>round             # <<<<<<<<<<<<<<
@@ -20817,7 +21698,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   __pyx_v_r = ((long)__pyx_v_round);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":162
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":258
  *     cdef long hhei = <long>(h * 0.5)
  *     cdef long r = <long>round
  *     if r > hwid:             # <<<<<<<<<<<<<<
@@ -20827,7 +21708,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_2 = (__pyx_v_r > __pyx_v_hwid);
   if (__pyx_t_2) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":163
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":259
  *     cdef long r = <long>round
  *     if r > hwid:
  *         r = hwid             # <<<<<<<<<<<<<<
@@ -20836,7 +21717,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
     __pyx_v_r = __pyx_v_hwid;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":162
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":258
  *     cdef long hhei = <long>(h * 0.5)
  *     cdef long r = <long>round
  *     if r > hwid:             # <<<<<<<<<<<<<<
@@ -20845,7 +21726,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":164
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":260
  *     if r > hwid:
  *         r = hwid
  *     if r > hhei:             # <<<<<<<<<<<<<<
@@ -20855,7 +21736,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_2 = (__pyx_v_r > __pyx_v_hhei);
   if (__pyx_t_2) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":165
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":261
  *         r = hwid
  *     if r > hhei:
  *         r = hhei             # <<<<<<<<<<<<<<
@@ -20864,7 +21745,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
     __pyx_v_r = __pyx_v_hhei;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":164
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":260
  *     if r > hwid:
  *         r = hwid
  *     if r > hhei:             # <<<<<<<<<<<<<<
@@ -20873,7 +21754,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":166
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":262
  *     if r > hhei:
  *         r = hhei
  *     if r < 0:             # <<<<<<<<<<<<<<
@@ -20883,7 +21764,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_2 = (__pyx_v_r < 0);
   if (__pyx_t_2) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":167
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":263
  *         r = hhei
  *     if r < 0:
  *         r = 0             # <<<<<<<<<<<<<<
@@ -20892,7 +21773,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
     __pyx_v_r = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":166
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":262
  *     if r > hhei:
  *         r = hhei
  *     if r < 0:             # <<<<<<<<<<<<<<
@@ -20901,7 +21782,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":169
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":265
  *         r = 0
  * 
  *     cdef unsigned char rcol = col[0]             # <<<<<<<<<<<<<<
@@ -20911,7 +21792,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_1 = 0;
   __pyx_v_rcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":170
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":266
  * 
  *     cdef unsigned char rcol = col[0]
  *     cdef unsigned char gcol = col[1]             # <<<<<<<<<<<<<<
@@ -20921,7 +21802,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_1 = 1;
   __pyx_v_gcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":171
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":267
  *     cdef unsigned char rcol = col[0]
  *     cdef unsigned char gcol = col[1]
  *     cdef unsigned char bcol = col[2]             # <<<<<<<<<<<<<<
@@ -20931,7 +21812,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_1 = 2;
   __pyx_v_bcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":172
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":268
  *     cdef unsigned char gcol = col[1]
  *     cdef unsigned char bcol = col[2]
  *     cdef unsigned char acol = col[3]             # <<<<<<<<<<<<<<
@@ -20941,7 +21822,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_1 = 3;
   __pyx_v_acol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":176
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":272
  *     cdef long x, y
  * 
  *     if t <= 0:             # <<<<<<<<<<<<<<
@@ -20951,7 +21832,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_2 = (__pyx_v_t <= 0);
   if (__pyx_t_2) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":177
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":273
  * 
  *     if t <= 0:
  *         if r == 0:             # <<<<<<<<<<<<<<
@@ -20961,38 +21842,38 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     __pyx_t_2 = (__pyx_v_r == 0);
     if (__pyx_t_2) {
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":179
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":275
  *         if r == 0:
  *             _fill(arr,
  *                 clip(y0, cTop, cBot), clip(y1, cTop, cBot),             # <<<<<<<<<<<<<<
  *                 clip(x0, cLeft, cRight), clip(x1, cLeft, cRight),
  *                 rcol, gcol, bcol, acol)
 */
-      __pyx_t_3 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y0, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_3 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 179, __pyx_L1_error)
-      __pyx_t_4 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y1, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_4 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 179, __pyx_L1_error)
+      __pyx_t_3 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y0, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_3 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
+      __pyx_t_4 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y1, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_4 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":180
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":276
  *             _fill(arr,
  *                 clip(y0, cTop, cBot), clip(y1, cTop, cBot),
  *                 clip(x0, cLeft, cRight), clip(x1, cLeft, cRight),             # <<<<<<<<<<<<<<
  *                 rcol, gcol, bcol, acol)
  *             return
 */
-      __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x0, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 180, __pyx_L1_error)
-      __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x1, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 180, __pyx_L1_error)
+      __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x0, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 276, __pyx_L1_error)
+      __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x1, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 276, __pyx_L1_error)
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":178
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":274
  *     if t <= 0:
  *         if r == 0:
  *             _fill(arr,             # <<<<<<<<<<<<<<
  *                 clip(y0, cTop, cBot), clip(y1, cTop, cBot),
  *                 clip(x0, cLeft, cRight), clip(x1, cLeft, cRight),
 */
-      __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), __pyx_t_3, __pyx_t_4, __pyx_t_6, __pyx_t_7, __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 178, __pyx_L1_error)
+      __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), __pyx_t_3, __pyx_t_4, __pyx_t_6, __pyx_t_7, __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 274, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":182
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":278
  *                 clip(x0, cLeft, cRight), clip(x1, cLeft, cRight),
  *                 rcol, gcol, bcol, acol)
  *             return             # <<<<<<<<<<<<<<
@@ -21003,7 +21884,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
       __pyx_r = Py_None; __Pyx_INCREF(Py_None);
       goto __pyx_L0;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":177
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":273
  * 
  *     if t <= 0:
  *         if r == 0:             # <<<<<<<<<<<<<<
@@ -21012,69 +21893,69 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
     }
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":186
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":282
  *         # Rounded fill (top/bottom strips + middle)
  *         _fill(arr,
  *             clip(y0 + r, cTop, cBot), clip(y1 - r, cTop, cBot),             # <<<<<<<<<<<<<<
  *             clip(x0, cLeft, cRight), clip(x1, cLeft, cRight),
  *             rcol, gcol, bcol, acol)
 */
-    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_y0 + __pyx_v_r), __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L1_error)
-    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_y1 - __pyx_v_r), __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L1_error)
+    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_y0 + __pyx_v_r), __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 282, __pyx_L1_error)
+    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_y1 - __pyx_v_r), __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 282, __pyx_L1_error)
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":187
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":283
  *         _fill(arr,
  *             clip(y0 + r, cTop, cBot), clip(y1 - r, cTop, cBot),
  *             clip(x0, cLeft, cRight), clip(x1, cLeft, cRight),             # <<<<<<<<<<<<<<
  *             rcol, gcol, bcol, acol)
  *         _fill(arr,
 */
-    __pyx_t_4 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x0, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_4 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 187, __pyx_L1_error)
-    __pyx_t_3 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x1, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_3 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 187, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x0, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_4 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 283, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x1, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_3 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 283, __pyx_L1_error)
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":185
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":281
  * 
  *         # Rounded fill (top/bottom strips + middle)
  *         _fill(arr,             # <<<<<<<<<<<<<<
  *             clip(y0 + r, cTop, cBot), clip(y1 - r, cTop, cBot),
  *             clip(x0, cLeft, cRight), clip(x1, cLeft, cRight),
 */
-    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), __pyx_t_7, __pyx_t_6, __pyx_t_4, __pyx_t_3, __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 185, __pyx_L1_error)
+    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), __pyx_t_7, __pyx_t_6, __pyx_t_4, __pyx_t_3, __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 281, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":190
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":286
  *             rcol, gcol, bcol, acol)
  *         _fill(arr,
  *             clip(y0, cTop, cBot), clip(y1, cTop, cBot),             # <<<<<<<<<<<<<<
  *             clip(x0 + r, cLeft, cRight), clip(x1 - r, cLeft, cRight),
  *             rcol, gcol, bcol, acol)
 */
-    __pyx_t_3 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y0, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_3 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
-    __pyx_t_4 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y1, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_4 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y0, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_3 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 286, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y1, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_4 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 286, __pyx_L1_error)
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":191
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":287
  *         _fill(arr,
  *             clip(y0, cTop, cBot), clip(y1, cTop, cBot),
  *             clip(x0 + r, cLeft, cRight), clip(x1 - r, cLeft, cRight),             # <<<<<<<<<<<<<<
  *             rcol, gcol, bcol, acol)
  *     else:
 */
-    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_x0 + __pyx_v_r), __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 191, __pyx_L1_error)
-    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_x1 - __pyx_v_r), __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 191, __pyx_L1_error)
+    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_x0 + __pyx_v_r), __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 287, __pyx_L1_error)
+    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_x1 - __pyx_v_r), __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 287, __pyx_L1_error)
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":189
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":285
  *             clip(x0, cLeft, cRight), clip(x1, cLeft, cRight),
  *             rcol, gcol, bcol, acol)
  *         _fill(arr,             # <<<<<<<<<<<<<<
  *             clip(y0, cTop, cBot), clip(y1, cTop, cBot),
  *             clip(x0 + r, cLeft, cRight), clip(x1 - r, cLeft, cRight),
 */
-    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), __pyx_t_3, __pyx_t_4, __pyx_t_6, __pyx_t_7, __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 189, __pyx_L1_error)
+    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), __pyx_t_3, __pyx_t_4, __pyx_t_6, __pyx_t_7, __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 285, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":176
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":272
  *     cdef long x, y
  * 
  *     if t <= 0:             # <<<<<<<<<<<<<<
@@ -21084,7 +21965,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     goto __pyx_L8;
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":194
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":290
  *             rcol, gcol, bcol, acol)
  *     else:
  *         _fill(arr, # Top             # <<<<<<<<<<<<<<
@@ -21093,93 +21974,93 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   /*else*/ {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":195
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":291
  *     else:
  *         _fill(arr, # Top
  *             clip(y0, cTop, cBot), clip(y0 + t, cTop, cBot),             # <<<<<<<<<<<<<<
  *             x0+r, x1-r, rcol, gcol, bcol, acol)
  *         _fill(arr, # Bottom
 */
-    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y0, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 195, __pyx_L1_error)
-    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_y0 + __pyx_v_t), __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 195, __pyx_L1_error)
+    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y0, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 291, __pyx_L1_error)
+    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_y0 + __pyx_v_t), __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 291, __pyx_L1_error)
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":194
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":290
  *             rcol, gcol, bcol, acol)
  *     else:
  *         _fill(arr, # Top             # <<<<<<<<<<<<<<
  *             clip(y0, cTop, cBot), clip(y0 + t, cTop, cBot),
  *             x0+r, x1-r, rcol, gcol, bcol, acol)
 */
-    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), __pyx_t_7, __pyx_t_6, (__pyx_v_x0 + __pyx_v_r), (__pyx_v_x1 - __pyx_v_r), __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 194, __pyx_L1_error)
+    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), __pyx_t_7, __pyx_t_6, (__pyx_v_x0 + __pyx_v_r), (__pyx_v_x1 - __pyx_v_r), __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 290, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":198
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":294
  *             x0+r, x1-r, rcol, gcol, bcol, acol)
  *         _fill(arr, # Bottom
  *             clip(y1 - t, cTop, cBot), clip(y1, cTop, cBot),             # <<<<<<<<<<<<<<
  *             x0+r, x1-r, rcol, gcol, bcol, acol)
  *         _fill(arr, y0+r, y1-r, # Left
 */
-    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_y1 - __pyx_v_t), __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 198, __pyx_L1_error)
-    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y1, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 198, __pyx_L1_error)
+    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_y1 - __pyx_v_t), __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 294, __pyx_L1_error)
+    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_y1, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 294, __pyx_L1_error)
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":197
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":293
  *             clip(y0, cTop, cBot), clip(y0 + t, cTop, cBot),
  *             x0+r, x1-r, rcol, gcol, bcol, acol)
  *         _fill(arr, # Bottom             # <<<<<<<<<<<<<<
  *             clip(y1 - t, cTop, cBot), clip(y1, cTop, cBot),
  *             x0+r, x1-r, rcol, gcol, bcol, acol)
 */
-    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), __pyx_t_6, __pyx_t_7, (__pyx_v_x0 + __pyx_v_r), (__pyx_v_x1 - __pyx_v_r), __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 197, __pyx_L1_error)
+    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), __pyx_t_6, __pyx_t_7, (__pyx_v_x0 + __pyx_v_r), (__pyx_v_x1 - __pyx_v_r), __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 293, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":201
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":297
  *             x0+r, x1-r, rcol, gcol, bcol, acol)
  *         _fill(arr, y0+r, y1-r, # Left
  *             clip(x0, cLeft, cRight), clip(x0 + t, cLeft, cRight),             # <<<<<<<<<<<<<<
  *             rcol, gcol, bcol, acol)
  *         _fill(arr, y0+r, y1-r, # Right
 */
-    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x0, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 201, __pyx_L1_error)
-    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_x0 + __pyx_v_t), __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 201, __pyx_L1_error)
+    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x0, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 297, __pyx_L1_error)
+    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_x0 + __pyx_v_t), __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 297, __pyx_L1_error)
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":200
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":296
  *             clip(y1 - t, cTop, cBot), clip(y1, cTop, cBot),
  *             x0+r, x1-r, rcol, gcol, bcol, acol)
  *         _fill(arr, y0+r, y1-r, # Left             # <<<<<<<<<<<<<<
  *             clip(x0, cLeft, cRight), clip(x0 + t, cLeft, cRight),
  *             rcol, gcol, bcol, acol)
 */
-    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), (__pyx_v_y0 + __pyx_v_r), (__pyx_v_y1 - __pyx_v_r), __pyx_t_7, __pyx_t_6, __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 200, __pyx_L1_error)
+    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), (__pyx_v_y0 + __pyx_v_r), (__pyx_v_y1 - __pyx_v_r), __pyx_t_7, __pyx_t_6, __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 296, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":204
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":300
  *             rcol, gcol, bcol, acol)
  *         _fill(arr, y0+r, y1-r, # Right
  *             clip(x1 - t, cLeft, cRight), clip(x1, cLeft, cRight),             # <<<<<<<<<<<<<<
  *             rcol, gcol, bcol, acol)
  * 
 */
-    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_x1 - __pyx_v_t), __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
-    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x1, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_6 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip((__pyx_v_x1 - __pyx_v_t), __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_6 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 300, __pyx_L1_error)
+    __pyx_t_7 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_x1, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_7 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 300, __pyx_L1_error)
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":203
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":299
  *             clip(x0, cLeft, cRight), clip(x0 + t, cLeft, cRight),
  *             rcol, gcol, bcol, acol)
  *         _fill(arr, y0+r, y1-r, # Right             # <<<<<<<<<<<<<<
  *             clip(x1 - t, cLeft, cRight), clip(x1, cLeft, cRight),
  *             rcol, gcol, bcol, acol)
 */
-    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), (__pyx_v_y0 + __pyx_v_r), (__pyx_v_y1 - __pyx_v_r), __pyx_t_6, __pyx_t_7, __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 203, __pyx_L1_error)
+    __pyx_t_5 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init__fill(((PyArrayObject *)__pyx_v_arr), (__pyx_v_y0 + __pyx_v_r), (__pyx_v_y1 - __pyx_v_r), __pyx_t_6, __pyx_t_7, __pyx_v_rcol, __pyx_v_gcol, __pyx_v_bcol, __pyx_v_acol); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 299, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __pyx_L8:;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":210
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":306
  *     cdef long cx, cy, xs, xe, ys, ye
  *     cdef long dx, dy, d2
  *     if r > 1:             # <<<<<<<<<<<<<<
@@ -21189,7 +22070,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
   __pyx_t_2 = (__pyx_v_r > 1);
   if (__pyx_t_2) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":211
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":307
  *     cdef long dx, dy, d2
  *     if r > 1:
  *         outer = r*r             # <<<<<<<<<<<<<<
@@ -21198,7 +22079,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
     __pyx_v_outer = (__pyx_v_r * __pyx_v_r);
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":212
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":308
  *     if r > 1:
  *         outer = r*r
  *         if t > 0:             # <<<<<<<<<<<<<<
@@ -21208,7 +22089,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     __pyx_t_2 = (__pyx_v_t > 0);
     if (__pyx_t_2) {
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":213
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":309
  *         outer = r*r
  *         if t > 0:
  *             inner = r - t             # <<<<<<<<<<<<<<
@@ -21217,7 +22098,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
       __pyx_v_inner = (__pyx_v_r - __pyx_v_t);
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":214
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":310
  *         if t > 0:
  *             inner = r - t
  *             if inner < 0:             # <<<<<<<<<<<<<<
@@ -21227,7 +22108,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
       __pyx_t_2 = (__pyx_v_inner < 0);
       if (__pyx_t_2) {
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":215
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":311
  *             inner = r - t
  *             if inner < 0:
  *                 inner = 0             # <<<<<<<<<<<<<<
@@ -21236,7 +22117,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
         __pyx_v_inner = 0;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":214
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":310
  *         if t > 0:
  *             inner = r - t
  *             if inner < 0:             # <<<<<<<<<<<<<<
@@ -21246,7 +22127,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
         goto __pyx_L12;
       }
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":217
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":313
  *                 inner = 0
  *             else:
  *                 inner *= inner             # <<<<<<<<<<<<<<
@@ -21258,7 +22139,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
       }
       __pyx_L12:;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":212
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":308
  *     if r > 1:
  *         outer = r*r
  *         if t > 0:             # <<<<<<<<<<<<<<
@@ -21268,7 +22149,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
       goto __pyx_L11;
     }
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":219
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":315
  *                 inner *= inner
  *         else:
  *             inner = 0             # <<<<<<<<<<<<<<
@@ -21280,7 +22161,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     }
     __pyx_L11:;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":221
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":317
  *             inner = 0
  * 
  *         off = 0 if t > 0 else 1             # <<<<<<<<<<<<<<
@@ -21295,39 +22176,39 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     }
     __pyx_v_off = __pyx_t_7;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":225
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":321
  *         # TL, TR, BL, BR
  *         corners = [
  *             (x0 + r - off, y0 + r - 1, x0, x0+r, y0, y0+r),             # <<<<<<<<<<<<<<
  *             (x1 - r,       y0 + r - 1, x1-r, x1, y0, y0+r),
  *             (x0 + r - off, y1 - r - 1 + off, x0, x0+r, y1-r, y1),
 */
-    __pyx_t_5 = __Pyx_PyLong_From_long(((__pyx_v_x0 + __pyx_v_r) - __pyx_v_off)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyLong_From_long(((__pyx_v_x0 + __pyx_v_r) - __pyx_v_off)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 321, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_8 = __Pyx_PyLong_From_long(((__pyx_v_y0 + __pyx_v_r) - 1)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyLong_From_long(((__pyx_v_y0 + __pyx_v_r) - 1)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 321, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_9 = __Pyx_PyLong_From_long(__pyx_v_x0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyLong_From_long(__pyx_v_x0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 321, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_10 = __Pyx_PyLong_From_long((__pyx_v_x0 + __pyx_v_r)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyLong_From_long((__pyx_v_x0 + __pyx_v_r)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 321, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_11 = __Pyx_PyLong_From_long(__pyx_v_y0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyLong_From_long(__pyx_v_y0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 321, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_12 = __Pyx_PyLong_From_long((__pyx_v_y0 + __pyx_v_r)); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyLong_From_long((__pyx_v_y0 + __pyx_v_r)); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 321, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_13 = PyTuple_New(6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_13 = PyTuple_New(6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 321, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_GIVEREF(__pyx_t_5);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_5) != (0)) __PYX_ERR(0, 225, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_5) != (0)) __PYX_ERR(0, 321, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_8);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_8) != (0)) __PYX_ERR(0, 225, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_8) != (0)) __PYX_ERR(0, 321, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_9);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 2, __pyx_t_9) != (0)) __PYX_ERR(0, 225, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 2, __pyx_t_9) != (0)) __PYX_ERR(0, 321, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_10);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 3, __pyx_t_10) != (0)) __PYX_ERR(0, 225, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 3, __pyx_t_10) != (0)) __PYX_ERR(0, 321, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_11);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 4, __pyx_t_11) != (0)) __PYX_ERR(0, 225, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 4, __pyx_t_11) != (0)) __PYX_ERR(0, 321, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_12);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 5, __pyx_t_12) != (0)) __PYX_ERR(0, 225, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_13, 5, __pyx_t_12) != (0)) __PYX_ERR(0, 321, __pyx_L1_error);
     __pyx_t_5 = 0;
     __pyx_t_8 = 0;
     __pyx_t_9 = 0;
@@ -21335,39 +22216,39 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     __pyx_t_11 = 0;
     __pyx_t_12 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":226
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":322
  *         corners = [
  *             (x0 + r - off, y0 + r - 1, x0, x0+r, y0, y0+r),
  *             (x1 - r,       y0 + r - 1, x1-r, x1, y0, y0+r),             # <<<<<<<<<<<<<<
  *             (x0 + r - off, y1 - r - 1 + off, x0, x0+r, y1-r, y1),
  *             (x1 - r,       y1 - r - 1 + off, x1-r, x1, y1-r, y1)
 */
-    __pyx_t_12 = __Pyx_PyLong_From_long((__pyx_v_x1 - __pyx_v_r)); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyLong_From_long((__pyx_v_x1 - __pyx_v_r)); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_11 = __Pyx_PyLong_From_long(((__pyx_v_y0 + __pyx_v_r) - 1)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyLong_From_long(((__pyx_v_y0 + __pyx_v_r) - 1)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_10 = __Pyx_PyLong_From_long((__pyx_v_x1 - __pyx_v_r)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyLong_From_long((__pyx_v_x1 - __pyx_v_r)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_9 = __Pyx_PyLong_From_long(__pyx_v_x1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyLong_From_long(__pyx_v_x1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_8 = __Pyx_PyLong_From_long(__pyx_v_y0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyLong_From_long(__pyx_v_y0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_5 = __Pyx_PyLong_From_long((__pyx_v_y0 + __pyx_v_r)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyLong_From_long((__pyx_v_y0 + __pyx_v_r)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_14 = PyTuple_New(6); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_14 = PyTuple_New(6); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_14);
     __Pyx_GIVEREF(__pyx_t_12);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_12) != (0)) __PYX_ERR(0, 226, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_12) != (0)) __PYX_ERR(0, 322, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_11);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 1, __pyx_t_11) != (0)) __PYX_ERR(0, 226, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 1, __pyx_t_11) != (0)) __PYX_ERR(0, 322, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_10);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 2, __pyx_t_10) != (0)) __PYX_ERR(0, 226, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 2, __pyx_t_10) != (0)) __PYX_ERR(0, 322, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_9);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 3, __pyx_t_9) != (0)) __PYX_ERR(0, 226, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 3, __pyx_t_9) != (0)) __PYX_ERR(0, 322, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_8);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 4, __pyx_t_8) != (0)) __PYX_ERR(0, 226, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 4, __pyx_t_8) != (0)) __PYX_ERR(0, 322, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_5);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 5, __pyx_t_5) != (0)) __PYX_ERR(0, 226, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_14, 5, __pyx_t_5) != (0)) __PYX_ERR(0, 322, __pyx_L1_error);
     __pyx_t_12 = 0;
     __pyx_t_11 = 0;
     __pyx_t_10 = 0;
@@ -21375,39 +22256,39 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     __pyx_t_8 = 0;
     __pyx_t_5 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":227
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":323
  *             (x0 + r - off, y0 + r - 1, x0, x0+r, y0, y0+r),
  *             (x1 - r,       y0 + r - 1, x1-r, x1, y0, y0+r),
  *             (x0 + r - off, y1 - r - 1 + off, x0, x0+r, y1-r, y1),             # <<<<<<<<<<<<<<
  *             (x1 - r,       y1 - r - 1 + off, x1-r, x1, y1-r, y1)
  *         ]
 */
-    __pyx_t_5 = __Pyx_PyLong_From_long(((__pyx_v_x0 + __pyx_v_r) - __pyx_v_off)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyLong_From_long(((__pyx_v_x0 + __pyx_v_r) - __pyx_v_off)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 323, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_8 = __Pyx_PyLong_From_long((((__pyx_v_y1 - __pyx_v_r) - 1) + __pyx_v_off)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyLong_From_long((((__pyx_v_y1 - __pyx_v_r) - 1) + __pyx_v_off)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 323, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_9 = __Pyx_PyLong_From_long(__pyx_v_x0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyLong_From_long(__pyx_v_x0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 323, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_10 = __Pyx_PyLong_From_long((__pyx_v_x0 + __pyx_v_r)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyLong_From_long((__pyx_v_x0 + __pyx_v_r)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 323, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_11 = __Pyx_PyLong_From_long((__pyx_v_y1 - __pyx_v_r)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyLong_From_long((__pyx_v_y1 - __pyx_v_r)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 323, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_12 = __Pyx_PyLong_From_long(__pyx_v_y1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyLong_From_long(__pyx_v_y1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 323, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_15 = PyTuple_New(6); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_15 = PyTuple_New(6); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 323, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_15);
     __Pyx_GIVEREF(__pyx_t_5);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 0, __pyx_t_5) != (0)) __PYX_ERR(0, 227, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 0, __pyx_t_5) != (0)) __PYX_ERR(0, 323, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_8);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 1, __pyx_t_8) != (0)) __PYX_ERR(0, 227, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 1, __pyx_t_8) != (0)) __PYX_ERR(0, 323, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_9);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 2, __pyx_t_9) != (0)) __PYX_ERR(0, 227, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 2, __pyx_t_9) != (0)) __PYX_ERR(0, 323, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_10);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 3, __pyx_t_10) != (0)) __PYX_ERR(0, 227, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 3, __pyx_t_10) != (0)) __PYX_ERR(0, 323, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_11);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 4, __pyx_t_11) != (0)) __PYX_ERR(0, 227, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 4, __pyx_t_11) != (0)) __PYX_ERR(0, 323, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_12);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 5, __pyx_t_12) != (0)) __PYX_ERR(0, 227, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 5, __pyx_t_12) != (0)) __PYX_ERR(0, 323, __pyx_L1_error);
     __pyx_t_5 = 0;
     __pyx_t_8 = 0;
     __pyx_t_9 = 0;
@@ -21415,39 +22296,39 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     __pyx_t_11 = 0;
     __pyx_t_12 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":228
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":324
  *             (x1 - r,       y0 + r - 1, x1-r, x1, y0, y0+r),
  *             (x0 + r - off, y1 - r - 1 + off, x0, x0+r, y1-r, y1),
  *             (x1 - r,       y1 - r - 1 + off, x1-r, x1, y1-r, y1)             # <<<<<<<<<<<<<<
  *         ]
  * 
 */
-    __pyx_t_12 = __Pyx_PyLong_From_long((__pyx_v_x1 - __pyx_v_r)); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyLong_From_long((__pyx_v_x1 - __pyx_v_r)); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 324, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_11 = __Pyx_PyLong_From_long((((__pyx_v_y1 - __pyx_v_r) - 1) + __pyx_v_off)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyLong_From_long((((__pyx_v_y1 - __pyx_v_r) - 1) + __pyx_v_off)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 324, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_10 = __Pyx_PyLong_From_long((__pyx_v_x1 - __pyx_v_r)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyLong_From_long((__pyx_v_x1 - __pyx_v_r)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 324, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_9 = __Pyx_PyLong_From_long(__pyx_v_x1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyLong_From_long(__pyx_v_x1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 324, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_8 = __Pyx_PyLong_From_long((__pyx_v_y1 - __pyx_v_r)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyLong_From_long((__pyx_v_y1 - __pyx_v_r)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 324, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_5 = __Pyx_PyLong_From_long(__pyx_v_y1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyLong_From_long(__pyx_v_y1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 324, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_16 = PyTuple_New(6); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_16 = PyTuple_New(6); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 324, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_16);
     __Pyx_GIVEREF(__pyx_t_12);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 0, __pyx_t_12) != (0)) __PYX_ERR(0, 228, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 0, __pyx_t_12) != (0)) __PYX_ERR(0, 324, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_11);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 1, __pyx_t_11) != (0)) __PYX_ERR(0, 228, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 1, __pyx_t_11) != (0)) __PYX_ERR(0, 324, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_10);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 2, __pyx_t_10) != (0)) __PYX_ERR(0, 228, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 2, __pyx_t_10) != (0)) __PYX_ERR(0, 324, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_9);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 3, __pyx_t_9) != (0)) __PYX_ERR(0, 228, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 3, __pyx_t_9) != (0)) __PYX_ERR(0, 324, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_8);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 4, __pyx_t_8) != (0)) __PYX_ERR(0, 228, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 4, __pyx_t_8) != (0)) __PYX_ERR(0, 324, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_5);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 5, __pyx_t_5) != (0)) __PYX_ERR(0, 228, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_16, 5, __pyx_t_5) != (0)) __PYX_ERR(0, 324, __pyx_L1_error);
     __pyx_t_12 = 0;
     __pyx_t_11 = 0;
     __pyx_t_10 = 0;
@@ -21455,23 +22336,23 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     __pyx_t_8 = 0;
     __pyx_t_5 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":224
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":320
  * 
  *         # TL, TR, BL, BR
  *         corners = [             # <<<<<<<<<<<<<<
  *             (x0 + r - off, y0 + r - 1, x0, x0+r, y0, y0+r),
  *             (x1 - r,       y0 + r - 1, x1-r, x1, y0, y0+r),
 */
-    __pyx_t_5 = PyList_New(4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 224, __pyx_L1_error)
+    __pyx_t_5 = PyList_New(4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 320, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_GIVEREF(__pyx_t_13);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 0, __pyx_t_13) != (0)) __PYX_ERR(0, 224, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 0, __pyx_t_13) != (0)) __PYX_ERR(0, 320, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_14);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 1, __pyx_t_14) != (0)) __PYX_ERR(0, 224, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 1, __pyx_t_14) != (0)) __PYX_ERR(0, 320, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_15);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 2, __pyx_t_15) != (0)) __PYX_ERR(0, 224, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 2, __pyx_t_15) != (0)) __PYX_ERR(0, 320, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_16);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 3, __pyx_t_16) != (0)) __PYX_ERR(0, 224, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 3, __pyx_t_16) != (0)) __PYX_ERR(0, 320, __pyx_L1_error);
     __pyx_t_13 = 0;
     __pyx_t_14 = 0;
     __pyx_t_15 = 0;
@@ -21479,7 +22360,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     __pyx_v_corners = ((PyObject*)__pyx_t_5);
     __pyx_t_5 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":231
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":327
  *         ]
  * 
  *         for cx, cy, xs, xe, ys, ye in corners:             # <<<<<<<<<<<<<<
@@ -21492,13 +22373,13 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
       {
         Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_5);
         #if !CYTHON_ASSUME_SAFE_SIZE
-        if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 231, __pyx_L1_error)
+        if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 327, __pyx_L1_error)
         #endif
         if (__pyx_t_17 >= __pyx_temp) break;
       }
       __pyx_t_16 = __Pyx_PyList_GetItemRefFast(__pyx_t_5, __pyx_t_17, __Pyx_ReferenceSharing_OwnStrongReference);
       ++__pyx_t_17;
-      if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 231, __pyx_L1_error)
+      if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 327, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_16);
       if ((likely(PyTuple_CheckExact(__pyx_t_16))) || (PyList_CheckExact(__pyx_t_16))) {
         PyObject* sequence = __pyx_t_16;
@@ -21506,7 +22387,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
         if (unlikely(size != 6)) {
           if (size > 6) __Pyx_RaiseTooManyValuesError(6);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          __PYX_ERR(0, 231, __pyx_L1_error)
+          __PYX_ERR(0, 327, __pyx_L1_error)
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
         if (likely(PyTuple_CheckExact(sequence))) {
@@ -21524,22 +22405,22 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
           __Pyx_INCREF(__pyx_t_10);
         } else {
           __pyx_t_15 = __Pyx_PyList_GetItemRefFast(sequence, 0, __Pyx_ReferenceSharing_SharedReference);
-          if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 231, __pyx_L1_error)
+          if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_XGOTREF(__pyx_t_15);
           __pyx_t_14 = __Pyx_PyList_GetItemRefFast(sequence, 1, __Pyx_ReferenceSharing_SharedReference);
-          if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 231, __pyx_L1_error)
+          if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_XGOTREF(__pyx_t_14);
           __pyx_t_13 = __Pyx_PyList_GetItemRefFast(sequence, 2, __Pyx_ReferenceSharing_SharedReference);
-          if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 231, __pyx_L1_error)
+          if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_XGOTREF(__pyx_t_13);
           __pyx_t_8 = __Pyx_PyList_GetItemRefFast(sequence, 3, __Pyx_ReferenceSharing_SharedReference);
-          if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 231, __pyx_L1_error)
+          if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_XGOTREF(__pyx_t_8);
           __pyx_t_9 = __Pyx_PyList_GetItemRefFast(sequence, 4, __Pyx_ReferenceSharing_SharedReference);
-          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 231, __pyx_L1_error)
+          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_XGOTREF(__pyx_t_9);
           __pyx_t_10 = __Pyx_PyList_GetItemRefFast(sequence, 5, __Pyx_ReferenceSharing_SharedReference);
-          if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 231, __pyx_L1_error)
+          if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_XGOTREF(__pyx_t_10);
         }
         #else
@@ -21547,7 +22428,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
           Py_ssize_t i;
           PyObject** temps[6] = {&__pyx_t_15,&__pyx_t_14,&__pyx_t_13,&__pyx_t_8,&__pyx_t_9,&__pyx_t_10};
           for (i=0; i < 6; i++) {
-            PyObject* item = __Pyx_PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 231, __pyx_L1_error)
+            PyObject* item = __Pyx_PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 327, __pyx_L1_error)
             __Pyx_GOTREF(item);
             *(temps[i]) = item;
           }
@@ -21557,7 +22438,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
       } else {
         Py_ssize_t index = -1;
         PyObject** temps[6] = {&__pyx_t_15,&__pyx_t_14,&__pyx_t_13,&__pyx_t_8,&__pyx_t_9,&__pyx_t_10};
-        __pyx_t_11 = PyObject_GetIter(__pyx_t_16); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 231, __pyx_L1_error)
+        __pyx_t_11 = PyObject_GetIter(__pyx_t_16); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 327, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
         __pyx_t_18 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_11);
@@ -21566,7 +22447,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
           __Pyx_GOTREF(item);
           *(temps[index]) = item;
         }
-        if (__Pyx_IternextUnpackEndCheck(__pyx_t_18(__pyx_t_11), 6) < (0)) __PYX_ERR(0, 231, __pyx_L1_error)
+        if (__Pyx_IternextUnpackEndCheck(__pyx_t_18(__pyx_t_11), 6) < (0)) __PYX_ERR(0, 327, __pyx_L1_error)
         __pyx_t_18 = NULL;
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         goto __pyx_L16_unpacking_done;
@@ -21574,20 +22455,20 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __pyx_t_18 = NULL;
         if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-        __PYX_ERR(0, 231, __pyx_L1_error)
+        __PYX_ERR(0, 327, __pyx_L1_error)
         __pyx_L16_unpacking_done:;
       }
-      __pyx_t_7 = __Pyx_PyLong_As_long(__pyx_t_15); if (unlikely((__pyx_t_7 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 231, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyLong_As_long(__pyx_t_15); if (unlikely((__pyx_t_7 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 327, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-      __pyx_t_6 = __Pyx_PyLong_As_long(__pyx_t_14); if (unlikely((__pyx_t_6 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 231, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyLong_As_long(__pyx_t_14); if (unlikely((__pyx_t_6 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 327, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      __pyx_t_4 = __Pyx_PyLong_As_long(__pyx_t_13); if (unlikely((__pyx_t_4 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 231, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyLong_As_long(__pyx_t_13); if (unlikely((__pyx_t_4 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 327, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_8); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 231, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_8); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 327, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_19 = __Pyx_PyLong_As_long(__pyx_t_9); if (unlikely((__pyx_t_19 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 231, __pyx_L1_error)
+      __pyx_t_19 = __Pyx_PyLong_As_long(__pyx_t_9); if (unlikely((__pyx_t_19 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 327, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_20 = __Pyx_PyLong_As_long(__pyx_t_10); if (unlikely((__pyx_t_20 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 231, __pyx_L1_error)
+      __pyx_t_20 = __Pyx_PyLong_As_long(__pyx_t_10); if (unlikely((__pyx_t_20 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 327, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       __pyx_v_cx = __pyx_t_7;
       __pyx_v_cy = __pyx_t_6;
@@ -21596,47 +22477,47 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
       __pyx_v_ys = __pyx_t_19;
       __pyx_v_ye = __pyx_t_20;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":232
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":328
  * 
  *         for cx, cy, xs, xe, ys, ye in corners:
  *             xs = clip(xs, cLeft, cRight)             # <<<<<<<<<<<<<<
  *             xe = clip(xe, cLeft, cRight)
  *             ys = clip(ys, cTop, cBot)
 */
-      __pyx_t_20 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_xs, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_20 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 232, __pyx_L1_error)
+      __pyx_t_20 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_xs, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_20 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 328, __pyx_L1_error)
       __pyx_v_xs = __pyx_t_20;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":233
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":329
  *         for cx, cy, xs, xe, ys, ye in corners:
  *             xs = clip(xs, cLeft, cRight)
  *             xe = clip(xe, cLeft, cRight)             # <<<<<<<<<<<<<<
  *             ys = clip(ys, cTop, cBot)
  *             ye = clip(ye, cTop, cBot)
 */
-      __pyx_t_20 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_xe, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_20 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 233, __pyx_L1_error)
+      __pyx_t_20 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_xe, __pyx_v_cLeft, __pyx_v_cRight); if (unlikely(__pyx_t_20 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 329, __pyx_L1_error)
       __pyx_v_xe = __pyx_t_20;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":234
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":330
  *             xs = clip(xs, cLeft, cRight)
  *             xe = clip(xe, cLeft, cRight)
  *             ys = clip(ys, cTop, cBot)             # <<<<<<<<<<<<<<
  *             ye = clip(ye, cTop, cBot)
  * 
 */
-      __pyx_t_20 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_ys, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_20 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 234, __pyx_L1_error)
+      __pyx_t_20 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_ys, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_20 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 330, __pyx_L1_error)
       __pyx_v_ys = __pyx_t_20;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":235
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":331
  *             xe = clip(xe, cLeft, cRight)
  *             ys = clip(ys, cTop, cBot)
  *             ye = clip(ye, cTop, cBot)             # <<<<<<<<<<<<<<
  * 
  *             for y in range(ys, ye):
 */
-      __pyx_t_20 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_ye, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_20 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 235, __pyx_L1_error)
+      __pyx_t_20 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip(__pyx_v_ye, __pyx_v_cTop, __pyx_v_cBot); if (unlikely(__pyx_t_20 == ((long)-1L) && PyErr_Occurred())) __PYX_ERR(0, 331, __pyx_L1_error)
       __pyx_v_ye = __pyx_t_20;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":237
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":333
  *             ye = clip(ye, cTop, cBot)
  * 
  *             for y in range(ys, ye):             # <<<<<<<<<<<<<<
@@ -21648,7 +22529,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
       for (__pyx_t_3 = __pyx_v_ys; __pyx_t_3 < __pyx_t_19; __pyx_t_3+=1) {
         __pyx_v_y = __pyx_t_3;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":238
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":334
  * 
  *             for y in range(ys, ye):
  *                 if y < cTop or y > cBot:             # <<<<<<<<<<<<<<
@@ -21666,7 +22547,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
         __pyx_L20_bool_binop_done:;
         if (__pyx_t_2) {
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":239
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":335
  *             for y in range(ys, ye):
  *                 if y < cTop or y > cBot:
  *                     continue             # <<<<<<<<<<<<<<
@@ -21675,7 +22556,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
           goto __pyx_L17_continue;
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":238
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":334
  * 
  *             for y in range(ys, ye):
  *                 if y < cTop or y > cBot:             # <<<<<<<<<<<<<<
@@ -21684,7 +22565,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
         }
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":240
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":336
  *                 if y < cTop or y > cBot:
  *                     continue
  *                 dy = y - cy             # <<<<<<<<<<<<<<
@@ -21693,7 +22574,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
         __pyx_v_dy = (__pyx_v_y - __pyx_v_cy);
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":241
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":337
  *                     continue
  *                 dy = y - cy
  *                 for x in range(xs, xe):             # <<<<<<<<<<<<<<
@@ -21705,7 +22586,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
         for (__pyx_t_7 = __pyx_v_xs; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
           __pyx_v_x = __pyx_t_7;
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":242
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":338
  *                 dy = y - cy
  *                 for x in range(xs, xe):
  *                     if x < cLeft or x > cRight:             # <<<<<<<<<<<<<<
@@ -21723,7 +22604,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
           __pyx_L25_bool_binop_done:;
           if (__pyx_t_2) {
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":243
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":339
  *                 for x in range(xs, xe):
  *                     if x < cLeft or x > cRight:
  *                         continue             # <<<<<<<<<<<<<<
@@ -21732,7 +22613,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
             goto __pyx_L22_continue;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":242
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":338
  *                 dy = y - cy
  *                 for x in range(xs, xe):
  *                     if x < cLeft or x > cRight:             # <<<<<<<<<<<<<<
@@ -21741,7 +22622,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
           }
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":244
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":340
  *                     if x < cLeft or x > cRight:
  *                         continue
  *                     dx = x - cx             # <<<<<<<<<<<<<<
@@ -21750,7 +22631,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
           __pyx_v_dx = (__pyx_v_x - __pyx_v_cx);
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":245
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":341
  *                         continue
  *                     dx = x - cx
  *                     d2 = dx*dx + dy*dy             # <<<<<<<<<<<<<<
@@ -21759,7 +22640,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
           __pyx_v_d2 = ((__pyx_v_dx * __pyx_v_dx) + (__pyx_v_dy * __pyx_v_dy));
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":246
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":342
  *                     dx = x - cx
  *                     d2 = dx*dx + dy*dy
  *                     if inner <= d2 < outer:             # <<<<<<<<<<<<<<
@@ -21772,7 +22653,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
           }
           if (__pyx_t_2) {
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":247
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":343
  *                     d2 = dx*dx + dy*dy
  *                     if inner <= d2 < outer:
  *                         arr[y, x, 0] = rcol             # <<<<<<<<<<<<<<
@@ -21784,7 +22665,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
             __pyx_t_23 = 0;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_23, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_rcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":248
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":344
  *                     if inner <= d2 < outer:
  *                         arr[y, x, 0] = rcol
  *                         arr[y, x, 1] = gcol             # <<<<<<<<<<<<<<
@@ -21796,7 +22677,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
             __pyx_t_1 = 1;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_gcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":249
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":345
  *                         arr[y, x, 0] = rcol
  *                         arr[y, x, 1] = gcol
  *                         arr[y, x, 2] = bcol             # <<<<<<<<<<<<<<
@@ -21808,7 +22689,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
             __pyx_t_23 = 2;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_23, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_bcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":250
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":346
  *                         arr[y, x, 1] = gcol
  *                         arr[y, x, 2] = bcol
  *                         arr[y, x, 3] = acol             # <<<<<<<<<<<<<<
@@ -21820,7 +22701,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
             __pyx_t_1 = 3;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_acol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":246
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":342
  *                     dx = x - cx
  *                     d2 = dx*dx + dy*dy
  *                     if inner <= d2 < outer:             # <<<<<<<<<<<<<<
@@ -21833,7 +22714,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
         __pyx_L17_continue:;
       }
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":231
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":327
  *         ]
  * 
  *         for cx, cy, xs, xe, ys, ye in corners:             # <<<<<<<<<<<<<<
@@ -21843,7 +22724,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":210
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":306
  *     cdef long cx, cy, xs, xe, ys, ye
  *     cdef long dx, dy, d2
  *     if r > 1:             # <<<<<<<<<<<<<<
@@ -21852,7 +22733,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(PyAr
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":131
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":227
  *             cell += 4
  * 
  * cpdef drawRect(             # <<<<<<<<<<<<<<
@@ -21938,74 +22819,74 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_arr,&__pyx_mstate_global->__pyx_n_u_pos,&__pyx_mstate_global->__pyx_n_u_sze,&__pyx_mstate_global->__pyx_n_u_thickness,&__pyx_mstate_global->__pyx_n_u_round,&__pyx_mstate_global->__pyx_n_u_col,&__pyx_mstate_global->__pyx_n_u_crop,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 131, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 227, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  7:
         values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 131, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 227, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 131, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 227, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 131, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 227, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 131, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 227, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 131, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 227, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 131, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 227, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 131, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 227, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "drawRect", 0) < (0)) __PYX_ERR(0, 131, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "drawRect", 0) < (0)) __PYX_ERR(0, 227, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 7; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("drawRect", 1, 7, 7, i); __PYX_ERR(0, 131, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("drawRect", 1, 7, 7, i); __PYX_ERR(0, 227, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 7)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 131, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 227, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 131, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 227, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 131, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 227, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 131, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 227, __pyx_L3_error)
       values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 131, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 227, __pyx_L3_error)
       values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 131, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 227, __pyx_L3_error)
       values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 131, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 227, __pyx_L3_error)
     }
     __pyx_v_arr = ((PyArrayObject *)values[0]);
-    __pyx_v_pos = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pos.memview)) __PYX_ERR(0, 133, __pyx_L3_error)
-    __pyx_v_sze = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_sze.memview)) __PYX_ERR(0, 134, __pyx_L3_error)
-    __pyx_v_thickness = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_thickness == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 135, __pyx_L3_error)
-    __pyx_v_round = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_round == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 136, __pyx_L3_error)
+    __pyx_v_pos = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pos.memview)) __PYX_ERR(0, 229, __pyx_L3_error)
+    __pyx_v_sze = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_sze.memview)) __PYX_ERR(0, 230, __pyx_L3_error)
+    __pyx_v_thickness = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_thickness == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 231, __pyx_L3_error)
+    __pyx_v_round = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_round == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 232, __pyx_L3_error)
     __pyx_v_col = ((PyArrayObject *)values[5]);
     __pyx_v_crop = values[6];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("drawRect", 1, 7, 7, __pyx_nargs); __PYX_ERR(0, 131, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("drawRect", 1, 7, 7, __pyx_nargs); __PYX_ERR(0, 227, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -22018,8 +22899,8 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 132, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 137, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 228, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 233, __pyx_L1_error)
   __pyx_r = __pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_4drawRect(__pyx_self, __pyx_v_arr, __pyx_v_pos, __pyx_v_sze, __pyx_v_thickness, __pyx_v_round, __pyx_v_col, __pyx_v_crop);
 
   /* function exit code */
@@ -22063,18 +22944,18 @@ static PyObject *__pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_4drawRect(CY
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 131, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 227, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 131, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 227, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_pos.memview)) { __Pyx_RaiseUnboundLocalError("pos"); __PYX_ERR(0, 131, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_sze.memview)) { __Pyx_RaiseUnboundLocalError("sze"); __PYX_ERR(0, 131, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(__pyx_v_arr, __pyx_v_pos, __pyx_v_sze, __pyx_v_thickness, __pyx_v_round, __pyx_v_col, __pyx_v_crop, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+  if (unlikely(!__pyx_v_pos.memview)) { __Pyx_RaiseUnboundLocalError("pos"); __PYX_ERR(0, 227, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_sze.memview)) { __Pyx_RaiseUnboundLocalError("sze"); __PYX_ERR(0, 227, __pyx_L1_error) }
+  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawRect(__pyx_v_arr, __pyx_v_pos, __pyx_v_sze, __pyx_v_thickness, __pyx_v_round, __pyx_v_col, __pyx_v_crop, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -22102,7 +22983,7 @@ static PyObject *__pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_4drawRect(CY
   return __pyx_r;
 }
 
-/* "BlazeSudio/graphicsCore/_calcs/init.pyx":253
+/* "BlazeSudio/graphicsCore/_calcs/init.pyx":349
  * 
  * 
  * cpdef drawCirc(             # <<<<<<<<<<<<<<
@@ -22168,16 +23049,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 253, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 349, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 253, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 349, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":260
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":356
  *         cnp.ndarray[cnp.uint8_t, ndim=1] col,
  *         crop):
  *     cdef long r = <long>radius             # <<<<<<<<<<<<<<
@@ -22186,7 +23067,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
 */
   __pyx_v_r = ((long)__pyx_v_radius);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":261
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":357
  *         crop):
  *     cdef long r = <long>radius
  *     cdef long x = <long>pos[0]             # <<<<<<<<<<<<<<
@@ -22196,7 +23077,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   __pyx_t_1 = 0;
   __pyx_v_x = ((long)(*((double *) ( /* dim=0 */ (__pyx_v_pos.data + __pyx_t_1 * __pyx_v_pos.strides[0]) ))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":262
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":358
  *     cdef long r = <long>radius
  *     cdef long x = <long>pos[0]
  *     cdef long y = <long>pos[1]             # <<<<<<<<<<<<<<
@@ -22206,16 +23087,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   __pyx_t_1 = 1;
   __pyx_v_y = ((long)(*((double *) ( /* dim=0 */ (__pyx_v_pos.data + __pyx_t_1 * __pyx_v_pos.strides[0]) ))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":264
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":360
  *     cdef long y = <long>pos[1]
  * 
  *     cdef long y0 = max(y - r - 1, <long>crop[1])             # <<<<<<<<<<<<<<
  *     cdef long y1 = min(y + r + 1, <long>crop[3])
  *     cdef long x0 = max(x - r - 1, <long>crop[0])
 */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_crop, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 264, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_crop, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 360, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_2); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 264, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_2); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 360, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_4 = ((long)__pyx_t_3);
   __pyx_t_3 = ((__pyx_v_y - __pyx_v_r) - 1);
@@ -22227,16 +23108,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   }
   __pyx_v_y0 = __pyx_t_5;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":265
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":361
  * 
  *     cdef long y0 = max(y - r - 1, <long>crop[1])
  *     cdef long y1 = min(y + r + 1, <long>crop[3])             # <<<<<<<<<<<<<<
  *     cdef long x0 = max(x - r - 1, <long>crop[0])
  *     cdef long x1 = min(x + r + 1, <long>crop[2])
 */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_crop, 3, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 265, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_crop, 3, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 361, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_PyLong_As_long(__pyx_t_2); if (unlikely((__pyx_t_5 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 265, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_As_long(__pyx_t_2); if (unlikely((__pyx_t_5 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 361, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_4 = ((long)__pyx_t_5);
   __pyx_t_5 = ((__pyx_v_y + __pyx_v_r) + 1);
@@ -22248,16 +23129,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   }
   __pyx_v_y1 = __pyx_t_3;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":266
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":362
  *     cdef long y0 = max(y - r - 1, <long>crop[1])
  *     cdef long y1 = min(y + r + 1, <long>crop[3])
  *     cdef long x0 = max(x - r - 1, <long>crop[0])             # <<<<<<<<<<<<<<
  *     cdef long x1 = min(x + r + 1, <long>crop[2])
  *     if y0 >= y1 or x0 >= x1:
 */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_crop, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 266, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_crop, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 362, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_2); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 266, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_2); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 362, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_4 = ((long)__pyx_t_3);
   __pyx_t_3 = ((__pyx_v_x - __pyx_v_r) - 1);
@@ -22269,16 +23150,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   }
   __pyx_v_x0 = __pyx_t_5;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":267
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":363
  *     cdef long y1 = min(y + r + 1, <long>crop[3])
  *     cdef long x0 = max(x - r - 1, <long>crop[0])
  *     cdef long x1 = min(x + r + 1, <long>crop[2])             # <<<<<<<<<<<<<<
  *     if y0 >= y1 or x0 >= x1:
  *         return
 */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_crop, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 267, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_crop, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 363, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_PyLong_As_long(__pyx_t_2); if (unlikely((__pyx_t_5 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 267, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_As_long(__pyx_t_2); if (unlikely((__pyx_t_5 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 363, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_4 = ((long)__pyx_t_5);
   __pyx_t_5 = ((__pyx_v_x + __pyx_v_r) + 1);
@@ -22290,7 +23171,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   }
   __pyx_v_x1 = __pyx_t_3;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":268
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":364
  *     cdef long x0 = max(x - r - 1, <long>crop[0])
  *     cdef long x1 = min(x + r + 1, <long>crop[2])
  *     if y0 >= y1 or x0 >= x1:             # <<<<<<<<<<<<<<
@@ -22308,7 +23189,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_6) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":269
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":365
  *     cdef long x1 = min(x + r + 1, <long>crop[2])
  *     if y0 >= y1 or x0 >= x1:
  *         return             # <<<<<<<<<<<<<<
@@ -22319,7 +23200,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":268
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":364
  *     cdef long x0 = max(x - r - 1, <long>crop[0])
  *     cdef long x1 = min(x + r + 1, <long>crop[2])
  *     if y0 >= y1 or x0 >= x1:             # <<<<<<<<<<<<<<
@@ -22328,7 +23209,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":271
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":367
  *         return
  * 
  *     cdef long outrad2 = r * r             # <<<<<<<<<<<<<<
@@ -22337,7 +23218,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
 */
   __pyx_v_outrad2 = (__pyx_v_r * __pyx_v_r);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":273
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":369
  *     cdef long outrad2 = r * r
  *     cdef long innrad2
  *     if thickness == 0:             # <<<<<<<<<<<<<<
@@ -22347,7 +23228,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   __pyx_t_6 = (__pyx_v_thickness == 0.0);
   if (__pyx_t_6) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":274
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":370
  *     cdef long innrad2
  *     if thickness == 0:
  *         innrad2 = 0             # <<<<<<<<<<<<<<
@@ -22356,7 +23237,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
 */
     __pyx_v_innrad2 = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":273
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":369
  *     cdef long outrad2 = r * r
  *     cdef long innrad2
  *     if thickness == 0:             # <<<<<<<<<<<<<<
@@ -22366,7 +23247,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
     goto __pyx_L6;
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":276
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":372
  *         innrad2 = 0
  *     else:
  *         innrad2 = max(r - <long>thickness, 0)             # <<<<<<<<<<<<<<
@@ -22384,7 +23265,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
     }
     __pyx_v_innrad2 = __pyx_t_5;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":277
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":373
  *     else:
  *         innrad2 = max(r - <long>thickness, 0)
  *         innrad2 *= innrad2             # <<<<<<<<<<<<<<
@@ -22395,7 +23276,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   }
   __pyx_L6:;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":279
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":375
  *         innrad2 *= innrad2
  * 
  *     cdef unsigned char rcol = col[0]             # <<<<<<<<<<<<<<
@@ -22405,7 +23286,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   __pyx_t_1 = 0;
   __pyx_v_rcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":280
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":376
  * 
  *     cdef unsigned char rcol = col[0]
  *     cdef unsigned char gcol = col[1]             # <<<<<<<<<<<<<<
@@ -22415,7 +23296,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   __pyx_t_1 = 1;
   __pyx_v_gcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":281
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":377
  *     cdef unsigned char rcol = col[0]
  *     cdef unsigned char gcol = col[1]
  *     cdef unsigned char bcol = col[2]             # <<<<<<<<<<<<<<
@@ -22425,7 +23306,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   __pyx_t_1 = 2;
   __pyx_v_bcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":282
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":378
  *     cdef unsigned char gcol = col[1]
  *     cdef unsigned char bcol = col[2]
  *     cdef unsigned char acol = col[3]             # <<<<<<<<<<<<<<
@@ -22435,7 +23316,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   __pyx_t_1 = 3;
   __pyx_v_acol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":287
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":383
  *     cdef long dx, dy
  *     cdef long dist_sq
  *     for yy in range(y0, y1):             # <<<<<<<<<<<<<<
@@ -22447,7 +23328,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
   for (__pyx_t_4 = __pyx_v_y0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
     __pyx_v_yy = __pyx_t_4;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":288
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":384
  *     cdef long dist_sq
  *     for yy in range(y0, y1):
  *         dy = yy - y             # <<<<<<<<<<<<<<
@@ -22456,7 +23337,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
 */
     __pyx_v_dy = (__pyx_v_yy - __pyx_v_y);
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":289
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":385
  *     for yy in range(y0, y1):
  *         dy = yy - y
  *         for xx in range(x0, x1):             # <<<<<<<<<<<<<<
@@ -22468,7 +23349,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
     for (__pyx_t_10 = __pyx_v_x0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
       __pyx_v_xx = __pyx_t_10;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":290
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":386
  *         dy = yy - y
  *         for xx in range(x0, x1):
  *             dx = xx - x             # <<<<<<<<<<<<<<
@@ -22477,7 +23358,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
 */
       __pyx_v_dx = (__pyx_v_xx - __pyx_v_x);
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":291
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":387
  *         for xx in range(x0, x1):
  *             dx = xx - x
  *             dist_sq = dx*dx + dy*dy             # <<<<<<<<<<<<<<
@@ -22486,7 +23367,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
 */
       __pyx_v_dist_sq = ((__pyx_v_dx * __pyx_v_dx) + (__pyx_v_dy * __pyx_v_dy));
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":293
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":389
  *             dist_sq = dx*dx + dy*dy
  * 
  *             if innrad2 <= dist_sq <= outrad2:             # <<<<<<<<<<<<<<
@@ -22499,7 +23380,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
       }
       if (__pyx_t_6) {
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":294
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":390
  * 
  *             if innrad2 <= dist_sq <= outrad2:
  *                 arr[yy, xx, 0] = rcol             # <<<<<<<<<<<<<<
@@ -22511,7 +23392,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
         __pyx_t_12 = 0;
         *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_rcol;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":295
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":391
  *             if innrad2 <= dist_sq <= outrad2:
  *                 arr[yy, xx, 0] = rcol
  *                 arr[yy, xx, 1] = gcol             # <<<<<<<<<<<<<<
@@ -22523,7 +23404,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
         __pyx_t_1 = 1;
         *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_gcol;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":296
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":392
  *                 arr[yy, xx, 0] = rcol
  *                 arr[yy, xx, 1] = gcol
  *                 arr[yy, xx, 2] = bcol             # <<<<<<<<<<<<<<
@@ -22535,7 +23416,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
         __pyx_t_12 = 2;
         *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_bcol;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":297
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":393
  *                 arr[yy, xx, 1] = gcol
  *                 arr[yy, xx, 2] = bcol
  *                 arr[yy, xx, 3] = acol             # <<<<<<<<<<<<<<
@@ -22547,7 +23428,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
         __pyx_t_1 = 3;
         *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_acol;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":293
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":389
  *             dist_sq = dx*dx + dy*dy
  * 
  *             if innrad2 <= dist_sq <= outrad2:             # <<<<<<<<<<<<<<
@@ -22558,7 +23439,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(PyAr
     }
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":253
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":349
  * 
  * 
  * cpdef drawCirc(             # <<<<<<<<<<<<<<
@@ -22633,67 +23514,67 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_arr,&__pyx_mstate_global->__pyx_n_u_pos,&__pyx_mstate_global->__pyx_n_u_radius,&__pyx_mstate_global->__pyx_n_u_thickness,&__pyx_mstate_global->__pyx_n_u_col,&__pyx_mstate_global->__pyx_n_u_crop,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 253, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 349, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  6:
         values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 253, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 349, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 253, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 349, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 253, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 349, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 253, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 349, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 253, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 349, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 253, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 349, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "drawCirc", 0) < (0)) __PYX_ERR(0, 253, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "drawCirc", 0) < (0)) __PYX_ERR(0, 349, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 6; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("drawCirc", 1, 6, 6, i); __PYX_ERR(0, 253, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("drawCirc", 1, 6, 6, i); __PYX_ERR(0, 349, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 6)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 253, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 349, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 253, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 349, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 253, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 349, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 253, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 349, __pyx_L3_error)
       values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 253, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 349, __pyx_L3_error)
       values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 253, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 349, __pyx_L3_error)
     }
     __pyx_v_arr = ((PyArrayObject *)values[0]);
-    __pyx_v_pos = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pos.memview)) __PYX_ERR(0, 255, __pyx_L3_error)
-    __pyx_v_radius = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_radius == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 256, __pyx_L3_error)
-    __pyx_v_thickness = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_thickness == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 257, __pyx_L3_error)
+    __pyx_v_pos = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pos.memview)) __PYX_ERR(0, 351, __pyx_L3_error)
+    __pyx_v_radius = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_radius == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 352, __pyx_L3_error)
+    __pyx_v_thickness = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_thickness == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 353, __pyx_L3_error)
     __pyx_v_col = ((PyArrayObject *)values[4]);
     __pyx_v_crop = values[5];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("drawCirc", 1, 6, 6, __pyx_nargs); __PYX_ERR(0, 253, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("drawCirc", 1, 6, 6, __pyx_nargs); __PYX_ERR(0, 349, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -22705,8 +23586,8 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 254, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 258, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 350, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 354, __pyx_L1_error)
   __pyx_r = __pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_6drawCirc(__pyx_self, __pyx_v_arr, __pyx_v_pos, __pyx_v_radius, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop);
 
   /* function exit code */
@@ -22749,17 +23630,17 @@ static PyObject *__pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_6drawCirc(CY
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 253, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 349, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 253, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 349, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_pos.memview)) { __Pyx_RaiseUnboundLocalError("pos"); __PYX_ERR(0, 253, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(__pyx_v_arr, __pyx_v_pos, __pyx_v_radius, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 253, __pyx_L1_error)
+  if (unlikely(!__pyx_v_pos.memview)) { __Pyx_RaiseUnboundLocalError("pos"); __PYX_ERR(0, 349, __pyx_L1_error) }
+  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawCirc(__pyx_v_arr, __pyx_v_pos, __pyx_v_radius, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 349, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -22787,7 +23668,7 @@ static PyObject *__pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_6drawCirc(CY
   return __pyx_r;
 }
 
-/* "BlazeSudio/graphicsCore/_calcs/init.pyx":300
+/* "BlazeSudio/graphicsCore/_calcs/init.pyx":396
  * 
  * 
  * cpdef drawElipse(             # <<<<<<<<<<<<<<
@@ -22869,16 +23750,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 300, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 396, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 300, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 396, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":309
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":405
  *         cnp.ndarray[cnp.uint8_t, ndim=1] col,
  *         crop):
  *     cdef long xrad = <long>xradius             # <<<<<<<<<<<<<<
@@ -22887,7 +23768,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
   __pyx_v_xrad = ((long)__pyx_v_xradius);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":310
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":406
  *         crop):
  *     cdef long xrad = <long>xradius
  *     cdef long yrad = <long>yradius             # <<<<<<<<<<<<<<
@@ -22896,7 +23777,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
   __pyx_v_yrad = ((long)__pyx_v_yradius);
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":311
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":407
  *     cdef long xrad = <long>xradius
  *     cdef long yrad = <long>yradius
  *     cdef long x = <long>pos[0]             # <<<<<<<<<<<<<<
@@ -22906,7 +23787,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   __pyx_t_1 = 0;
   __pyx_v_x = ((long)(*((double *) ( /* dim=0 */ (__pyx_v_pos.data + __pyx_t_1 * __pyx_v_pos.strides[0]) ))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":312
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":408
  *     cdef long yrad = <long>yradius
  *     cdef long x = <long>pos[0]
  *     cdef long y = <long>pos[1]             # <<<<<<<<<<<<<<
@@ -22916,7 +23797,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   __pyx_t_1 = 1;
   __pyx_v_y = ((long)(*((double *) ( /* dim=0 */ (__pyx_v_pos.data + __pyx_t_1 * __pyx_v_pos.strides[0]) ))));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":315
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":411
  * 
  *     cdef long t
  *     if thickness >= min(xrad, yrad):             # <<<<<<<<<<<<<<
@@ -22934,7 +23815,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   __pyx_t_5 = (__pyx_v_thickness >= __pyx_t_4);
   if (__pyx_t_5) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":316
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":412
  *     cdef long t
  *     if thickness >= min(xrad, yrad):
  *         t = 0             # <<<<<<<<<<<<<<
@@ -22943,7 +23824,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
     __pyx_v_t = 0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":315
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":411
  * 
  *     cdef long t
  *     if thickness >= min(xrad, yrad):             # <<<<<<<<<<<<<<
@@ -22953,7 +23834,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
     goto __pyx_L3;
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":318
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":414
  *         t = 0
  *     else:
  *         t = <long>(thickness / 2)             # <<<<<<<<<<<<<<
@@ -22965,16 +23846,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   }
   __pyx_L3:;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":321
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":417
  * 
  *     # Bounding box
  *     cdef long x_min = max(x - xrad- 1 - t, <long>crop[0])             # <<<<<<<<<<<<<<
  *     cdef long x_max = min(x + xrad+ 1 + t, <long>crop[2])
  *     cdef long y_min = max(y - yrad- 1 - t, <long>crop[1])
 */
-  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_crop, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 321, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_crop, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 417, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_4 = __Pyx_PyLong_As_long(__pyx_t_6); if (unlikely((__pyx_t_4 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 321, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyLong_As_long(__pyx_t_6); if (unlikely((__pyx_t_4 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 417, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_2 = ((long)__pyx_t_4);
   __pyx_t_4 = (((__pyx_v_x - __pyx_v_xrad) - 1) - __pyx_v_t);
@@ -22986,16 +23867,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   }
   __pyx_v_x_min = __pyx_t_3;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":322
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":418
  *     # Bounding box
  *     cdef long x_min = max(x - xrad- 1 - t, <long>crop[0])
  *     cdef long x_max = min(x + xrad+ 1 + t, <long>crop[2])             # <<<<<<<<<<<<<<
  *     cdef long y_min = max(y - yrad- 1 - t, <long>crop[1])
  *     cdef long y_max = min(y + yrad+ 1 + t, <long>crop[3])
 */
-  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_crop, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_crop, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_6); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 322, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_6); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_2 = ((long)__pyx_t_3);
   __pyx_t_3 = (((__pyx_v_x + __pyx_v_xrad) + 1) + __pyx_v_t);
@@ -23007,16 +23888,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   }
   __pyx_v_x_max = __pyx_t_4;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":323
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":419
  *     cdef long x_min = max(x - xrad- 1 - t, <long>crop[0])
  *     cdef long x_max = min(x + xrad+ 1 + t, <long>crop[2])
  *     cdef long y_min = max(y - yrad- 1 - t, <long>crop[1])             # <<<<<<<<<<<<<<
  *     cdef long y_max = min(y + yrad+ 1 + t, <long>crop[3])
  *     if y_min >= y_max or x_min >= x_max:
 */
-  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_crop, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_crop, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 419, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_4 = __Pyx_PyLong_As_long(__pyx_t_6); if (unlikely((__pyx_t_4 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyLong_As_long(__pyx_t_6); if (unlikely((__pyx_t_4 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 419, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_2 = ((long)__pyx_t_4);
   __pyx_t_4 = (((__pyx_v_y - __pyx_v_yrad) - 1) - __pyx_v_t);
@@ -23028,16 +23909,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   }
   __pyx_v_y_min = __pyx_t_3;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":324
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":420
  *     cdef long x_max = min(x + xrad+ 1 + t, <long>crop[2])
  *     cdef long y_min = max(y - yrad- 1 - t, <long>crop[1])
  *     cdef long y_max = min(y + yrad+ 1 + t, <long>crop[3])             # <<<<<<<<<<<<<<
  *     if y_min >= y_max or x_min >= x_max:
  *         return
 */
-  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_crop, 3, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_crop, 3, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 420, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_6); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 324, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_As_long(__pyx_t_6); if (unlikely((__pyx_t_3 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 420, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_2 = ((long)__pyx_t_3);
   __pyx_t_3 = (((__pyx_v_y + __pyx_v_yrad) + 1) + __pyx_v_t);
@@ -23049,7 +23930,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   }
   __pyx_v_y_max = __pyx_t_4;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":325
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":421
  *     cdef long y_min = max(y - yrad- 1 - t, <long>crop[1])
  *     cdef long y_max = min(y + yrad+ 1 + t, <long>crop[3])
  *     if y_min >= y_max or x_min >= x_max:             # <<<<<<<<<<<<<<
@@ -23067,7 +23948,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   __pyx_L5_bool_binop_done:;
   if (__pyx_t_5) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":326
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":422
  *     cdef long y_max = min(y + yrad+ 1 + t, <long>crop[3])
  *     if y_min >= y_max or x_min >= x_max:
  *         return             # <<<<<<<<<<<<<<
@@ -23078,7 +23959,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":325
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":421
  *     cdef long y_min = max(y - yrad- 1 - t, <long>crop[1])
  *     cdef long y_max = min(y + yrad+ 1 + t, <long>crop[3])
  *     if y_min >= y_max or x_min >= x_max:             # <<<<<<<<<<<<<<
@@ -23087,7 +23968,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":329
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":425
  * 
  *     # Rotation
  *     cdef double cos_t = np.cos(rotation)             # <<<<<<<<<<<<<<
@@ -23095,12 +23976,12 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
  * 
 */
   __pyx_t_8 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 329, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 425, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_cos); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 329, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_cos); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 425, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_rotation); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 329, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_rotation); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 425, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __pyx_t_11 = 1;
   #if CYTHON_UNPACK_METHODS
@@ -23120,14 +24001,14 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 329, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 425, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
   }
-  __pyx_t_12 = __Pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 329, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 425, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_cos_t = __pyx_t_12;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":330
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":426
  *     # Rotation
  *     cdef double cos_t = np.cos(rotation)
  *     cdef double sin_t = np.sin(rotation)             # <<<<<<<<<<<<<<
@@ -23135,12 +24016,12 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
  *     cdef long xx, yy
 */
   __pyx_t_10 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 330, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 426, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_sin); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 330, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_sin); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 426, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_rotation); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 330, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_rotation); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 426, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __pyx_t_11 = 1;
   #if CYTHON_UNPACK_METHODS
@@ -23160,14 +24041,14 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 330, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 426, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
   }
-  __pyx_t_12 = __Pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 330, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 426, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_sin_t = __pyx_t_12;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":337
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":433
  *     cdef double v_outer, v_inner
  * 
  *     cdef unsigned char rcol = col[0]             # <<<<<<<<<<<<<<
@@ -23177,7 +24058,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   __pyx_t_1 = 0;
   __pyx_v_rcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":338
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":434
  * 
  *     cdef unsigned char rcol = col[0]
  *     cdef unsigned char gcol = col[1]             # <<<<<<<<<<<<<<
@@ -23187,7 +24068,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   __pyx_t_1 = 1;
   __pyx_v_gcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":339
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":435
  *     cdef unsigned char rcol = col[0]
  *     cdef unsigned char gcol = col[1]
  *     cdef unsigned char bcol = col[2]             # <<<<<<<<<<<<<<
@@ -23197,7 +24078,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   __pyx_t_1 = 2;
   __pyx_v_bcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":340
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":436
  *     cdef unsigned char gcol = col[1]
  *     cdef unsigned char bcol = col[2]
  *     cdef unsigned char acol = col[3]             # <<<<<<<<<<<<<<
@@ -23207,7 +24088,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   __pyx_t_1 = 3;
   __pyx_v_acol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":342
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":438
  *     cdef unsigned char acol = col[3]
  * 
  *     if t == 0:             # <<<<<<<<<<<<<<
@@ -23217,7 +24098,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   __pyx_t_5 = (__pyx_v_t == 0);
   if (__pyx_t_5) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":343
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":439
  * 
  *     if t == 0:
  *         invxr = 1.0 / (xrad * xrad)             # <<<<<<<<<<<<<<
@@ -23226,7 +24107,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
     __pyx_v_invxr = (1.0 / ((double)(__pyx_v_xrad * __pyx_v_xrad)));
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":344
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":440
  *     if t == 0:
  *         invxr = 1.0 / (xrad * xrad)
  *         invyr = 1.0 / (yrad * yrad)             # <<<<<<<<<<<<<<
@@ -23235,7 +24116,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
     __pyx_v_invyr = (1.0 / ((double)(__pyx_v_yrad * __pyx_v_yrad)));
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":345
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":441
  *         invxr = 1.0 / (xrad * xrad)
  *         invyr = 1.0 / (yrad * yrad)
  *         for yy in range(y_min, y_max):             # <<<<<<<<<<<<<<
@@ -23247,7 +24128,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
     for (__pyx_t_3 = __pyx_v_y_min; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
       __pyx_v_yy = __pyx_t_3;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":346
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":442
  *         invyr = 1.0 / (yrad * yrad)
  *         for yy in range(y_min, y_max):
  *             dy = yy - y             # <<<<<<<<<<<<<<
@@ -23256,7 +24137,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
       __pyx_v_dy = (__pyx_v_yy - __pyx_v_y);
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":347
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":443
  *         for yy in range(y_min, y_max):
  *             dy = yy - y
  *             for xx in range(x_min, x_max):             # <<<<<<<<<<<<<<
@@ -23268,7 +24149,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
       for (__pyx_t_15 = __pyx_v_x_min; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
         __pyx_v_xx = __pyx_t_15;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":348
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":444
  *             dy = yy - y
  *             for xx in range(x_min, x_max):
  *                 dx = xx - x             # <<<<<<<<<<<<<<
@@ -23277,7 +24158,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
         __pyx_v_dx = (__pyx_v_xx - __pyx_v_x);
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":350
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":446
  *                 dx = xx - x
  * 
  *                 xr = dx * cos_t + dy * sin_t             # <<<<<<<<<<<<<<
@@ -23286,7 +24167,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
         __pyx_v_xr = ((__pyx_v_dx * __pyx_v_cos_t) + (__pyx_v_dy * __pyx_v_sin_t));
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":351
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":447
  * 
  *                 xr = dx * cos_t + dy * sin_t
  *                 yr = -dx * sin_t + dy * cos_t             # <<<<<<<<<<<<<<
@@ -23295,7 +24176,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
         __pyx_v_yr = (((-__pyx_v_dx) * __pyx_v_sin_t) + (__pyx_v_dy * __pyx_v_cos_t));
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":353
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":449
  *                 yr = -dx * sin_t + dy * cos_t
  * 
  *                 if xr * xr * invxr + yr * yr * invyr <= 1.0:             # <<<<<<<<<<<<<<
@@ -23305,7 +24186,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
         __pyx_t_5 = ((((__pyx_v_xr * __pyx_v_xr) * __pyx_v_invxr) + ((__pyx_v_yr * __pyx_v_yr) * __pyx_v_invyr)) <= 1.0);
         if (__pyx_t_5) {
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":354
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":450
  * 
  *                 if xr * xr * invxr + yr * yr * invyr <= 1.0:
  *                     arr[yy, xx, 0] = rcol             # <<<<<<<<<<<<<<
@@ -23317,7 +24198,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
           __pyx_t_17 = 0;
           *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_rcol;
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":355
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":451
  *                 if xr * xr * invxr + yr * yr * invyr <= 1.0:
  *                     arr[yy, xx, 0] = rcol
  *                     arr[yy, xx, 1] = gcol             # <<<<<<<<<<<<<<
@@ -23329,7 +24210,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
           __pyx_t_1 = 1;
           *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_gcol;
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":356
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":452
  *                     arr[yy, xx, 0] = rcol
  *                     arr[yy, xx, 1] = gcol
  *                     arr[yy, xx, 2] = bcol             # <<<<<<<<<<<<<<
@@ -23341,7 +24222,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
           __pyx_t_17 = 2;
           *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_bcol;
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":357
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":453
  *                     arr[yy, xx, 1] = gcol
  *                     arr[yy, xx, 2] = bcol
  *                     arr[yy, xx, 3] = acol             # <<<<<<<<<<<<<<
@@ -23353,7 +24234,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
           __pyx_t_1 = 3;
           *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_acol;
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":353
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":449
  *                 yr = -dx * sin_t + dy * cos_t
  * 
  *                 if xr * xr * invxr + yr * yr * invyr <= 1.0:             # <<<<<<<<<<<<<<
@@ -23364,7 +24245,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
       }
     }
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":342
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":438
  *     cdef unsigned char acol = col[3]
  * 
  *     if t == 0:             # <<<<<<<<<<<<<<
@@ -23374,7 +24255,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
     goto __pyx_L7;
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":359
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":455
  *                     arr[yy, xx, 3] = acol
  *     else:
  *         inv_right = 1.0 / ((xrad + t) * (xrad + t))             # <<<<<<<<<<<<<<
@@ -23384,7 +24265,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   /*else*/ {
     __pyx_v_inv_right = (1.0 / ((double)((__pyx_v_xrad + __pyx_v_t) * (__pyx_v_xrad + __pyx_v_t))));
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":360
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":456
  *     else:
  *         inv_right = 1.0 / ((xrad + t) * (xrad + t))
  *         inv_bot = 1.0 / ((yrad + t) * (yrad + t))             # <<<<<<<<<<<<<<
@@ -23393,7 +24274,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
     __pyx_v_inv_bot = (1.0 / ((double)((__pyx_v_yrad + __pyx_v_t) * (__pyx_v_yrad + __pyx_v_t))));
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":361
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":457
  *         inv_right = 1.0 / ((xrad + t) * (xrad + t))
  *         inv_bot = 1.0 / ((yrad + t) * (yrad + t))
  *         inv_left = 1.0 / ((xrad - t) * (xrad - t))             # <<<<<<<<<<<<<<
@@ -23402,7 +24283,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
     __pyx_v_inv_left = (1.0 / ((double)((__pyx_v_xrad - __pyx_v_t) * (__pyx_v_xrad - __pyx_v_t))));
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":362
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":458
  *         inv_bot = 1.0 / ((yrad + t) * (yrad + t))
  *         inv_left = 1.0 / ((xrad - t) * (xrad - t))
  *         inv_top = 1.0 / ((yrad - t) * (yrad - t))             # <<<<<<<<<<<<<<
@@ -23411,7 +24292,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
     __pyx_v_inv_top = (1.0 / ((double)((__pyx_v_yrad - __pyx_v_t) * (__pyx_v_yrad - __pyx_v_t))));
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":364
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":460
  *         inv_top = 1.0 / ((yrad - t) * (yrad - t))
  * 
  *         for yy in range(y_min, y_max):             # <<<<<<<<<<<<<<
@@ -23423,7 +24304,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
     for (__pyx_t_3 = __pyx_v_y_min; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
       __pyx_v_yy = __pyx_t_3;
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":365
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":461
  * 
  *         for yy in range(y_min, y_max):
  *             dy = yy - y             # <<<<<<<<<<<<<<
@@ -23432,7 +24313,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
       __pyx_v_dy = (__pyx_v_yy - __pyx_v_y);
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":366
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":462
  *         for yy in range(y_min, y_max):
  *             dy = yy - y
  *             for xx in range(x_min, x_max):             # <<<<<<<<<<<<<<
@@ -23444,7 +24325,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
       for (__pyx_t_15 = __pyx_v_x_min; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
         __pyx_v_xx = __pyx_t_15;
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":367
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":463
  *             dy = yy - y
  *             for xx in range(x_min, x_max):
  *                 dx = xx - x             # <<<<<<<<<<<<<<
@@ -23453,7 +24334,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
         __pyx_v_dx = (__pyx_v_xx - __pyx_v_x);
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":369
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":465
  *                 dx = xx - x
  * 
  *                 xr = dx * cos_t + dy * sin_t             # <<<<<<<<<<<<<<
@@ -23462,7 +24343,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
         __pyx_v_xr = ((__pyx_v_dx * __pyx_v_cos_t) + (__pyx_v_dy * __pyx_v_sin_t));
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":370
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":466
  * 
  *                 xr = dx * cos_t + dy * sin_t
  *                 yr = -dx * sin_t + dy * cos_t             # <<<<<<<<<<<<<<
@@ -23471,7 +24352,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
         __pyx_v_yr = (((-__pyx_v_dx) * __pyx_v_sin_t) + (__pyx_v_dy * __pyx_v_cos_t));
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":372
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":468
  *                 yr = -dx * sin_t + dy * cos_t
  * 
  *                 v_outer = xr * xr * inv_right + yr * yr * inv_bot             # <<<<<<<<<<<<<<
@@ -23480,7 +24361,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
         __pyx_v_v_outer = (((__pyx_v_xr * __pyx_v_xr) * __pyx_v_inv_right) + ((__pyx_v_yr * __pyx_v_yr) * __pyx_v_inv_bot));
 
-        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":373
+        /* "BlazeSudio/graphicsCore/_calcs/init.pyx":469
  * 
  *                 v_outer = xr * xr * inv_right + yr * yr * inv_bot
  *                 if v_outer <= 1.0:             # <<<<<<<<<<<<<<
@@ -23490,7 +24371,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
         __pyx_t_5 = (__pyx_v_v_outer <= 1.0);
         if (__pyx_t_5) {
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":374
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":470
  *                 v_outer = xr * xr * inv_right + yr * yr * inv_bot
  *                 if v_outer <= 1.0:
  *                     v_inner = xr * xr * inv_left + yr * yr * inv_top             # <<<<<<<<<<<<<<
@@ -23499,7 +24380,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
           __pyx_v_v_inner = (((__pyx_v_xr * __pyx_v_xr) * __pyx_v_inv_left) + ((__pyx_v_yr * __pyx_v_yr) * __pyx_v_inv_top));
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":375
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":471
  *                 if v_outer <= 1.0:
  *                     v_inner = xr * xr * inv_left + yr * yr * inv_top
  *                     if v_inner > 1.0:             # <<<<<<<<<<<<<<
@@ -23509,7 +24390,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
           __pyx_t_5 = (__pyx_v_v_inner > 1.0);
           if (__pyx_t_5) {
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":376
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":472
  *                     v_inner = xr * xr * inv_left + yr * yr * inv_top
  *                     if v_inner > 1.0:
  *                         arr[yy, xx, 0] = rcol             # <<<<<<<<<<<<<<
@@ -23521,7 +24402,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
             __pyx_t_17 = 0;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_rcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":377
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":473
  *                     if v_inner > 1.0:
  *                         arr[yy, xx, 0] = rcol
  *                         arr[yy, xx, 1] = gcol             # <<<<<<<<<<<<<<
@@ -23533,7 +24414,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
             __pyx_t_1 = 1;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_gcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":378
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":474
  *                         arr[yy, xx, 0] = rcol
  *                         arr[yy, xx, 1] = gcol
  *                         arr[yy, xx, 2] = bcol             # <<<<<<<<<<<<<<
@@ -23545,7 +24426,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
             __pyx_t_17 = 2;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_bcol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":379
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":475
  *                         arr[yy, xx, 1] = gcol
  *                         arr[yy, xx, 2] = bcol
  *                         arr[yy, xx, 3] = acol             # <<<<<<<<<<<<<<
@@ -23556,7 +24437,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
             __pyx_t_1 = 3;
             *__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_acol;
 
-            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":375
+            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":471
  *                 if v_outer <= 1.0:
  *                     v_inner = xr * xr * inv_left + yr * yr * inv_top
  *                     if v_inner > 1.0:             # <<<<<<<<<<<<<<
@@ -23565,7 +24446,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
 */
           }
 
-          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":373
+          /* "BlazeSudio/graphicsCore/_calcs/init.pyx":469
  * 
  *                 v_outer = xr * xr * inv_right + yr * yr * inv_bot
  *                 if v_outer <= 1.0:             # <<<<<<<<<<<<<<
@@ -23578,7 +24459,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(Py
   }
   __pyx_L7:;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":300
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":396
  * 
  * 
  * cpdef drawElipse(             # <<<<<<<<<<<<<<
@@ -23658,81 +24539,81 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_arr,&__pyx_mstate_global->__pyx_n_u_pos,&__pyx_mstate_global->__pyx_n_u_xradius,&__pyx_mstate_global->__pyx_n_u_yradius,&__pyx_mstate_global->__pyx_n_u_rotation,&__pyx_mstate_global->__pyx_n_u_thickness,&__pyx_mstate_global->__pyx_n_u_col,&__pyx_mstate_global->__pyx_n_u_crop,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 300, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 396, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  8:
         values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 300, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 396, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  7:
         values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 300, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 396, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 300, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 396, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 300, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 396, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 300, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 396, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 300, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 396, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 300, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 396, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 300, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 396, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "drawElipse", 0) < (0)) __PYX_ERR(0, 300, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "drawElipse", 0) < (0)) __PYX_ERR(0, 396, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 8; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("drawElipse", 1, 8, 8, i); __PYX_ERR(0, 300, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("drawElipse", 1, 8, 8, i); __PYX_ERR(0, 396, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 8)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 300, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 396, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 300, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 396, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 300, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 396, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 300, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 396, __pyx_L3_error)
       values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 300, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 396, __pyx_L3_error)
       values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 300, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 396, __pyx_L3_error)
       values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 300, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 396, __pyx_L3_error)
       values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 300, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 396, __pyx_L3_error)
     }
     __pyx_v_arr = ((PyArrayObject *)values[0]);
-    __pyx_v_pos = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pos.memview)) __PYX_ERR(0, 302, __pyx_L3_error)
-    __pyx_v_xradius = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_xradius == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 303, __pyx_L3_error)
-    __pyx_v_yradius = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_yradius == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 304, __pyx_L3_error)
-    __pyx_v_rotation = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_rotation == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 305, __pyx_L3_error)
-    __pyx_v_thickness = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_thickness == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 306, __pyx_L3_error)
+    __pyx_v_pos = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pos.memview)) __PYX_ERR(0, 398, __pyx_L3_error)
+    __pyx_v_xradius = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_xradius == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 399, __pyx_L3_error)
+    __pyx_v_yradius = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_yradius == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 400, __pyx_L3_error)
+    __pyx_v_rotation = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_rotation == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 401, __pyx_L3_error)
+    __pyx_v_thickness = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_thickness == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 402, __pyx_L3_error)
     __pyx_v_col = ((PyArrayObject *)values[6]);
     __pyx_v_crop = values[7];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("drawElipse", 1, 8, 8, __pyx_nargs); __PYX_ERR(0, 300, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("drawElipse", 1, 8, 8, __pyx_nargs); __PYX_ERR(0, 396, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -23744,8 +24625,8 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 301, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 307, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 397, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 403, __pyx_L1_error)
   __pyx_r = __pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_8drawElipse(__pyx_self, __pyx_v_arr, __pyx_v_pos, __pyx_v_xradius, __pyx_v_yradius, __pyx_v_rotation, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop);
 
   /* function exit code */
@@ -23788,17 +24669,17 @@ static PyObject *__pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_8drawElipse(
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 300, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 396, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 300, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 396, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_pos.memview)) { __Pyx_RaiseUnboundLocalError("pos"); __PYX_ERR(0, 300, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(__pyx_v_arr, __pyx_v_pos, __pyx_v_xradius, __pyx_v_yradius, __pyx_v_rotation, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 300, __pyx_L1_error)
+  if (unlikely(!__pyx_v_pos.memview)) { __Pyx_RaiseUnboundLocalError("pos"); __PYX_ERR(0, 396, __pyx_L1_error) }
+  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_drawElipse(__pyx_v_arr, __pyx_v_pos, __pyx_v_xradius, __pyx_v_yradius, __pyx_v_rotation, __pyx_v_thickness, __pyx_v_col, __pyx_v_crop, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 396, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -25824,8 +26705,8 @@ __Pyx_RefNannySetupContext("PyInit_init", 0);
   /* "BlazeSudio/graphicsCore/_calcs/init.pyx":2
  * # cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
  * import numpy as np             # <<<<<<<<<<<<<<
+ * from libc.stdlib cimport malloc, free
  * cimport numpy as cnp
- * __cimport_types__ = [cnp.ndarray]
 */
   __pyx_t_1 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_numpy, 0, 0, NULL, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)
   __pyx_t_4 = __pyx_t_1;
@@ -25833,22 +26714,22 @@ __Pyx_RefNannySetupContext("PyInit_init", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_np, __pyx_t_4) < (0)) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":4
- * import numpy as np
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":5
+ * from libc.stdlib cimport malloc, free
  * cimport numpy as cnp
  * __cimport_types__ = [cnp.ndarray]             # <<<<<<<<<<<<<<
  * 
  * cdef inline long clip(long v, long lo, long hi):
 */
-  __pyx_t_4 = __Pyx_PyList_Pack(1, ((PyObject *)__pyx_mstate_global->__pyx_ptype_5numpy_ndarray)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyList_Pack(1, ((PyObject *)__pyx_mstate_global->__pyx_ptype_5numpy_ndarray)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_cimport_types, __pyx_t_4) < (0)) __PYX_ERR(0, 4, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_cimport_types, __pyx_t_4) < (0)) __PYX_ERR(0, 5, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "BlazeSudio/graphicsCore/_calcs/init.pyx":1
  * # cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True             # <<<<<<<<<<<<<<
  * import numpy as np
- * cimport numpy as cnp
+ * from libc.stdlib cimport malloc, free
 */
   __pyx_t_4 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);

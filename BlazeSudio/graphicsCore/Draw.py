@@ -31,7 +31,7 @@ class Polygon(NormalisedOp):
 
         Args:
             ps: The points making up the polygon
-            thickness: The thickness of the line. Must be > 0.
+            thickness: The thickness of the line. If == 0, will fill the entire shape. Must be >= 0.
             col: The colour of the line
 
         Keyword args:
@@ -61,7 +61,6 @@ class Polygon(NormalisedOp):
         t = self.thickness * ((sx2 + sy2) * 0.5) ** 0.5
         newps = self._warpPs(mat, ps)
         _calcs.drawPolyLine(arr, newps, t, self.col, crop, self.round)
-        # TODO: Fill
         return arr
 
 class Line(Polygon):

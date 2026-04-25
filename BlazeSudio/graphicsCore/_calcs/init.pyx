@@ -1,5 +1,6 @@
 # cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
 import numpy as np
+from libc.stdlib cimport malloc, free
 cimport numpy as cnp
 __cimport_types__ = [cnp.ndarray]
 
@@ -90,14 +91,109 @@ cpdef drawLine(
                 err += dy
             y += 1
 
+
+cdef void fillPolygon(
+        cnp.ndarray[cnp.uint8_t, ndim=3] arr,
+        double[:, :] points,
+        cnp.ndarray[cnp.uint8_t, ndim=1] col,
+        crop):
+    cdef long n = points.shape[0]
+    if n < 3:
+        return
+
+    cdef unsigned char rcol = col[0]
+    cdef unsigned char gcol = col[1]
+    cdef unsigned char bcol = col[2]
+    cdef unsigned char acol = col[3]
+
+    cdef long cLeft = <long>crop[0]
+    cdef long cTop = <long>crop[1]
+    cdef long cRight = <long>crop[2]
+    cdef long cBot = <long>crop[3]
+
+    cdef long i, j, y, x, k, m
+    cdef long yMin = cBot
+    cdef long yMax = cTop
+    cdef double yi, yj, xi, xj, t, xint_d
+    cdef long xint
+    cdef long* inters = <long*>malloc(n * sizeof(long))
+    if inters == NULL:
+        return
+
+    # polygon bbox in y, clipped to crop
+    for i in range(n):
+        y = <long>points[i, 1]
+        if y < yMin: yMin = y
+        if y > yMax: yMax = y
+
+    if yMin < cTop: yMin = cTop
+    if yMax > cBot: yMax = cBot
+
+    cdef unsigned char *cell
+
+    # scanline fill (even-odd rule)
+    for y in range(yMin, yMax + 1):
+        k = 0
+        for i in range(n):
+            j = (i + 1) % n
+            yi = points[i, 1]
+            yj = points[j, 1]
+
+            # include edges crossing this scanline; avoids double-count at vertices
+            if ((yi <= y and y < yj) or (yj <= y and y < yi)):
+                xi = points[i, 0]
+                xj = points[j, 0]
+                t = (y - yi) / (yj - yi)
+                xint_d = xi + t * (xj - xi)
+                xint = <long>xint_d
+                if xint < cLeft:
+                    xint = cLeft
+                elif xint > cRight:
+                    xint = cRight
+                inters[k] = xint
+                k += 1
+
+        # insertion sort intersections
+        for i in range(1, k):
+            x = inters[i]
+            m = i - 1
+            while m >= 0 and inters[m] > x:
+                inters[m + 1] = inters[m]
+                m -= 1
+            inters[m + 1] = x
+
+        # fill pairs
+        i = 0
+        while i + 1 < k:
+            xi = inters[i]
+            xj = inters[i + 1]
+            if xi < cLeft: xi = cLeft
+            if xj > cRight: xj = cRight
+            for x in range(<long>xi, <long>xj + 1):
+                cell = &arr[y, x, 0]
+                cell[0] = rcol
+                cell[1] = gcol
+                cell[2] = bcol
+                cell[3] = acol
+            i += 2
+
+    free(inters)
+
+
 cpdef drawPolyLine(
         cnp.ndarray[cnp.uint8_t, ndim=3] arr,
         double[:, :] points,
         double thickness,
         cnp.ndarray[cnp.uint8_t, ndim=1] col,
         crop, bool round):
-    cdef long ht = <long>(thickness // 2)
     cdef long n = len(points)
+    if n < 2:
+        return
+    if thickness <= 0:
+        fillPolygon(arr, points, col, crop)
+        return
+
+    cdef long ht = <long>(thickness // 2)
     if round:
         for i in range(n):
             drawCirc(arr, points[i], ht, 0, col, crop)
