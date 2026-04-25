@@ -2,6 +2,7 @@ import freetype
 import numpy as np
 from typing import Self
 from dataclasses import dataclass
+from functools import lru_cache
 from .base import NormalisedOp, Vec2
 from .Trans import Translate
 from . import _blit
@@ -16,6 +17,7 @@ __all__ = [
 class FChar:
     bitmap: np.ndarray
     advance: float
+    width: float
     xoffs: float
     yoffs: float
 
@@ -74,17 +76,19 @@ class SysFonts:
     @classmethod
     def __getitem__(cls, it: str) -> str|None:
         """Get the location of a specific font by its name"""
+        if os.path.exists(it):
+            return it
         return cls.get_all().get(it, None)
     @classmethod
     def pick_path(cls, *options) -> str|None:
         """Pick the first provided font name that exists and return the name"""
         li = cls.get_all()
         for opt in options:
-            if opt in li:
+            if opt in li or os.path.exists(opt):
                 return opt
         return None
     @classmethod
-    def pick(cls, *options) -> str|None:
+    def pick(cls, *options) -> 'Font':
         """Pick the first provided font that exists and return the Font object (will use default if none found)"""
         return Font(cls.pick_path(*options))
     @classmethod
@@ -122,11 +126,12 @@ class _FontDrawOp(NormalisedOp):
             self._cachehash = newcache
             # TODO: Font caching, but only cache when the same text is used more than once in a row to prevent the longer cache routine running constantly
         self.font.load(self.text)
-        xoffs = 0
+        xoffs = self._p.x
+        yoffs = self._p.y + self.font.yoffs
         for c in self.text:
             char = self.font.cache[c]
             args = Translate(
-                    xoffs + char.xoffs + self._p.x, char.yoffs + self._p.y
+                    xoffs + char.xoffs, char.yoffs + yoffs
                 ).apply(mat, crop, defSmth)
             if args is not None:
                 shp = char.bitmap.shape
@@ -147,7 +152,7 @@ class Font:
     __slots__ = ["face", "_pth", "cache"]
     def __init__(self, path: str|None):
         self.fontpth = path
-        self.sized(16)
+        self.sized(24)
 
     def sized(self, size: float) -> Self:
         self.face.set_char_size(size * 64)
@@ -183,24 +188,30 @@ class Font:
             h, w = glyph.bitmap.rows, glyph.bitmap.width
             self.cache[char] = FChar(
                 np.array(glyph.bitmap.buffer, dtype=np.uint8).reshape(h, w),
-                glyph.advance.x / 64, glyph.bitmap_left, -glyph.bitmap_top
+                glyph.advance.x / 64, w, glyph.bitmap_left, -glyph.bitmap_top
             )
 
+    @lru_cache()
     def __call__(self, txt, col: np.ndarray, *, normalise_x = None, normalise_y = None) -> _FontDrawOp:
         """Returns an Op that will draw the provided text using this font"""
         return _FontDrawOp(self, txt, col, normalise_x=normalise_x, normalise_y=normalise_y)
     def render(self, txt, col: np.ndarray, *, normalise_x = None, normalise_y = None) -> _FontDrawOp:
         """Returns an Op that will draw the provided text using this font"""
-        return _FontDrawOp(self, txt, col, normalise_x=normalise_x, normalise_y=normalise_y)
+        return self(txt, col, normalise_x=normalise_x, normalise_y=normalise_y)
 
     @property
+    def yoffs(self) -> float:
+        return self.face.size.ascender / 64
+    @property
     def lineheight(self) -> float:
-        return self.face.height / 64
+        return self.face.size.height / 64
     def linewidth(self, txt) -> float:
+        if txt == "":
+            return 0
         self.load(txt)
         return sum(
-            self.cache[i].advance for i in txt
-        ) / 64
+            self.cache[i].advance for i in txt[:-1]
+        )+self.cache[txt[-1]].width + 1
     def linesize(self, txt) -> float:
         return (
             self.linewidth(txt),

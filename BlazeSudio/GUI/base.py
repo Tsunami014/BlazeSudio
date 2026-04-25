@@ -71,6 +71,17 @@ class Element:
     __slots__ = []
     def _op(self, mat, mxsze) -> Op:
         return OpList()
+    def _handleOp(self, op, mat, mxsze) -> Op:
+        op2 = op if not hasattr(op, "getNormalisedPos") else op @ -op.getNormalisedPos(0, 0)
+        if any(i is None for i in mxsze):
+            if hasattr(op2, "rsze") and any(i is not None for i in mxsze):
+                rsze = op2.rsze
+                return (op2 @ Crop(0, 0,
+                                    (mxsze[0] if mxsze[0] is not None else rsze[0]),
+                                    (mxsze[1] if mxsze[1] is not None else rsze[1])
+                            )) @ T.MatTrans(mat)
+            return op2 @ T.MatTrans(mat)
+        return (op2 @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
     def _minsze(self, mat) -> tuple[float, float]:
         return (0, 0)
     def __matmul__(self, oth) -> 'TransformedElm':
@@ -113,13 +124,7 @@ class OpElm(Element):
     def _op(self, mat, mxsze):
         op = self.op if not hasattr(self.op, "getNormalisedPos") else self.op @ -self.op.getNormalisedPos(0, 0)
         if any(i is None for i in mxsze):
-            if hasattr(op, "rsze") and any(i is not None for i in mxsze):
-                rsze = op.rsze
-                return (op @ Crop(0, 0,
-                                    (mxsze[0] if mxsze[0] is not None else rsze[0]),
-                                    (mxsze[1] if mxsze[1] is not None else rsze[1])
-                            )) @ T.MatTrans(mat)
-            return op @ T.MatTrans(mat)
+            return self._handleOp(self.op, mat, mxsze)
         return (op @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
     def _minsze(self, mat):
         if hasattr(self.op, "rect"):

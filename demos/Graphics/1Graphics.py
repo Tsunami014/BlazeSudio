@@ -6,6 +6,7 @@ def main():
     from BlazeSudio.graphics.base import ReturnState
     import pygame
     from time import sleep
+    pygame.init()
     @Loading.decor
     def test_loading(slf):
         slf['i'] = 0
