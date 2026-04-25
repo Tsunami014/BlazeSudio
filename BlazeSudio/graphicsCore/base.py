@@ -68,7 +68,7 @@ class Trans(ABC):
     flags = TransFlags.NoFlags
 
     @abstractmethod
-    def apply(self, mat: np.ndarray, arr: np.ndarray, crop, defSmth: bool): ...
+    def apply(self, mat: np.ndarray, crop: tuple, defSmth: bool) -> tuple[np.ndarray, tuple, bool]: ...
 
     def __pos__(self) -> Self: return self
     def __add__(self, oth) -> 'Trans':

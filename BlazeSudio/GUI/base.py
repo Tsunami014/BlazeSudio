@@ -1,14 +1,17 @@
-from BlazeSudio.graphicsCore.miscOps import Fill
+from BlazeSudio.graphicsCore.miscOps import Fill, Crop
 from BlazeSudio.graphicsCore.stuff import Col, AvgClock
-from BlazeSudio.graphicsCore.base import NormalisedOp, OpList, Vec2, Trans
-from BlazeSudio.graphicsCore.core import Op, Core, _CoreCls
-from BlazeSudio.graphicsCore import Ix
+from BlazeSudio.graphicsCore.base import Op, OpList, IDENTITY, Vec2, Trans
+from BlazeSudio.graphicsCore.core import Core, _CoreCls
+from BlazeSudio.graphicsCore._basey import Base
+from BlazeSudio.graphicsCore import Ix, Trans as T
 from typing import Self
-import numpy as np
 
-__all__ = ['UI', 'Element', 'BLANK']
+__all__ = [
+    'UI',
+    'Element',
+        'OpElm'
+]
 
-BLANK = np.array([[]], np.uint8)
 
 class _UITyping(_CoreCls):
     bgcol: Col.colourType
@@ -66,20 +69,49 @@ UI: _UITyping = _UIBase()
 
 class Element:
     __slots__ = []
-    def _op(self, mat, crop) -> Op:
+    def _op(self, mat, mxsze) -> Op:
         return OpList()
+    def _minsze(self, mat) -> tuple[float, float]:
+        return (0, 0)
     def __matmul__(self, oth) -> 'TransformedElm':
         return TransformedElm(self, oth)
-    def __call__(self) -> NormalisedOp:
+    def __call__(self) -> Op:
         sze = Core.size
-        return self._op(Vec2(sze[0]/2, sze[1]/2).mat, (0, 0, sze[0], sze[1]))
+        return self._op(IDENTITY, (sze[0], sze[1]))
 
-class TransformedElm(Element):
+
+class TransformedElm(Element, Base):
     __slots__ = ['elm', 'oth']
     def __init__(self, elm, oth):
         self.elm: Element = elm
         self.oth: Trans = oth
+    def _op(self, mat, mxsze):
+        crop = [0, 0, *mxsze]
+        nmat, ncrop, _ = self.oth.apply(mat, crop, False)
+        r = self._warpbbx(nmat, ncrop, [0,0,0,0])
+        return self.elm._op(nmat, (min(ncrop[2]-ncrop[0], mxsze[0]), min(ncrop[3]-ncrop[1], mxsze[1]))) @ Vec2(-r[0], -r[1])
+    def _minsze(self, mat):
+        crop = [0, 0, *self.elm._minsze(mat)]
+        nmat, ncrop, _ = self.oth.apply(mat, crop, False)
+        r = self._warpbbx(nmat, ncrop, [0,0,0,0])
+        return r[2]-r[0], r[3]-r[1]
 
-    def _op(self, mat, crop):
-        self.oth.apply(mat, BLANK, crop)
-        return 
+class OpElm(Element):
+    __slots__ = ['__op']
+    def __init__(self, op: Op):
+        self.op = op
+    @property
+    def op(self): return self.__op
+    @op.setter
+    def op(self, new):
+        self.__op = new
+        if hasattr(new, 'getNormalisedPos'):
+            new._translate(*(-new.getNormalisedPos(0, 0)))
+    def _op(self, mat, mxsze):
+        return (self.__op @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
+    def _minsze(self, mat):
+        if hasattr(self.__op, "rect"):
+            r = self.__op.rect()
+            if r[0] is not None:
+                return (r[2]-r[0], r[3]-r[1])
+        return (0, 0)

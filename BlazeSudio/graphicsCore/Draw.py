@@ -44,7 +44,7 @@ class Polygon(NormalisedOp):
         self.ps = np.array(ps, float)
         assert len(self.ps.shape) == 2, "Points must be a 2 dimensional array; [(point 1 x, point 1 y), (point 2 x, point 2 y), etc.]"
         assert self.ps.shape[1] == 2, "Points must have only 2 dimensions; an x and a y; [(point 1 x, point 1 y), etc.]"
-        assert thickness > 0, "Thickness must be >0"
+        assert thickness >= 0, "Thickness must be >=0"
         self.thickness = thickness
         self.col = np.array(col, np.uint8)
         assert self.col.shape == (4,), "Colour is of incorrect shape!"
@@ -61,6 +61,7 @@ class Polygon(NormalisedOp):
         t = self.thickness * ((sx2 + sy2) * 0.5) ** 0.5
         newps = self._warpPs(mat, ps)
         _calcs.drawPolyLine(arr, newps, t, self.col, crop, self.round)
+        # TODO: Fill
         return arr
 
 class Line(Polygon):
@@ -96,7 +97,6 @@ class Line(Polygon):
             round: Whether the line ends are round or not
         """
     def __init__(self, *args, **kwargs):
-
         match len(args):
             case 4:
                 p1, p2, thickness, col = args
@@ -107,6 +107,7 @@ class Line(Polygon):
                 raise TypeError(
                     f'Incorrect number of arguments! Expected 3 or 4, found {len(args)}!'
                 )
+        assert thickness > 0, "Thickness must be >0"
         super().__init__(ps, thickness, col, **kwargs)
         assert self.ps.shape == (2, 2), "Points must be in this format: [(point 1 x, point 1 y), (point 2 x, point 2 y)]"
 
@@ -177,12 +178,12 @@ class Rect(Polygon):
 
     @property
     def ps(self):
-        return [
+        return np.array([
             self.pos,
             [self.pos[0], self.pos[1]+self.sze[1]],
             [self.pos[0]+self.sze[0], self.pos[1]+self.sze[1]],
             [self.pos[0]+self.sze[0], self.pos[1]]
-        ]
+        ], float)
 
     def apply(self, mat: np.ndarray, arr: np.ndarray, crop, defSmth) -> np.ndarray:
         # Checks if the rectangle after matrix op is still a rectangle - i.e. no perspective warp or rotation
