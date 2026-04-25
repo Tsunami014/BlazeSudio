@@ -1,5 +1,5 @@
 from . import Input, Elms
-from .layouts import HLayout
+from .layouts import Layouts
 from .base import UI, OpElm
 __all__ = [
     'UI',
@@ -7,7 +7,7 @@ __all__ = [
     'Input',
     'Elms',
 
-    'HLayout',
+    'Layouts',
 
     'OpElm'
 ]

@@ -3,7 +3,7 @@ from BlazeSudio.graphicsCore.base import OpList, Vec2
 from dataclasses import dataclass
 from typing import Self, Iterable
 
-__all__ = ["HLayout"]
+__all__ = ["Layouts"]
 
 @dataclass(eq=False, slots=True)
 class ElementOut:
@@ -19,6 +19,8 @@ class ElementOut:
 
 class _BaseLayout(Element):
     __slots__ = ['_children', 'spacing']
+    _DIRECTION = None
+    _FLIP = None
     def __init__(self, *children: tuple[Element], spacing: float = 10):
         """[Element (or None for stretch or float for spacing), isSpacing, stretch]"""
         self._children: list[tuple[Element|None|float, bool, float]] = []
@@ -72,22 +74,18 @@ class _BaseLayout(Element):
     def pop(self, idx) -> ElementOut:
         return self._children.pop(idx)
 
-    def _op(self, mat, mxsze):
-        return OpList(*[i._op(mat, mxsze) for i in self._children if (not i[1]) and i[0] is not None])
 
-
-class HLayout(_BaseLayout):
     def _op(self, mat, mxsze):
         minszes = {
-            i[0]: i[0]._minsze(mat)[0] for i in self._children if (not i[1]) and i[0] is not None
+            i[0]: i[0]._minsze(mat)[self._DIRECTION] for i in self._children if (not i[1]) and i[0] is not None
         }
         spread = sum(i[2] for i in self._children if i[2] is not None)
         sze = sum(minszes[i[0]]+self.spacing for i in self._children if (not i[1]) and i[0] is not None) + \
                 sum(i[0]+self.spacing for i in self._children if i[1]) - self.spacing
-        if mxsze[0] is None:
+        if mxsze[self._DIRECTION] is None:
             each = 0
         else:
-            each = max(mxsze[0]-sze, 0)/spread if spread != 0 else 0
+            each = max(mxsze[self._DIRECTION]-sze, 0)/spread if spread != 0 else 0
         li = OpList()
         offs = 0
         for elm, isSpace, stretch in self._children:
@@ -96,14 +94,30 @@ class HLayout(_BaseLayout):
             else:
                 if elm is not None:
                     sze = minszes[elm]
-                    if mxsze[0] is None:
-                        li += elm._op(mat @ Vec2(offs, 0).mat, (sze, None))
+                    v2 = Vec2(offs, 0) if self._DIRECTION == 0 else Vec2(0, offs)
+                    if mxsze[self._DIRECTION] is None:
+                        li += elm._op(mat @ v2.mat, (sze, None)[::self._FLIP])
                     else:
-                        li += elm._op(mat @ Vec2(offs, 0).mat, (sze, mxsze[1]))
+                        li += elm._op(mat @ v2.mat, (sze, mxsze[1-self._DIRECTION])[::self._FLIP])
                     offs += sze + self.spacing
                 offs += (0 if stretch is None else each)
         return li
 
     def _minsze(self, mat):
         szes = [i[0]._minsze(mat) for i in self._children if (not i[1]) and i[0] is not None]
-        return sum(i[0]+self.spacing for i in szes)-self.spacing, max(i[1] for i in szes)
+        if self._DIRECTION == 0:
+            return sum(i[0]+self.spacing for i in szes)-self.spacing, max(i[1] for i in szes)
+        return max(i[0] for i in szes), sum(i[1]+self.spacing for i in szes)-self.spacing
+
+
+class Layouts:
+    def __new__(cls):
+        raise NotImplementedError("This class cannot be instantiated!")
+
+    class Horiz(_BaseLayout):
+        _DIRECTION = 0
+        _FLIP = 1
+    class Vert(_BaseLayout):
+        _DIRECTION = 1
+        _FLIP = -1
+
