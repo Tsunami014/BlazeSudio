@@ -150,15 +150,18 @@ class _FontDrawOp(NormalisedOp):
 
 class Font:
     __slots__ = ["face", "_pth", "cache"]
-    def __init__(self, path: str|None):
+    def __init__(self, path: str|None = None, sze: float = 24):
         self.fontpth = path
-        self.sized(24)
+        self.size = sze
 
-    def sized(self, size: float) -> Self:
-        self.face.set_char_size(size * 64)
-        return self
-    def sized_px(self, size: int) -> Self:
+    @property
+    def size(self) -> int:
+        return self.face.size.y_ppem
+    @size.setter
+    def size(self, size: int):
         self.face.set_pixel_sizes(0, size)
+    def set_size_pt(self, size: float):
+        self.face.set_char_size(size * 64)
         return self
 
     @property
