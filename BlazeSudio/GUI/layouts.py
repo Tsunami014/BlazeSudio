@@ -175,9 +175,9 @@ class _BaseLayout(Element):
         minszes = [((e:=s[3]._szes(mxsze, bound)[0] or (0, 0))[self._DIRECTION], e[1-self._DIRECTION]) for s in szes if s[3] is not None]
         if len(minszes) == 0:
             minszes = [(0, 0)]
-        space = (self.spacing*(len(szes)-1), 0)[::self._FLIP]
-        return (sum(s[0] for s in minszes)+space[0], max(s[1] for s in minszes)+space[1])[::self._FLIP], \
-            (sum(s[0] for s in szes)+space[0], max(s[4] for s in szes)+space[1])[::self._FLIP]
+        space = self.spacing*(len(szes)-1)
+        return (sum(s[0] for s in minszes)+space, max(s[1] for s in minszes))[::self._FLIP], \
+            (sum(s[0] for s in szes)+space, max(s[4] for s in szes))[::self._FLIP]
 
 
 class Layouts:

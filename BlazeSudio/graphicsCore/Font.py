@@ -242,5 +242,5 @@ class Font:
                 wids.append(a)
             else:
                 wids[-1] += a
-        return (max(wids), len(wids)*self.lineheight)
+        return (max(wids)+1, len(wids)*self.lineheight)
 
