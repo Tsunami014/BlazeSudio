@@ -11,7 +11,7 @@ def main():
                 .add_stretch(1)
                 .add_elms([
                     OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
-                    Elms.Text("This is a test!"), # TODO: Size
+                    Elms.Text("This is a test!"),
                     OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
                     ])
                 .add_stretch(1)

@@ -37,5 +37,6 @@ class Text(Element):
         self.font.size = size
     def _op(self, mat, mxsze):
         return self._handleOp(self.font(self.txt, self.col), mat, mxsze)
-    def _minsze(self, mat) -> tuple[float, float]:
-        return self.font.linesize(self.txt)
+    def _szes(self, mxsze):
+        out = self.font.linesize(self.txt)
+        return out, out
