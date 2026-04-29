@@ -102,12 +102,13 @@ class SysFonts:
         return Font(cls.default_path())
 
 class _FontDrawOp(NormalisedOp):
-    __slots__ = ['_p', 'font', 'text', 'col', '_cache', '_cachehash']
-    def __init__(self, f, txt, col, **kwargs):
+    __slots__ = ['_p', 'font', 'text', 'col', 'aligns', '_cache', '_cachehash']
+    def __init__(self, f, txt, col, aligns, **kwargs):
         self._p = Vec2(0, 0)
         self.font = f
         self.text = txt
         self.col = col
+        self.aligns = aligns
         self._cache = None
         self._cachehash = None
         super().__init__(**kwargs)
@@ -126,11 +127,13 @@ class _FontDrawOp(NormalisedOp):
             self._cachehash = newcache
             # TODO: Font caching, but only cache when the same text is used more than once in a row to prevent the longer cache routine running constantly
         self.font.load(self.text)
-        xoffs = self._p.x
         yoffs = self._p.y + self.font.yoffs
+        xoffs = self._p.x + (self.aligns[0] if len(self.aligns) > 0 else 0)
+        lne = 0
         for c in self.text:
             if c == '\n':
-                xoffs = self._p.x
+                lne += 1
+                xoffs = self._p.x + (self.aligns[lne] if len(self.aligns) > lne else 0)
                 yoffs += self.font.lineheight
                 continue
             char = self.font.cache[c]
@@ -230,24 +233,32 @@ class Font:
                 advs2.append((txt, wid, wid+lastdiff))
             advs = advs2
         outs = [[0, []]]
+        lastdiff = 0
         for ad in advs:
             txt, a, w = ad
             if txt == '\n' or outs[-1][0]+w >= maxwid:
+                outs[-1][0] += lastdiff
                 outs.append([0, []])
+                lastdiff = 0
             if txt != '\n':
                 outs[-1][0] += a
                 outs[-1][1].append(ad)
+                lastdiff = w-a
         return [(wid, ("".join(i[0] for i in ads).strip()) if ads else "") for wid, ads in outs]
 
     @lru_cache()
-    def __call__(self, txt, col: np.ndarray, maxwid: int = None, breakOnSpace: bool = True, *, normalise_x = None, normalise_y = None) -> _FontDrawOp:
+    def __call__(self, txt, col: np.ndarray, maxwid: int = None, breakOnSpace: bool = True, align: float = 0, *, normalise_x = None, normalise_y = None) -> _FontDrawOp:
         """Returns an Op that will draw the provided text using this font"""
         if maxwid is not None:
-            txt = '\n'.join(i[1] for i in self._get_list(txt, maxwid, breakOnSpace))
-        return _FontDrawOp(self, txt, col, normalise_x=normalise_x, normalise_y=normalise_y)
-    def render(self, txt, col: np.ndarray, maxwid: int = None, breakOnSpace: bool = True, *, normalise_x = None, normalise_y = None) -> _FontDrawOp:
+            li = self._get_list(txt, maxwid, breakOnSpace)
+            txt = '\n'.join(i[1] for i in li)
+            aligns = [max((maxwid-i[0])*align, 0) for i in li]
+        else:
+            aligns = []
+        return _FontDrawOp(self, txt, col, aligns, normalise_x=normalise_x, normalise_y=normalise_y)
+    def render(self, txt, col: np.ndarray, maxwid: int = None, breakOnSpace: bool = True, align: float = 0, *, normalise_x = None, normalise_y = None) -> _FontDrawOp:
         """Returns an Op that will draw the provided text using this font"""
-        return self(txt, col, maxwid, breakOnSpace, normalise_x=normalise_x, normalise_y=normalise_y)
+        return self(txt, col, maxwid, breakOnSpace, align, normalise_x=normalise_x, normalise_y=normalise_y)
 
     @property
     def yoffs(self) -> float:
