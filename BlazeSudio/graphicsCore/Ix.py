@@ -4,6 +4,7 @@ The module for handling interaction
 To update the interaction state, `update` or `updateLoop` or `handleBasic` must be called. They must be called preferably once per frame, as any less and the OS will question the window and any more and some events will get deleted.
 """
 from . import _specialkeys
+from .core import Core
 from .Events import EvTyp, Event, KeyEvent, EVENT_LIST, EVENT_NAMES, _translateEv
 from typing import Iterable
 import sdl2
@@ -131,6 +132,11 @@ def _upd():
 
     ev = sdl2.SDL_Event()
     while sdl2.SDL_PollEvent(ev) != 0:
+        if ev.type == sdl2.SDL_WINDOWEVENT and ev.window.event in (
+                sdl2.SDL_WINDOWEVENT_RESIZED,
+                sdl2.SDL_WINDOWEVENT_SIZE_CHANGED
+            ):
+            Core._resize_event(ev)
         o = _translateEv(ev)
         if o is not None:
             Keys._keyEvs.append(o)

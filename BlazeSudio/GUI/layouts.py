@@ -25,7 +25,7 @@ class _BaseLayout(Element):
         """[Element (or None for stretch or float for spacing), isSpacing, stretch]"""
         self._children: list[tuple[Element|None|float, bool, float]] = []
         self._dirty = False
-        self._szesCache = [None, None]
+        self._szesCache = []
         if children:
             self.add_elms(children)
         self.spacing = spacing
@@ -89,7 +89,7 @@ class _BaseLayout(Element):
 
 
     def _getSzes(self, mxsze, bound):
-        if self._szesCache[0] != (mxsze, bound) or self._dirty:
+        if not any(i[0] == (mxsze, bound) for i in self._szesCache) or self._dirty:
             # cursze, maxsze, stretch, elm, otheraxis
             szes = []
 
@@ -153,9 +153,15 @@ class _BaseLayout(Element):
                     for s in szes:
                         if s[1] is None:
                             s[0] = left
-            self._szesCache = [(mxsze, bound), szes]
+            self._szesCache.append(((mxsze, bound), szes))
+            self._szesCache = self._szesCache[-5:]
             return szes
-        return self._szesCache[1]
+        for match, szes in self._szesCache:
+            if match == (mxsze, bound):
+                return szes
+        raise ValueError(
+            "I don't know how you managed to achieve this"
+        )
 
     def _op(self, mat, mxsze):
         li = OpList()

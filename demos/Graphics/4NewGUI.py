@@ -9,13 +9,13 @@ def main():
             Layouts.CentreHoriz(
                 OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
                 Layouts.CentreVert(
-                    Elms.Text("This is a test!"),
+                    Elms.Text("This is a test!", opts=None),
                 ),
                 OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
             ),
-            Elms.Text("I hope you really like this extremely super duper very long text as it is quite long and it should wrap around the screen.\nNewline! Yay!")
+            Elms.Text("I hope you really like this extremely super long very long text as it is quite long and it should wrap around the screen.\nNewline! Yay!")
         )
     )
 
-    UI.resize(800, 500)
+    UI.resizable = True
     UI.Run()

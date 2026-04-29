@@ -1,9 +1,10 @@
 from BlazeSudio.graphicsCore.miscOps import Fill, Crop
 from BlazeSudio.graphicsCore.stuff import Col, AvgClock
-from BlazeSudio.graphicsCore.base import Op, OpList, IDENTITY, Vec2, Trans
+from BlazeSudio.graphicsCore.base import Op, OpList, IDENTITY, Trans
 from BlazeSudio.graphicsCore.core import Core, _CoreCls
 from BlazeSudio.graphicsCore._basey import Base
 from BlazeSudio.graphicsCore import Ix, Trans as T
+from enum import IntEnum
 from typing import Self
 
 __all__ = [
@@ -30,6 +31,11 @@ class _UITyping(_CoreCls):
 
 class _UIBase:
     __instance = None
+    _mine = (
+        "__instance", "__new__",
+        "elm", "bgcol", "clock",
+        "__call__", "clear", "Run", "basicIx",
+    )
     def __new__(cls):
         if cls.__instance is None:
             cls.__instance = super().__new__(cls)
@@ -50,7 +56,7 @@ class _UIBase:
         while Ix.handleBasic():
             self.clock.tick(maxfps)
             if fps_title:
-                Core.set_title(f'FPS: {round(self.clock.get_fps(), 2)}')
+                Core.title = f'FPS: {round(self.clock.get_fps(), 2)}'
             if self.elm is None:
                 Core(Fill(self.bgcol)).rend()
             else:
@@ -58,12 +64,13 @@ class _UIBase:
         if quit_after:
             Core.Quit()
     def __getattribute__(self, name):
-        if name in (
-                "__instance", "__new__",
-                "elm", "bgcol", "clock",
-                "__call__", "clear", "Run", "basicIx"):
+        if name == '_mine' or name in self._mine:
             return super().__getattribute__(name)
-        return Core.__getattribute__(name)
+        return getattr(Core, name)
+    def __setattr__(self, name, new):
+        if hasattr(Core, name):
+            return setattr(Core, name, new)
+        return super().__setattr__(name, new)
 
 UI: _UITyping = _UIBase()
 
@@ -71,9 +78,9 @@ class Element:
     __slots__ = []
     def _op(self, mat, mxsze) -> Op:
         return OpList()
-    def _handleOp(self, op, mat, bound) -> Op:
+    def _handleOp(self, op, mat, mxsze) -> Op:
         op2 = op if not hasattr(op, "getNormalisedPos") else op @ -op.getNormalisedPos(0, 0)
-        return (op2 @ Crop((0, 0), bound)) @ T.MatTrans(mat)
+        return (op2 @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
     def _szes(self, mxsze, bound) -> tuple[tuple[float, float]|None, tuple[float, float]]|None:
         """
         Gets the sizes for the element. Returns a tuple of (minsize, maxsize)
@@ -90,6 +97,20 @@ class Element:
         sze = Core.size
         return self._op(IDENTITY, (sze[0], sze[1]))
 
+class UIElement(Element):
+    __slots__ = ['opts']
+    class O(IntEnum):
+        """No options will be applied"""
+        none = 0
+    def __init__(self, *, opts: O = O.none):
+        if opts is None:
+            self.opts = self.O.none
+        else:
+            self.opts = opts
+    def _opInner(self, mxsze) -> Op:
+        return OpList()
+    def _op(self, mat, mxsze) -> Op:
+        return self._handleOp(self._opInner(mxsze), mat, mxsze)
 
 class TransformedElm(Element, Base):
     __slots__ = ['elm', 'oth']

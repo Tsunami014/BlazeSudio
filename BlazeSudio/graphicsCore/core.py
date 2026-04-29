@@ -14,7 +14,7 @@ class _SurfaceBase:
         self.op: Op|None = None
         self._cachedout = None
         self._cachedarr = None
-        self.isSmooth = False
+        self.smooth = False
 
     @overload
     def resize(self, sze: Iterable[int] ,/):
@@ -68,24 +68,16 @@ class _SurfaceBase:
             if self._cachedarr is None:
                 self._cachedarr = np.ndarray((self._sze[1], self._sze[0], 4), np.uint8) # User should fill with colour
             if self.op is not None:
-                self._cachedout = self.op.apply(IDENTITY, self._cachedarr, (0, 0, *self._sze), self.isSmooth)
+                self._cachedout = self.op.apply(IDENTITY, self._cachedarr, (0, 0, *self._sze), self.smooth)
             else:
                 self._cachedout = self._cachedarr
         return self._cachedout
 
-    def clear(self) -> Self:
+    def clear(self):
         self.op = None
         self._cachedout = None
-        return self
-    def clearsurf(self) -> Self:
+    def clearsurf(self):
         self._cachedarr = None
-        return self
-    def rough(self) -> Self:
-        self.isSmooth = False
-        return self
-    def smooth(self) -> Self:
-        self.isSmooth = True
-        return self
 
 
 _PIXFMT = sdl2.SDL_PIXELFORMAT_ABGR8888 # NOTE: This *may* display funny on big-endian systems
@@ -96,13 +88,18 @@ class _CoreCls(_SurfaceBase):
         return cls._instance
 
     def __init__(self):
+        if getattr(self, "_init", False):
+            return
+        self._init = True
+
         self._mainWin = sdl2.SDL_CreateWindow(b"Blaze Sudio game", 
-                        sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED, 0, 0, sdl2.SDL_WINDOW_SHOWN)
+                            sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED, 800, 500,
+                            sdl2.SDL_WINDOW_SHOWN)
         self._renderer = sdl2.SDL_CreateRenderer(self._mainWin, -1,
             sdl2.SDL_RENDERER_ACCELERATED)
-        self._texture = sdl2.SDL_CreateTexture(self._renderer, _PIXFMT, sdl2.SDL_TEXTUREACCESS_STREAMING, 0, 0)
+        self._texture = sdl2.SDL_CreateTexture(self._renderer, _PIXFMT, sdl2.SDL_TEXTUREACCESS_STREAMING, 800, 500)
 
-        super().__init__((0, 0))
+        super().__init__((800, 500))
 
     def Quit(self):
         """
@@ -149,6 +146,46 @@ class _CoreCls(_SurfaceBase):
         sdl2.SDL_DestroyTexture(self._texture)
         self._texture = sdl2.SDL_CreateTexture(self._renderer, _PIXFMT, sdl2.SDL_TEXTUREACCESS_STREAMING, *self._sze)
 
+    @property
+    def resizable(self) -> bool:
+        flags = sdl2.SDL_GetWindowFlags(self._mainWin)
+        return bool(flags & sdl2.SDL_WINDOW_RESIZABLE)
+    @resizable.setter
+    def resizable(self, new: bool):
+        if self.resizable == new:
+            return
+        # Rebuild entire window because otherwise it won't work :(
+
+        w, h = ctypes.c_int(), ctypes.c_int()
+        x, y = ctypes.c_int(), ctypes.c_int()
+        sdl2.SDL_GetWindowSize(self._mainWin, ctypes.byref(w), ctypes.byref(h))
+        sdl2.SDL_GetWindowPosition(self._mainWin, ctypes.byref(x), ctypes.byref(y))
+        flags = sdl2.SDL_GetWindowFlags(self._mainWin)
+        if new:
+            flags |= sdl2.SDL_WINDOW_RESIZABLE
+        else:
+            flags &= ~sdl2.SDL_WINDOW_RESIZABLE
+
+        sdl2.SDL_DestroyTexture(self._texture)
+        sdl2.SDL_DestroyRenderer(self._renderer)
+        sdl2.SDL_DestroyWindow(self._mainWin)
+
+
+        self._mainWin = sdl2.SDL_CreateWindow(
+            sdl2.SDL_GetWindowTitle(self._mainWin) or b"Blaze Sudio game", 
+            x.value, y.value, w.value, h.value, flags
+        )
+        self._renderer = sdl2.SDL_CreateRenderer(
+            self._mainWin, -1, sdl2.SDL_RENDERER_ACCELERATED
+        )
+        self._texture = sdl2.SDL_CreateTexture(
+            self._renderer, _PIXFMT, sdl2.SDL_TEXTUREACCESS_STREAMING, *self._sze
+        )
+
+    def _resize_event(self, event):
+        self.resize(event.window.data1, event.window.data2)
+        self.rend()
+
     def rend(self):
         """
         Render the entire screen.
@@ -164,13 +201,11 @@ class _CoreCls(_SurfaceBase):
         sdl2.SDL_RenderPresent(self._renderer)
 
 
-    def set_title(self, title: str):
-        """
-        Set the title of the window
-
-        Args:
-            title (str): The new title of the window
-        """
+    @property
+    def title(self) -> str:
+        return sdl2.SDL_GetWindowTitle(self._mainWin).decode("utf-8")
+    @title.setter
+    def title(self, title):
         sdl2.SDL_SetWindowTitle(self._mainWin, title.encode("utf-8"))
     def set_icon(self, icon: Op):
         pass # TODO: This

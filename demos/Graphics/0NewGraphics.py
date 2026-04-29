@@ -15,7 +15,8 @@ def main():
 
     from BlazeSudio.graphicsCore import Core, Ix, AvgClock, Col, Op, Font
 
-    fnt = Font.SysFonts.default().sized_px(80)
+    fnt = Font.SysFonts.default()
+    fnt.size = 80
     c = AvgClock()
     cur = None
     f = 0
@@ -125,7 +126,7 @@ def main():
             times = times[-20:]
             avgFPS = sum(times)/len(times)
             PRINT_fps(avgFPS)
-            Core.set_title(f'FPS: {avgFPS}')
+            Core.title = f'FPS: {avgFPS}'
         f = (f + 1) % 720
 
     Core.Quit()
