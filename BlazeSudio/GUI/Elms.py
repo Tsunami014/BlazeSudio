@@ -36,7 +36,7 @@ class Text(Element):
     def size(self, size: int):
         self.font.size = size
     def _op(self, mat, mxsze):
-        return self._handleOp(self.font(self.txt, self.col), mat, mxsze)
+        return self._handleOp(self.font(self.txt, self.col, mxsze[0]), mat, mxsze)
     def _szes(self, mxsze, _):
         out = self.font.linesize_wid(self.txt, mxsze[0])
         return self.font.linesize(self.txt[0]), out

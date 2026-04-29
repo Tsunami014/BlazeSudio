@@ -129,6 +129,10 @@ class _FontDrawOp(NormalisedOp):
         xoffs = self._p.x
         yoffs = self._p.y + self.font.yoffs
         for c in self.text:
+            if c == '\n':
+                xoffs = self._p.x
+                yoffs += self.font.lineheight
+                continue
             char = self.font.cache[c]
             args = Translate(
                     xoffs + char.xoffs, char.yoffs + yoffs
@@ -196,13 +200,54 @@ class Font:
                 glyph.advance.x / 64, w, glyph.bitmap_left, -glyph.bitmap_top
             )
 
+    def _get_list(self, txt, maxwid, breakOnSpace=True):
+        self.load(txt)
+        advs = [(i, self.cache[i].advance, self.cache[i].width) if i != '\n' else (i,0,0) for i in txt[:-1]] + \
+                [((c:=txt[-1]), (wid:=self.cache[c].width), wid)]
+        if breakOnSpace:
+            advs2 = []
+            txt = ""
+            wid = 0
+            lastdiff = 0
+            for c, a, w in advs:
+                if c in ('\n', ' ') or wid+w >= maxwid:
+                    if c == ' ':
+                        advs2.append((txt+' ', wid+a, wid+w))
+                    else:
+                        advs2.append((txt, wid, wid+lastdiff))
+                    txt = ""
+                    wid = 0
+                    lastdiff = 0
+                    if c == '\n':
+                        advs2.append(('\n', None, None))
+                        continue
+                    if c == ' ':
+                        continue
+                txt += c
+                wid += a
+                lastdiff = w-a
+            if txt:
+                advs2.append((txt, wid, wid+lastdiff))
+            advs = advs2
+        outs = [[0, []]]
+        for ad in advs:
+            txt, a, w = ad
+            if txt == '\n' or outs[-1][0]+w >= maxwid:
+                outs.append([0, []])
+            if txt != '\n':
+                outs[-1][0] += a
+                outs[-1][1].append(ad)
+        return [(wid, ("".join(i[0] for i in ads).strip()) if ads else "") for wid, ads in outs]
+
     @lru_cache()
-    def __call__(self, txt, col: np.ndarray, *, normalise_x = None, normalise_y = None) -> _FontDrawOp:
+    def __call__(self, txt, col: np.ndarray, maxwid: int = None, breakOnSpace: bool = True, *, normalise_x = None, normalise_y = None) -> _FontDrawOp:
         """Returns an Op that will draw the provided text using this font"""
+        if maxwid is not None:
+            txt = '\n'.join(i[1] for i in self._get_list(txt, maxwid, breakOnSpace))
         return _FontDrawOp(self, txt, col, normalise_x=normalise_x, normalise_y=normalise_y)
-    def render(self, txt, col: np.ndarray, *, normalise_x = None, normalise_y = None) -> _FontDrawOp:
+    def render(self, txt, col: np.ndarray, maxwid: int = None, breakOnSpace: bool = True, *, normalise_x = None, normalise_y = None) -> _FontDrawOp:
         """Returns an Op that will draw the provided text using this font"""
-        return self(txt, col, normalise_x=normalise_x, normalise_y=normalise_y)
+        return self(txt, col, maxwid, breakOnSpace, normalise_x=normalise_x, normalise_y=normalise_y)
 
     @property
     def yoffs(self) -> float:
@@ -228,19 +273,6 @@ class Font:
     def linesize_wid(self, txt, maxwid, breakOnSpace=True) -> tuple[float, float]:
         if txt == "":
             return (0, 0)
-        self.load(txt)
-        if breakOnSpace:
-            # TODO: This
-            advs = [(i, self.cache[i].advance, self.cache[i].width) for i in txt[:-1]] + [((c:=txt[-1]), (wid:=self.cache[c].width), wid)]
-        else:
-            advs = [(i, self.cache[i].advance, self.cache[i].width) for i in txt[:-1]] + [((c:=txt[-1]), (wid:=self.cache[c].width), wid)]
-        wids = [0]
-        for c, a, w in advs:
-            if c == '\n':
-                wids.append(0)
-            elif wids[-1]+w >= maxwid:
-                wids.append(a)
-            else:
-                wids[-1] += a
+        wids = [i[0] for i in self._get_list(txt, maxwid, breakOnSpace)]
         return (max(wids)+1, len(wids)*self.lineheight)
 
