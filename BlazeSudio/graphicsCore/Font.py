@@ -184,6 +184,8 @@ class Font:
 
     def load(self, txt) -> None:
         for char in txt:
+            if char == '\n':
+                continue
             if char in self.cache:
                 continue
             self.face.load_char(char, freetype.FT_LOAD_RENDER)
@@ -211,13 +213,34 @@ class Font:
     def linewidth(self, txt) -> float:
         if txt == "":
             return 0
+        if '\n' in txt:
+            return max(self.linewidth(i) for i in txt.split('\n'))
         self.load(txt)
         return sum(
             self.cache[i].advance for i in txt[:-1]
         )+self.cache[txt[-1]].width + 1
-    def linesize(self, txt) -> float:
+    def linesize(self, txt) -> tuple[float, float]:
         return (
             self.linewidth(txt),
-            self.lineheight,
+            self.lineheight * (txt.count('\n')+1),
         )
+
+    def linesize_wid(self, txt, maxwid, breakOnSpace=True) -> tuple[float, float]:
+        if txt == "":
+            return (0, 0)
+        self.load(txt)
+        if breakOnSpace:
+            # TODO: This
+            advs = [(i, self.cache[i].advance, self.cache[i].width) for i in txt[:-1]] + [((c:=txt[-1]), (wid:=self.cache[c].width), wid)]
+        else:
+            advs = [(i, self.cache[i].advance, self.cache[i].width) for i in txt[:-1]] + [((c:=txt[-1]), (wid:=self.cache[c].width), wid)]
+        wids = [0]
+        for c, a, w in advs:
+            if c == '\n':
+                wids.append(0)
+            elif wids[-1]+w >= maxwid:
+                wids.append(a)
+            else:
+                wids[-1] += a
+        return (max(wids), len(wids)*self.lineheight)
 

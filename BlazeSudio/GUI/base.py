@@ -71,14 +71,19 @@ class Element:
     __slots__ = []
     def _op(self, mat, mxsze) -> Op:
         return OpList()
-    def _handleOp(self, op, mat, mxsze) -> Op:
+    def _handleOp(self, op, mat, bound) -> Op:
         op2 = op if not hasattr(op, "getNormalisedPos") else op @ -op.getNormalisedPos(0, 0)
-        return (op2 @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
-    def _szes(self, mxsze) -> tuple[tuple[float, float], tuple[float, float]]:
+        return (op2 @ Crop((0, 0), bound)) @ T.MatTrans(mat)
+    def _szes(self, mxsze, bound) -> tuple[tuple[float, float]|None, tuple[float, float]]|None:
         """
         Gets the sizes for the element. Returns a tuple of (minsize, maxsize)
+
+        The mxsze is the largest the element can stretch, but if there is spacing try to only size it to bound.
+        If this function returns None when bound is None, bound will actually be a value of interest; otherwise it will be the same as mxsze
+
+        If minsze is None, it is (0, 0)
         """
-        return (0, 0), (0, 0)
+        return None, (0, 0)
     def __matmul__(self, oth) -> 'TransformedElm':
         return TransformedElm(self, oth)
     def __call__(self) -> Op:
@@ -101,12 +106,16 @@ class TransformedElm(Element, Base):
                 return out @ (rpos1-rpos2)
             return out @ -rpos2
         return out
-    def _szes(self, mxsze):
+    def _szes(self, mxsze, bound):
         out = []
-        for sze in self.elm._szes(mxsze):
-            crop = [0, 0, *sze]
+        for sze in self.elm._szes(mxsze, bound):
+            outercrop = [0,0,0,0]
+            if sze is None:
+                crop = outercrop
+            else:
+                crop = [0, 0, *sze]
             nmat, ncrop, _ = self.oth.apply(IDENTITY, crop, False)
-            r = self._warpbbx(nmat, ncrop, [0,0,0,0])
+            r = self._warpbbx(nmat, ncrop, outercrop)
             out.append((r[2]-r[0], r[3]-r[1]))
         return out
 
@@ -117,10 +126,10 @@ class OpElm(Element):
     def _op(self, mat, mxsze):
         op = self.op if not hasattr(self.op, "getNormalisedPos") else self.op @ -self.op.getNormalisedPos(0, 0)
         return (op @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
-    def _szes(self, mxsze):
+    def _szes(self, mxsze, _):
         if hasattr(self.op, "rect"):
             r = self.op.rect()
             if r[0] is not None:
                 out = (r[2]-r[0], r[3]-r[1])
-                return (0, 0), out
-        return (0, 0), mxsze
+                return out, out
+        return None, mxsze

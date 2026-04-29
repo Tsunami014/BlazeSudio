@@ -243,7 +243,7 @@ class Op(ABC, _basey.Base):
             oth = Vec2(*oth)
         return TransOp(self.frozen(), oth)
 
-    def _op(self, mat, crop) -> Self: # For GUI integration
+    def _op(self, mat, mxsze) -> Self: # For GUI integration
         return self
 
     def __iter__(self):

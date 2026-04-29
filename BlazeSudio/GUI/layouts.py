@@ -88,59 +88,100 @@ class _BaseLayout(Element):
         return self._children.pop(idx)
 
 
-    def _getSzes(self, mxsze):
-        if self._szesCache[0] != mxsze or self._dirty:
-            szes = []
+    def _getSzes(self, mxsze, bound):
+        if self._szesCache[0] != (mxsze, bound) or self._dirty:
             # cursze, maxsze, stretch, elm, otheraxis
+            szes = []
+
+            # Build the list
             for c in self._children:
                 if c[1]:
                     szes.append([0, c[0], 1, None, 0])
                 elif c[0] is None:
                     szes.append([0, None, c[2], None, 0])
                 else:
-                    mn, mx = c[0]._szes(mxsze)
-                    szes.append([mn[self._DIRECTION], mx[self._DIRECTION], c[2] or 1, c[0], mx[1-self._DIRECTION]])
+                    mn, mx = c[0]._szes(mxsze, bound)
+                    szes.append([
+                        (mn[self._DIRECTION] if mn is not None else 0), mx[self._DIRECTION],
+                        c[2] or 1, c[0], 0])
+            # Find the lengths of all elements except stretch
             maxsize = mxsze[self._DIRECTION] - self.spacing*(len(szes)-1)
             while True:
                 left = maxsize-sum(i[0] for i in szes)
                 if left <= 0:
                     break
-                n = sum(int(i[1] is None or i[0] < i[1])*(i[2] or 0) for i in szes)
+                n = sum(int(i[1] is None or i[0] < i[1])*(i[2] or 0) for i in szes if i[1] is not None)
                 if n == 0:
                     break
                 each = left / n
                 for s in szes:
-                    if s[2] is None:
+                    if s[2] is None or s[3] is None:
                         continue
-                    olds0 = s[0]
-                    s[0] = olds0 + each*s[2]
+                    s[0] = s[0] + each*s[2]
                     if s[1] is not None:
                         s[0] = min(s[0], s[1])
-                    if s[3] is not None and s[0] != olds0:
+
+            # Find the depth of the elms, saving the ones that require a bound argument
+            saves = []
+            mxothsze = mxsze[1-self._DIRECTION]
+            for s in szes:
+                if s[3] is not None:
+                    mxsz = (s[0], mxothsze)[::self._FLIP]
+                    sz = s[3]._szes(mxsz, None)
+                    if sz is None:
+                        saves.append(s)
+                    else:
                         s[4] = min(
-                            s[3]._szes((s[0], mxsze[1-self._DIRECTION])[::self._FLIP])[1][1-self._DIRECTION],
-                            mxsze[1-self._DIRECTION])
-            self._szesCache = [mxsze, szes]
+                            sz[1][1-self._DIRECTION],
+                            mxothsze)
+            # Now depth the saved
+            if saves:
+                mxother = max(s[4] for s in szes) or bound[1-self._DIRECTION]
+                for s in saves:
+                    mxsz = (s[0], mxothsze)[::self._FLIP]
+                    bnd = (s[0], mxother)[::self._FLIP]
+                    s[4] = min(
+                        s[3]._szes(mxsz, bnd)[1][1-self._DIRECTION],
+                        mxothsze)
+
+            # Now length the stretches
+            n = sum(int(i[1] is None) for i in szes)
+            if n != 0:
+                maxsize = bound[self._DIRECTION] - sum(i[0] for i in szes) - self.spacing*(len(szes)-1)
+                if maxsize > 0:
+                    left = maxsize / n
+                    for s in szes:
+                        if s[1] is None:
+                            s[0] = left
+            self._szesCache = [(mxsze, bound), szes]
             return szes
         return self._szesCache[1]
 
     def _op(self, mat, mxsze):
         li = OpList()
         offs = 0
-        for s in self._getSzes(mxsze):
+        for s in self._getSzes(mxsze, mxsze):
             if s[3] is not None:
-                v2 = Vec2(offs, 0) if self._DIRECTION == 0 else Vec2(0, offs)
-                li += s[3]._op(mat @ v2.mat, (s[0], mxsze[1-self._DIRECTION])[::self._FLIP])
+                v2 = Vec2((offs, 0)[::self._FLIP])
+                sz = (s[0], s[4])[::self._FLIP]
+                li += s[3]._op(mat @ v2.mat, sz)
             offs += s[0] + self.spacing
         return li
 
-    def _szes(self, mxsze):
-        szes = self._getSzes(mxsze)
-        return (0, 0), (sum(s[0] for s in szes), max(s[4] for s in szes))[::self._FLIP]
+    def _szes(self, mxsze, bound):
+        if bound is None:
+            return None
+        szes = self._getSzes(mxsze, bound)
+        minszes = [((e:=s[3]._szes(mxsze, bound)[0] or (0, 0))[self._DIRECTION], e[1-self._DIRECTION]) for s in szes if s[3] is not None]
+        if len(minszes) == 0:
+            minszes = [(0, 0)]
+        space = (self.spacing*(len(szes)-1), 0)[::self._FLIP]
+        return (sum(s[0] for s in minszes)+space[0], max(s[1] for s in minszes)+space[1])[::self._FLIP], \
+            (sum(s[0] for s in szes)+space[0], max(s[4] for s in szes)+space[1])[::self._FLIP]
 
 
 class Layouts:
-    def __new__(cls):
+    def __new__(cls, *_):
         raise NotImplementedError("This class cannot be instantiated!")
 
     class Horiz(_BaseLayout):
@@ -149,4 +190,23 @@ class Layouts:
     class Vert(_BaseLayout):
         _DIRECTION = 1
         _FLIP = -1
+
+    @staticmethod
+    def CentreHoriz(*elms, spacing: float = 10):
+        """Centre elements horizontally"""
+        return (Layouts.Horiz(spacing=spacing)
+            .add_stretch(1)
+            .add_elms(elms)
+            .add_stretch(1))
+    @staticmethod
+    def CentreVert(*elms, spacing: float = 10):
+        """Centre elements vertically"""
+        return (Layouts.Vert(spacing=spacing)
+            .add_stretch(1)
+            .add_elms(elms)
+            .add_stretch(1))
+    @staticmethod
+    def CentreBoth(*elms, spacing: float = 10):
+        """Centre elements both vertically and horizontally"""
+        return Layouts.CentreVert(Layouts.CentreHoriz(*elms, spacing=spacing), spacing=spacing)
 
