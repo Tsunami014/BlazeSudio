@@ -4,7 +4,6 @@ from BlazeSudio.graphicsCore.base import Op, OpList, IDENTITY, Trans
 from BlazeSudio.graphicsCore.core import Core, _CoreCls
 from BlazeSudio.graphicsCore._basey import Base
 from BlazeSudio.graphicsCore import Ix, Trans as T
-from enum import IntEnum
 from typing import Self
 
 __all__ = [
@@ -97,11 +96,22 @@ class Element:
         sze = Core.size
         return self._op(IDENTITY, (sze[0], sze[1]))
 
+
+class BaseO:
+    def __getitem__(self, it) -> int:
+        return {i: j for i, j in BaseO.__dict__.items() if not i.startswith('__')}[it]
+    """No options will be applied"""
+    none = 0
+    """The default options (None)"""
+    Default = 0
+    """Centres the element instead of having it align to the left (overrides RightAlign if both are applied)"""
+    CentreAlign = -0b1
+    """Aligns to the right instead of the left"""
+    RightAlign = -0b10
+
 class UIElement(Element):
     __slots__ = ['opts']
-    class O(IntEnum):
-        """No options will be applied"""
-        none = 0
+    class O(BaseO): ...
     def __init__(self, *, opts: O = O.none):
         if opts is None:
             self.opts = self.O.none

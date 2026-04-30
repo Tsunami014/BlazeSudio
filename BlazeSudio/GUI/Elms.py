@@ -1,4 +1,4 @@
-from .base import UIElement, IntEnum, Col
+from .base import UIElement, BaseO, Col
 from BlazeSudio.graphicsCore import Font
 from typing import Iterable
 
@@ -9,24 +9,17 @@ __all__ = [
 class Text(UIElement):
     __slots__ = ['font', 'txt', 'col']
     """The Options (use | to combine)"""
-    class O(IntEnum):
-        """No options will be applied"""
-        none = 0
+    class O(BaseO):
         """Whether to break on words if go over the width (if not, breaks mid-word)"""
         BreakOnWord = 0b1
-        """Centres the text (overrides RightAlign if both are applied)"""
-        CentreAlign = 0b10
-        """Aligns the text to the right"""
-        RightAlign = 0b100
-
         """The defaults are: BreakOnWord"""
-        Defaults = BreakOnWord
+        Default = BreakOnWord
     def __init__(self,
                  txt: str,
                  sze: int = 24,
                  col: Col.colourType = Col.Black,
                  fontOpts: Iterable[str] = None,
-                 *, opts: O = O.Defaults):
+                 *, opts: O = O.Default):
         """
         Just some text
 

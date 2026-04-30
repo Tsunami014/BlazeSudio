@@ -1,4 +1,4 @@
-from .base import Element
+from .base import BaseO, Element
 from BlazeSudio.graphicsCore.base import OpList, Vec2
 from dataclasses import dataclass
 from typing import Self, Iterable
@@ -201,18 +201,38 @@ class Layouts:
     def CentreHoriz(*elms, spacing: float = 10):
         """Centre elements horizontally"""
         return (Layouts.Horiz(spacing=spacing)
-            .add_stretch(1)
+            .add_stretch()
             .add_elms(elms)
-            .add_stretch(1))
+            .add_stretch())
     @staticmethod
     def CentreVert(*elms, spacing: float = 10):
         """Centre elements vertically"""
         return (Layouts.Vert(spacing=spacing)
-            .add_stretch(1)
+            .add_stretch()
             .add_elms(elms)
-            .add_stretch(1))
+            .add_stretch())
     @staticmethod
     def CentreBoth(*elms, spacing: float = 10):
         """Centre elements both vertically and horizontally"""
         return Layouts.CentreVert(Layouts.CentreHoriz(*elms, spacing=spacing), spacing=spacing)
+
+    @staticmethod
+    def AlignLeft(elm):
+        """Returns the element (it defaults to aligning left)"""
+        return elm
+    @staticmethod
+    def AlignCentre(elm):
+        """Adds the zCentreAlign option to the element and puts it in a layout"""
+        elm.opts |= BaseO.CentreAlign
+        return (Layouts.Horiz(spacing=0)
+            .add_stretch()
+            .add_elm(elm)
+            .add_stretch())
+    @staticmethod
+    def AlignRight(elm):
+        """Adds the RightAlign option to the element and puts it in a layout"""
+        elm.opts |= BaseO.RightAlign
+        return (Layouts.Horiz(spacing=0)
+            .add_stretch()
+            .add_elm(elm))
 
