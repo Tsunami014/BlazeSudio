@@ -2,14 +2,16 @@
 def main():
     from BlazeSudio.graphicsCore import Draw
     from BlazeSudio.GUI import OpElm
-    from BlazeSudio.GUI import UI, Layouts, Elms
+    from BlazeSudio.GUI import UI, Layouts, Elms, Input
 
     UI(
         Layouts.CentreVert(
             Layouts.CentreHoriz(
                 OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
                 Layouts.CentreVert(
-                    Elms.Text("This is a test!", opts=None),
+                    Input.Button(
+                        Elms.Text("This is a test!", opts=None),
+                    ),
                 ),
                 OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
             ),

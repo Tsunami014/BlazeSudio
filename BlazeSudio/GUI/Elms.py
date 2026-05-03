@@ -8,7 +8,6 @@ __all__ = [
 
 class Text(UIElement):
     __slots__ = ['font', 'txt', 'col']
-    """The Options (use | to combine)"""
     class O(BaseO):
         """Whether to break on words if go over the width (if not, breaks mid-word)"""
         BreakOnWord = 0b1
