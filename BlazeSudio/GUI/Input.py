@@ -1,6 +1,6 @@
 from .base import Element, UIElement, BaseO, Col
 from BlazeSudio.graphicsCore.base import Vec2
-from BlazeSudio.graphicsCore import Draw, Trans
+from BlazeSudio.graphicsCore import Draw, Trans, Events
 
 __all__ = [
     "Button"
@@ -49,3 +49,10 @@ class Button(UIElement):
                 mn = (mn[0]+self.pad*2, mn[1]+self.pad*2)
         mx = (mx[0]+self.pad*2, mx[1]+self.pad*2)
         return mn, mx
+
+    def onevent(self, ev):
+        return self.inner.onevent(ev)
+    def onmouseevent(self, ev, mxsze):
+        if (click := Events.MouseEvent(ev, Events.EvTyp.MouseUp)):
+            print(f"Clicked at {click.pos}")
+        return self.inner.onmouseevent(ev.translated(-self.pad, -self.pad), (mxsze[0]-self.pad*2, mxsze[1]-self.pad*2))

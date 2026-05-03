@@ -179,7 +179,7 @@ class Event:
         ```
         """
         if typ is None:
-            if var not in cls._types.values():
+            if var.typ not in cls._types.values():
                 return False
             return var
         if not any((k & typ)==typ for k in cls._types.values()):
@@ -208,6 +208,11 @@ class Event:
         o = object.__new__(cls)
         o._dc_init(o, **kwargs)
         return o
+
+    def copy(self) -> Self:
+        return self.create(
+            **{i: getattr(self, i) for i in self.__slots__}
+        )
 
 
 @Dataclass
@@ -277,10 +282,68 @@ class KeyEvent(Event):
             _modifiers = k.mod
         )
 
+@Dataclass
+class MouseEvent(Event):
+    window_id: int
+    """ID of the window that received the event"""
+
+    pos: tuple[int]
+    """Mouse position (relative to window)"""
+    rel: tuple[int] = (0, 0)
+    """Relative motion (or scroll direction)"""
+
+    button: int = 0
+    """Mouse button (1=left, 2=middle, 3=right, etc.)"""
+    state: bool = False
+    """True if button pressed, False if released"""
+    clicks: int = 0
+    """Number of clicks (for button events)"""
+
+    _types = {
+        sdl2.SDL_MOUSEMOTION: EvTyp.MouseMove,
+        sdl2.SDL_MOUSEBUTTONDOWN: EvTyp.MouseDown,
+        sdl2.SDL_MOUSEBUTTONUP: EvTyp.MouseUp,
+        sdl2.SDL_MOUSEWHEEL: EvTyp.MouseScroll,
+    }
+
+    def translated(self, dx, dy) -> Self:
+        new = self.copy()
+        new.pos = (new.pos[0]+dx, new.pos[1]+dy)
+        return new
+
+    @classmethod
+    def _from_sdl(cls, ev, typ):
+        if typ == EvTyp.MouseMove:
+            ev = ev.motion
+            return Event._from_sdl(cls, ev, typ,
+                window_id = ev.windowID,
+                pos = (ev.x, ev.y),
+                rel = (ev.xrel, ev.yrel)
+            )
+
+        elif typ in (EvTyp.MouseDown, EvTyp.MouseUp):
+            ev = ev.button
+            return Event._from_sdl(cls, ev, typ,
+                window_id = ev.windowID,
+                pos = (ev.x, ev.y),
+                button = ev.button,
+                state = ev.state == sdl2.SDL_PRESSED,
+                clicks = ev.clicks
+            )
+
+        elif typ == EvTyp.MouseScroll:
+            ev = ev.wheel
+            return Event._from_sdl(cls, ev, typ,
+                window_id = ev.windowID,
+                pos = (ev.mouseX, ev.mouseY),
+                rel = (ev.x, ev.y)
+            )
+
 
 EVENT_LIST = (
     QuitEvent,
-    KeyEvent
+    KeyEvent,
+    MouseEvent,
 )
 EVENT_NAMES = [
     ev.__name__ for ev in EVENT_LIST

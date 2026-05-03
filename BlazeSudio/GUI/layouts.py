@@ -185,6 +185,27 @@ class _BaseLayout(Element):
         return (sum(s[0] for s in minszes)+space, max(s[1] for s in minszes))[::self._FLIP], \
             (sum(s[0] for s in szes)+space, max(s[4] for s in szes))[::self._FLIP]
 
+    def onevent(self, ev):
+        li = [i[0] for i in self._children if (not i[1]) and i[0] is not None]
+        li.sort(key=lambda x: x.IMPORTANCE)
+        for it in li:
+            if it.onevent(ev):
+                return True
+        return False
+    def onmouseevent(self, ev, mxsze):
+        point = ev.pos[self._DIRECTION]
+
+        offs = 0
+        for s in self._getSzes(mxsze, mxsze):
+            add = s[0]
+            if offs <= point <= offs+add:
+                if s[3] is not None:
+                    sz = (s[0], s[4])[::self._FLIP]
+                    return s[3].onmouseevent(ev.translated(*((-offs, 0)[::self._FLIP])), sz)
+                return False
+            offs += add + self.spacing
+        return False
+
 
 class Layouts:
     def __new__(cls, *_):

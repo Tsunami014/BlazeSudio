@@ -3,7 +3,7 @@ from BlazeSudio.graphicsCore.stuff import Col, AvgClock
 from BlazeSudio.graphicsCore.base import Op, OpList, IDENTITY, Trans
 from BlazeSudio.graphicsCore.core import Core, _CoreCls
 from BlazeSudio.graphicsCore._basey import Base
-from BlazeSudio.graphicsCore import Ix, Trans as T
+from BlazeSudio.graphicsCore import Ix, Events, Trans as T
 from typing import Self
 
 __all__ = [
@@ -53,13 +53,19 @@ class _UIBase:
 
     def Run(self, maxfps: float = None, *, quit_after: bool = True, fps_title: bool = False):
         while Ix.handleBasic():
-            self.clock.tick(maxfps)
+            for ev in Ix.loopEvs():
+                if Events.MouseEvent(ev):
+                    size = Core.size
+                    self.elm.onmouseevent(ev, (size[0], size[1]))
+                else:
+                    self.elm.onevent(ev)
             if fps_title:
                 Core.title = f'FPS: {round(self.clock.get_fps(), 2)}'
             if self.elm is None:
                 Core(Fill(self.bgcol)).rend()
             else:
                 Core(Fill(self.bgcol)+self.elm()).rend()
+            self.clock.tick(maxfps)
         if quit_after:
             Core.Quit()
     def __getattribute__(self, name):
@@ -75,6 +81,8 @@ UI: _UITyping = _UIBase()
 
 class Element:
     __slots__ = []
+    IMPORTANCE: int = 0
+    """How important this element is (when judging element for event handling, higher = more important (handles events first))"""
     def _op(self, mat, mxsze) -> Op:
         return OpList()
     def _handleOp(self, op, mat, mxsze) -> Op:
@@ -90,6 +98,12 @@ class Element:
         If minsze is None, it is (0, 0)
         """
         return None, (0, 0)
+    def onevent(self, ev: Events.Event) -> bool:
+        """Will not recieve mouse events. Returns whether it used the event (and so no other elements are allowed to use it)"""
+        return True
+    def onmouseevent(self, ev: Events.MouseEvent, mxsze) -> bool:
+        """Returns whether it used the event (and so no other elements are allowed to use it)"""
+        return True
     def __matmul__(self, oth) -> 'TransformedElm':
         return TransformedElm(self, oth)
     def __call__(self) -> Op:
@@ -100,14 +114,14 @@ class Element:
 class BaseO:
     def __getitem__(self, it) -> int:
         return {i: j for i, j in BaseO.__dict__.items() if not i.startswith('__')}[it]
-    """No options will be applied"""
     none = 0
-    """The default options (None)"""
+    """No options will be applied"""
     Default = 0
-    """Centres the element instead of having it align to the left (overrides RightAlign if both are applied)"""
+    """The default options (None)"""
     CentreAlign = -0b1
-    """Aligns to the right instead of the left"""
+    """Centres the element instead of having it align to the left (overrides RightAlign if both are applied)"""
     RightAlign = -0b10
+    """Aligns to the right instead of the left"""
 
 class UIElement(Element):
     __slots__ = ['opts']
@@ -149,6 +163,13 @@ class TransformedElm(Element, Base):
             r = self._warpbbx(nmat, ncrop, outercrop)
             out.append((r[2]-r[0], r[3]-r[1]))
         return out
+
+    def onevent(self, ev):
+        return self.elm.onevent(ev)
+    def onmouseevent(self, ev, mxsze):
+        # TODO: This (have to warp the event's positions and stuff)
+        warped = ev.copy()
+        return self.elm.onmouseevent(warped, self._szes(mxsze, mxsze)[1])
 
 class OpElm(Element):
     __slots__ = ['op']
