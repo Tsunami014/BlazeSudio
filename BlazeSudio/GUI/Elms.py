@@ -9,10 +9,10 @@ __all__ = [
 class Text(UIElement):
     __slots__ = ['font', 'txt', 'col']
     class O(BaseO):
-        """Whether to break on words if go over the width (if not, breaks mid-word)"""
         BreakOnWord = 0b1
-        """The defaults are: BreakOnWord"""
+        """Whether to break on words if go over the width (if not, breaks mid-word)"""
         Default = BreakOnWord
+        """The defaults are: BreakOnWord"""
     def __init__(self,
                  txt: str,
                  sze: int = 24,

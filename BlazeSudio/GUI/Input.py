@@ -9,8 +9,8 @@ __all__ = [
 class Button(UIElement):
     __slots__ = ['inner', 'col', 'pad', 'round']
     class O(BaseO):
-        """If enabled, the padding will be able to shrink to nothing if the layout is too small."""
         FlexPad = 0b1
+        """If enabled, the padding will be able to shrink to nothing if the layout is too small."""
     def __init__(self,
                  inner: Element,
                  col: Col.colourType = Col.Grey,
