@@ -192,19 +192,19 @@ class _BaseLayout(Element):
             if it.onevent(ev):
                 return True
         return False
-    def onmouseevent(self, ev, mxsze):
-        point = ev.pos[self._DIRECTION]
-
+    def mouseevents(self, evs, mxsze):
         offs = 0
         for s in self._getSzes(mxsze, mxsze):
             add = s[0]
-            if offs <= point <= offs+add:
-                if s[3] is not None:
-                    sz = (s[0], s[4])[::self._FLIP]
-                    return s[3].onmouseevent(ev.translated(*((-offs, 0)[::self._FLIP])), sz)
-                return False
+            if s[3] is not None:
+                nevs = []
+                trns = (-offs, 0)[::self._FLIP]
+                for ev in evs:
+                    if offs <= ev.pos[self._DIRECTION] <= offs+add:
+                        nevs.append(ev.translated(*trns))
+                sz = (s[0], s[4])[::self._FLIP]
+                s[3].mouseevents(nevs, sz)
             offs += add + self.spacing
-        return False
 
 
 class Layouts:

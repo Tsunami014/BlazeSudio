@@ -117,7 +117,32 @@ class Col:
         g = (val >> 8) & 0xFF
         b = val & 0xFF
         return (r, g, b, 255)
+    @classmethod
+    def hsv(cls, h: int, s: int, v: int, a: int = 255) -> colourType:
+        if s == 0.0:
+            return v, v, v
 
+        h /= 60.0 # Sector 0 to 5
+        i = int(h)
+        f = h - i # Factorial part of h
+        p = v * (1.0 - s)
+        q = v * (1.0 - s * f)
+        t = v * (1.0 - s * (1.0 - f))
+
+        if i == 0:
+            return (v, t, p, a)
+        if i == 1:
+            return (q, v, p, a)
+        if i == 2:
+            return (p, v, t, a)
+        if i == 3:
+            return (p, q, v, a)
+        if i == 4:
+            return (t, p, v, a)
+        return (v, p, q, a)
+    @classmethod
+    def hsva(cls, h: int, s: int, v: int, a: int) -> colourType:
+        return cls.hsv(h, s, v, a)
     @classmethod
     def to_rgb(cls, col: colourType) -> Tuple[int, int, int]:
         return col[:3]
@@ -133,7 +158,58 @@ class Col:
         if upper:
             return o.upper()
         return o
-    # TODO: to/from hsv
+    @classmethod
+    def to_hsv(cls, col: colourType) -> Tuple[int, int, int]:
+        r, g, b = col[0] / 255.0, col[1] / 255.0, col[2] / 255.0
+        mx = max(r, g, b)
+        mn = min(r, g, b)
+        diff = mx - mn
+
+        v = mx
+        s = 0 if mx == 0 else diff / mx
+        h = 0
+        if diff != 0:
+            if mx == r:
+                h = (60 * ((g - b) / diff) + 360) % 360
+            elif mx == g:
+                h = (60 * ((b - r) / diff) + 120) % 360
+            elif mx == b:
+                h = (60 * ((r - g) / diff) + 240) % 360
+
+        return (h, s, v)
+    @classmethod
+    def to_hsva(cls, col: colourType) -> Tuple[int, int, int, int]:
+        return (*cls.to_hsv(col), col[3])
+
+    @classmethod
+    def add_rgb(cls, col: colourType, r: int, g: int, b: int, a: int = 255) -> colourType:
+        clamp = lambda val: max(min(val, 255), 0)
+        return (clamp(col[0]+r), clamp(col[1]+g), clamp(col[2]+b), clamp(col[3]+a))
+    @classmethod
+    def add_rgba(cls, col: colourType, r: int, g: int, b: int, a) -> colourType:
+        return cls.add_rgba(col, r, g, b, a)
+    @classmethod
+    def add_hsv(cls, col: colourType, h: int, s: int, v: int, a: int = 255) -> colourType:
+        clamp = lambda val, mx: max(min(val, mx), 0)
+        oh, os, ov = cls.to_hsv(col)
+        return cls.hsv(
+            clamp(oh+h, 360),
+            clamp(os+s, 100),
+            clamp(ov+v, 100),
+            clamp(col[3]+a, 255),
+        )
+    @classmethod
+    def add_hsva(cls, col: colourType, h: int, s: int, v: int, a: int) -> colourType:
+        return cls.add_hsv(col, h, s, v, a)
+
+    @classmethod
+    def lighten(cls, col: colourType, amnt: int):
+        """Increase the brightness of the colour by amnt (0-255)"""
+        return cls.add_rgb(col, amnt, amnt, amnt)
+    @classmethod
+    def darken(cls, col: colourType, amnt: int):
+        """Decrease the brightness of the colour by amnt (0-255)"""
+        return cls.add_rgb(col, -amnt, -amnt, -amnt)
 
     Black = (0, 0, 0, 255)
     Grey = (125, 125, 125, 255)

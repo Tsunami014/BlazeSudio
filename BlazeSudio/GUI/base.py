@@ -53,12 +53,21 @@ class _UIBase:
 
     def Run(self, maxfps: float = None, *, quit_after: bool = True, fps_title: bool = False):
         while Ix.handleBasic():
+            mevs = []
             for ev in Ix.loopEvs():
                 if Events.MouseEvent(ev):
-                    size = Core.size
-                    self.elm.onmouseevent(ev, (size[0], size[1]))
+                    mevs.append(ev)
                 else:
                     self.elm.onevent(ev)
+            # Create an event whose sole purpose is to signal the existance of the mouse
+            mevs.append(Events.MouseEvent.create(
+                timestamp = None,
+                typ = Events.EvTyp.Mouse,
+                window_id = None,
+                pos = Ix.Mouse.pos,
+            ))
+            size = Core.size
+            self.elm.mouseevents(mevs, (size[0], size[1]))
             if fps_title:
                 Core.title = f'FPS: {round(self.clock.get_fps(), 2)}'
             if self.elm is None:
@@ -101,9 +110,8 @@ class Element:
     def onevent(self, ev: Events.Event) -> bool:
         """Will not recieve mouse events. Returns whether it used the event (and so no other elements are allowed to use it)"""
         return True
-    def onmouseevent(self, ev: Events.MouseEvent, mxsze) -> bool:
-        """Returns whether it used the event (and so no other elements are allowed to use it)"""
-        return True
+    def mouseevents(self, evs: list[Events.MouseEvent], mxsze):
+        pass
     def __matmul__(self, oth) -> 'TransformedElm':
         return TransformedElm(self, oth)
     def __call__(self) -> Op:
@@ -166,10 +174,10 @@ class TransformedElm(Element, Base):
 
     def onevent(self, ev):
         return self.elm.onevent(ev)
-    def onmouseevent(self, ev, mxsze):
+    def mouseevents(self, evs, mxsze):
         # TODO: This (have to warp the event's positions and stuff)
-        warped = ev.copy()
-        return self.elm.onmouseevent(warped, self._szes(mxsze, mxsze)[1])
+        nevs = []
+        return self.elm.mouseevents(nevs, self._szes(mxsze, mxsze)[1])
 
 class OpElm(Element):
     __slots__ = ['op']

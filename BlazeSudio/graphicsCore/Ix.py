@@ -33,7 +33,6 @@ def __getattr__(name):
 class _KeysMeta(type):
     def __getitem__(cls, key):
         return cls._getit(key)
-
 class Keys(metaclass=_KeysMeta):
     """
     Get keys pressed or key events
@@ -42,15 +41,15 @@ class Keys(metaclass=_KeysMeta):
     - Has a key event happened? Use the `Keys.event` function
     - Are any keyboard modifiers pressed? Use the booleans starting with `m` - e.g. `Keys.mShift`, `Keys.mCtrl` or `Keys.mAlt`
     """
-    _kbdState: object
+    _kbdState: object = {}
     _keyEvs: Iterable[Event] = []
-    mShift: bool
-    mCtrl: bool
-    mAlt: bool
-    mGui: bool
+    mShift: bool = False
+    mCtrl: bool = False
+    mAlt: bool = False
+    mGui: bool = False
     """'Windows'/'Command'/'Super' key"""
-    mNumLock: bool
-    mCapsLock: bool
+    mNumLock: bool = False
+    mCapsLock: bool = False
     @classmethod
     def _getit(cls, key):
         ln = len(key)
@@ -71,48 +70,23 @@ class Keys(metaclass=_KeysMeta):
     @classmethod
     def events(cls): pass # TODO: This, and also have lots of optional filters
 
-class Mouse:
-    """
-    Get mouse buttons/movement
-
-    - Is a mouse button pressed? Use e.g. `Mouse.left`
-    - Mouse position? Use `Mouse.pos`, `Mouse.x` or `Mouse.y`
-    - Set the mouse position? Use e.g. `Mouse.x = 10` (can set x, y or pos)
-    """
-    left: bool
-    l: bool
-    """Short for Mouse.left"""
-    middle: bool
-    m: bool
-    """Short for Mouse.middle"""
-    right: bool
-    r: bool
-    """Short for Mouse.right"""
-    x1: bool
-    """Extra button 1"""
-    x2: bool
-    """Extra button 2"""
-    _pos: Iterable[int]
-    pos: Iterable[int]
-    x: int
-    y: int
-    def __getattr__(self, name):
+class _MouseMeta(type):
+    def __getattribute__(self, name):
         if name == 'l':
             return self.left
-        elif name == 'm':
+        if name == 'm':
             return self.middle
-        elif name == 'r':
+        if name == 'r':
             return self.right
-        elif name == 'pos':
+        if name == 'pos':
             return self._pos
-        elif name == 'x':
+        if name == 'x':
             return self.pos[0]
-        elif name == 'y':
+        if name == 'y':
             return self.pos[1]
-        else:
-            return object.__getattribute__(self, name)
+        return object.__getattribute__(self, name)
 
-    def __setattr__(self, name, value):
+    def __setattribute__(self, name, value):
         if name == 'x':
             name = 'pos'
             value = (value, self._pos[1])
@@ -122,9 +96,34 @@ class Mouse:
         if name == 'pos':
             pass # TODO: Set mouse position
         else:
-            return super().__setattr__(name, value)
+            return object.__setattr__(self, name, value)
+class Mouse(metaclass=_MouseMeta):
+    """
+    Get mouse buttons/movement
 
-# Make class for controller
+    - Is a mouse button pressed? Use e.g. `Mouse.left`
+    - Mouse position? Use `Mouse.pos`, `Mouse.x` or `Mouse.y`
+    - Set the mouse position? Use e.g. `Mouse.x = 10` (can set x, y or pos)
+    """
+    left: bool = False
+    l: bool
+    """Short for Mouse.left"""
+    middle: bool = False
+    m: bool
+    """Short for Mouse.middle"""
+    right: bool = False
+    r: bool
+    """Short for Mouse.right"""
+    x1: bool = False
+    """Extra button 1"""
+    x2: bool = False
+    """Extra button 2"""
+    _pos: Iterable[int] = (-1, -1)
+    pos: Iterable[int]
+    x: int
+    y: int
+
+# TODO: Make class for controller
 
 # events need to be done
 def _upd():
