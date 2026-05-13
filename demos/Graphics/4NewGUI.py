@@ -4,6 +4,13 @@ def main():
     from BlazeSudio.GUI import OpElm
     from BlazeSudio.GUI import UI, Layouts, Elms, Input
 
+    txt = Elms.Text("")
+    clks = 0
+    def onclk(_=None):
+        nonlocal clks
+        txt.txt = f"{clks} clicks!"
+        clks += 1
+    onclk()
     UI(
         Layouts.CentreVert(
             Layouts.CentreHoriz(
@@ -11,8 +18,10 @@ def main():
                 Layouts.CentreVert(
                     Input.Button(
                         Elms.Text("This is a test!", opts=None),
+                        onclick=onclk
                     ),
                 ),
+                Layouts.CentreVert(txt),
                 OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
             ),
             Layouts.AlignCentre(
