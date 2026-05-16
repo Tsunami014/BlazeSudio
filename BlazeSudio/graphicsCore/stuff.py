@@ -211,9 +211,25 @@ class Col:
         """Decrease the brightness of the colour by amnt (0-255)"""
         return cls.add_rgb(col, -amnt, -amnt, -amnt)
 
-    Black = (0, 0, 0, 255)
-    Grey = (125, 125, 125, 255)
-    White = (255, 255, 255, 255)
+    TrueBlack = (0, 0, 0, 255)
+    TrueGrey = (125, 125, 125, 255)
+    TrueWhite = (255, 255, 255, 255)
     Transparent = (0, 0, 0, 0)
-    # TODO: themes - repeated colours (and 'highlight 1', 'tone 3', etc.) put in a list so apps can easily theme switch
+
+    Red = (247, 118, 142, 255)
+    Orange = (255, 158, 100, 255)
+    Yellow = (224, 175, 104, 255)
+    Green = (224, 175, 104, 255)
+    Blue = (42, 195, 222, 255)
+    Indigo = (122, 162, 247, 255)
+    Purple = (187, 154, 247, 255)
+    White = (192, 202, 245, 255)
+    LightGrey = (169, 177, 214, 255)
+    Grey = (86, 95, 137, 255)
+    Black = (26, 27, 38, 255)
+
+    Background = (242, 250, 255, 255)
+    Primary = (130, 102, 182, 255)
+    Secondary = (55, 115, 150, 255)
+    Accent = (183, 134, 61, 255)
 

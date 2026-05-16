@@ -1,6 +1,5 @@
 import freetype
 import numpy as np
-from typing import Self
 from dataclasses import dataclass
 from functools import lru_cache
 from .base import NormalisedOp, Vec2

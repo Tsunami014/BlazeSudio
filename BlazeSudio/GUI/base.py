@@ -38,7 +38,7 @@ class _UIBase:
     def __new__(cls):
         if cls.__instance is None:
             cls.__instance = super().__new__(cls)
-            cls.__instance.bgcol = Col.White
+            cls.__instance.bgcol = Col.Background
             cls.__instance.clock = AvgClock()
             cls.elm = None
         return cls.__instance

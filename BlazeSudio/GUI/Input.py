@@ -14,7 +14,7 @@ class ButtonBase(UIElement):
         """If enabled, the padding will be able to shrink to nothing if the layout is too small."""
     def __init__(self,
                  inner: Element,
-                 col: Col.colourType = Col.Grey,
+                 col: Col.colourType = Col.Primary,
                  padding: float = 24,
                  roundness: float = 12,
                  onclick: Callable = None,
@@ -68,7 +68,7 @@ class Button(ButtonBase):
     __slots__ = ['state']
     def __init__(self,
                  inner: Element,
-                 col: Col.colourType = Col.Grey,
+                 col: Col.colourType = Col.Primary,
                  padding: float = 24,
                  roundness: float = 12,
                  onclick: Callable = None,

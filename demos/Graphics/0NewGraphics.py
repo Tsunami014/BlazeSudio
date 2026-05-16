@@ -35,7 +35,7 @@ def main():
         f = 1
         times = []
 
-        ops = Op.Fill(Col.White)
+        ops = Op.Fill(Col.Background)
         match new:
             case 0: # Blank
                 perframe = lambda _: Core(ops)
@@ -43,31 +43,31 @@ def main():
                 # It can handle decimals!
                 ops += (
                     + Op.Draw.Line((10.5, 10.5), (200.25, 100.75), 15, Col.Black)
-                    + Op.Draw.Polygon([(100, 100.5), (200, 300), (0, 300)], 30, Col(80, 100, 250))
-                    + Op.Draw.Rect((30.5, 50), (100.25, 80.3333333), 10, Col.Grey, roundness=30)
-                    + Op.Draw.Rect(100, 150, 30, 50, 10, Col.Black)
-                    + Op.Draw.Circle(300, 300, 10, 5, Col(255, 100, 100))
-                    + Op.Draw.Elipse((100, 100), 50, 30, 10, Col(80, 255, 100))
+                    + Op.Draw.Polygon([(100, 100.5), (200, 300), (0, 300)], 30, Col.Red)
+                    + Op.Draw.Rect((30.5, 50), (100.25, 80.3333333), 10, Col.Orange, roundness=30)
+                    + Op.Draw.Rect(100, 150, 30, 50, 10, Col.Yellow)
+                    + Op.Draw.Circle(300, 300, 10, 5, Col.Green)
+                    + Op.Draw.Elipse((100, 100), 50, 30, 10, Col.Indigo)
                 )
                 # Testing entirely fill
                 ops += (
-                    + Op.Draw.Elipse(700, 100, 30, 70, 0, Col.Black)
-                    + Op.Draw.Circle((500, 300.5), 30.5, 0, Col.Black)
-                    + Op.Draw.Rect(500, 350, 50, 30, 0, Col.Black)
-                    + Op.Draw.Rect((500, 400), (30, 50), 0, Col.Grey, roundness=10)
+                    + Op.Draw.Elipse(700, 100, 30, 70, 0, Col.Purple)
+                    + Op.Draw.Circle((500, 300.5), 30.5, 0, Col.Primary)
+                    + Op.Draw.Rect(500, 350, 50, 30, 0, Col.Secondary)
+                    + Op.Draw.Rect((500, 400), (30, 50), 0, Col.Accent, roundness=10)
                 )
                 # Testing stupid cases. These *should* all appear one after the other in a column
                 ops += (
-                    + Op.Draw.Rect(500, 500, 0, 0, 5, Col.Black)
-                    + Op.Draw.Rect(500, 510, 50, 50, 1, Col.Black, roundness=100)
-                    + Op.Draw.Line((500, 570), (500, 570), 5, Col.Black)
+                    + Op.Draw.Rect(500, 500, 0, 0, 5, Col(80, 255, 100, 255))
+                    + Op.Draw.Rect(500, 510, 50, 50, 1, Col.Blue, roundness=100)
+                    + Op.Draw.Line((500, 570), (500, 570), 5, Col(250, 90, 255))
                 )
                 def _1perframe(f):
-                    Core(ops + Op.Draw.Circle(f*2, 10, 50, 0, Col(250, 90, 255)))
+                    Core(ops + Op.Draw.Circle(f*2, 10, 50, 0, Col.Grey))
                 perframe = _1perframe
             case 2: # Transform
-                rect = Op.Draw.Rect((0, 0), (500, 500), 0, Col.Grey)
-                line = Op.Draw.Line((0, 0), (500, 500), 10, Col.Black, **Op.Anchors.Middle)
+                rect = Op.Draw.Rect((0, 0), (500, 500), 0, Col.LightGrey)
+                line = Op.Draw.Line((0, 0), (500, 500), 10, Col.Primary, **Op.Anchors.Middle)
                 lnoff = rect.getNormalisedPos(**Op.Anchors.Middle)
                 crop = Op.Crop(0, 0, *rect.rsze)
                 def _2perframe(f):
