@@ -232,4 +232,6 @@ class Col:
     Primary = (130, 102, 182, 255)
     Secondary = (55, 115, 150, 255)
     Accent = (183, 134, 61, 255)
+    # TODO: e.g. highlight, shadow, outline
+    # TODO: Make the colours look nicer together
 

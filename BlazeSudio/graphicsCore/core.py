@@ -66,7 +66,7 @@ class _SurfaceBase:
     def arr(self) -> np.ndarray:
         if self._cachedout is None:
             if self._cachedarr is None:
-                self._cachedarr = np.ndarray((self._sze[1], self._sze[0], 4), np.uint8) # User should fill with colour
+                self._cachedarr = np.ndarray((self._sze[1], self._sze[0], 4), np.uint8)
             if self.op is not None:
                 self._cachedout = self.op.apply(IDENTITY, self._cachedarr, (0, 0, *self._sze), self.smooth)
             else:

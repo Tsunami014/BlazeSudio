@@ -19,10 +19,15 @@ class Fill(Op):
         self.col = np.array(col, np.uint8)
         self.flags = OpFlags.Reset
     def apply(self, _, arr: np.ndarray, __, ___):
-        if (self.col[0] == self.col[1] == self.col[2]).all():
-            arr.fill(self.col[0])
+        r = int(self.col[0])
+        g = int(self.col[1])
+        b = int(self.col[2])
+        if r == g == b:
+            arr.fill(r)
         else:
-            arr[...] = self.col
+            col = (r << 16) | (g << 8) | b
+            v = arr.view(np.uint32).reshape(arr.shape[:2])
+            v.fill(col)
         return arr
 
 
