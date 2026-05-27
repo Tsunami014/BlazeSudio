@@ -299,6 +299,9 @@ class MouseEvent(Event):
     clicks: int = 0
     """Number of clicks (for button events)"""
 
+    active: bool = True
+    """Whether the event is on the 'current screen'. Implementation defined."""
+
     _types = {
         sdl2.SDL_MOUSEMOTION: EvTyp.MouseMove,
         sdl2.SDL_MOUSEBUTTONDOWN: EvTyp.MouseDown,

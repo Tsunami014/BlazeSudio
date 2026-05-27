@@ -58,10 +58,13 @@ class ButtonBase(UIElement):
     def mouseevents(self, evs: list[Events.MouseEvent], mxsze):
         nevs = []
         for ev in evs:
-            if self.onclick is not None and Events.MouseEvent(ev, Events.EvTyp.MouseUp):
-                self.onclick(ev.pos)
-            if ev.pos[0] >= self.pad and ev.pos[1] >= self.pad and ev.pos[0] <= mxsze[0]-self.pad*2 and ev.pos[1] <= mxsze[1]-self.pad*2:
-                nevs.append(ev.translated(-self.pad, -self.pad))
+            new = ev.translated(-self.pad, -self.pad)
+            if ev.active:
+                if self.onclick is not None and Events.MouseEvent(ev, Events.EvTyp.MouseUp):
+                    self.onclick(ev.pos)
+                if not (ev.pos[0] >= self.pad and ev.pos[1] >= self.pad and ev.pos[0] <= mxsze[0]-self.pad*2 and ev.pos[1] <= mxsze[1]-self.pad*2):
+                    new.active = False
+            nevs.append(new)
         return self.inner.onmouseevent(nevs, (mxsze[0]-self.pad*2, mxsze[1]-self.pad*2))
 
 class Button(ButtonBase):
@@ -98,12 +101,17 @@ class Button(ButtonBase):
 
     def mouseevents(self, evs: list[Events.MouseEvent], mxsze):
         nevs = []
+        found = False
         for ev in evs:
-            if self.onclick is not None and Events.MouseEvent(ev, Events.EvTyp.MouseUp):
-                self.onclick(ev.pos)
-            if ev.pos[0] >= self.pad and ev.pos[1] >= self.pad and ev.pos[0] <= mxsze[0]-self.pad*2 and ev.pos[1] <= mxsze[1]-self.pad*2:
-                nevs.append(ev.translated(-self.pad, -self.pad))
-        if evs:
+            new = ev.translated(-self.pad, -self.pad)
+            if ev.active:
+                found = True
+                if self.onclick is not None and Events.MouseEvent(ev, Events.EvTyp.MouseUp):
+                    self.onclick(ev.pos)
+                if not (ev.pos[0] >= self.pad and ev.pos[1] >= self.pad and ev.pos[0] <= mxsze[0]-self.pad*2 and ev.pos[1] <= mxsze[1]-self.pad*2):
+                    new.active = False
+            nevs.append(new)
+        if found:
             self.state = int(Ix.Mouse.left)+1
         else:
             self.state = 0

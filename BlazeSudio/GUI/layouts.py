@@ -200,8 +200,10 @@ class _BaseLayout(Element):
                 nevs = []
                 trns = (-offs, 0)[::self._FLIP]
                 for ev in evs:
-                    if offs <= ev.pos[self._DIRECTION] <= offs+add:
-                        nevs.append(ev.translated(*trns))
+                    new = ev.translated(*trns)
+                    if new.active and not (offs <= ev.pos[self._DIRECTION] <= offs+add):
+                        new.active = False
+                    nevs.append(new)
                 sz = (s[0], s[4])[::self._FLIP]
                 s[3].mouseevents(nevs, sz)
             offs += add + self.spacing
