@@ -1,10 +1,12 @@
 from .base import Element, UIElement, BaseO, Col
+from .Elms import Text
 from BlazeSudio.graphicsCore.base import Vec2
 from BlazeSudio.graphicsCore import Draw, Trans, Events, Ix
-from typing import Callable
+from typing import Callable, Iterable
 
 __all__ = [
     "Button",
+    "Input",
 ]
 
 class ButtonBase(UIElement):
@@ -78,6 +80,7 @@ class Button(ButtonBase):
                  *, opts: ButtonBase.O = ButtonBase.O.Default):
         """
         A button to wrap an element in (e.g. text)
+        Changes colour and stuff too!
 
         Args:
             inner: The inner element to wrap
@@ -116,3 +119,82 @@ class Button(ButtonBase):
         else:
             self.state = 0
         return self.inner.mouseevents(nevs, (mxsze[0]-self.pad*2, mxsze[1]-self.pad*2))
+
+
+class Input(Text):
+    __slots__ = ['placehold', 'placeholdcol', 'active']
+    def __init__(self,
+                 txt: str = "",
+                 sze: int = 24,
+                 col: Col.colourType = Col.Black,
+                 placeholder: str = "",
+                 placeholdcol: Col.colourType = Col.Grey,
+                 fontOpts: Iterable[str] = None,
+                 *, opts: Text.O = Text.O.Default):
+        """
+        Text in a box that you can edit!
+
+        Args:
+            txt: The initial text
+            sze: The size of the text
+            col: The colour of the text
+            placeholder: The text to display when no text is inputted
+            placeholdcol: The colour of the placeholder text
+            fontOpts: A list of font names or files to try and load, otherwise use default
+
+        Keyword args:
+            opts: The options to apply to the text
+        """
+        self.placehold = placeholder
+        self.placeholdcol = placeholdcol
+        self.active = False
+        super().__init__(txt, sze, col, fontOpts, opts=opts)
+    @property
+    def basecol(self):
+        return Text.col.__get__(self, Input)
+    @basecol.setter
+    def basecol(self, new):
+        Text.col.__set__(self, new)
+    @property
+    def col(self):
+        if not super().txt:
+            col = self.placeholdcol
+        else:
+            col = super().col
+        return col if self.active else Col.lighten(col, 40)
+    @col.setter
+    def col(self, new):
+        Text.col.__set__(self, new)
+
+    @property
+    def basetxt(self):
+        return Text.txt.__get__(self, Input)
+    @basetxt.setter
+    def basetxt(self, new):
+        Text.txt.__set__(self, new)
+    @property
+    def txt(self):
+        rt = super().txt
+        if not rt:
+            return self.placehold
+        return rt
+    @txt.setter
+    def txt(self, new):
+        Text.txt.__set__(self, new)
+
+    def onevent(self, ev: Events.Event) -> bool:
+        if not self.active:
+            return False
+        if kev := Events.KeyEvent(ev, Events.EvTyp.KeyDown):
+            if kev.key == "Backspace":
+                self.basetxt = self.basetxt[:-1]
+                return True
+        elif tev := Events.TypingEvent(ev, Events.EvTyp.TypeEnd):
+            self.basetxt += tev.text
+            return True
+        return False
+
+    def mouseevents(self, evs: list[Events.MouseEvent], mxsze):
+        clicks = [e for i in evs if (e:=Events.MouseEvent(i, Events.EvTyp.MouseUp))]
+        if clicks:
+            self.active = any(i.active for i in clicks)

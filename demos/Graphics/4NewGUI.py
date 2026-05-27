@@ -2,7 +2,7 @@
 def main():
     from BlazeSudio.graphicsCore import Draw
     from BlazeSudio.GUI import OpElm
-    from BlazeSudio.GUI import UI, Layouts, Elms, Input
+    from BlazeSudio.GUI import UI, Lays, Elms, Input
 
     txt = Elms.Text("")
     clks = 0
@@ -12,22 +12,20 @@ def main():
         clks += 1
     onclk()
     UI(
-        Layouts.CentreVert(
-            Layouts.CentreHoriz(
+        Lays.VBox[None,
+            Lays.HBox[None,
                 OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
-                Layouts.CentreVert(
-                    Input.Button(
-                        Elms.Text("This is a test!", opts=None),
-                        onclick=onclk
-                    ),
+                Input.Button(
+                    Elms.Text("This is a test!", opts=None),
+                    onclick=onclk
                 ),
-                Layouts.CentreVert(txt),
+                txt,
                 OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
-            ),
-            Layouts.AlignCentre(
-                Elms.Text("I hope you really like this extremely super long very long text as it is quite long and it is very nice and long and epic.\nNewline! Yay!")
-            )
-        )
+            None],
+            Elms.Text("I hope you really like this extremely super long very long text as it is quite long and it is very nice and long and epic.\nNewline! Yay!"
+                ).AlignC,
+            Input.Input(placeholder="Type here!"),
+        None]
     )
 
     UI.resizable = True

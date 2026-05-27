@@ -13,9 +13,11 @@ class EvTyp(IntEnum):
     """The user just pressed a physical key (for text inputs please use KeyType)"""
     KeyUp = 0x21
     """The user just released a physical key"""
-    KeyType = 0x31
-    """The user just typed some text (this is preferred over keydown for text inputting as it allows IMEs to work)"""
-    KeyTyping = 0x41
+    Typing = 0x31
+    """The user is typing/has typed text (preferred over keypress for text inputting)"""
+    TypeEnd = 0x131
+    """The user just typed some text"""
+    TypeDuring = 0x231
     """The user is currently typing text with their IME"""
 
     Mouse = 0x2
@@ -182,11 +184,11 @@ class Event:
             if var.typ not in cls._types.values():
                 return False
             return var
-        if not any((k & typ)==typ for k in cls._types.values()):
+        if not any(t == typ for t in cls._types.values()):
             raise ValueError(
                 'Input type must be avaliable in this class, but is not!'
             )
-        if (var.typ & typ) != typ:
+        if var.typ != typ:
             return False
         return var
 
@@ -283,6 +285,56 @@ class KeyEvent(Event):
         )
 
 @Dataclass
+class TypingEvent(Event):
+    window_id: int
+    """ID of the window that received the text input"""
+
+    text: str
+    """The typed text"""
+
+    composing: bool
+    """True while the IME is composing text, False when the text was committed"""
+    cursor: int = 0
+    """IME cursor position within the composition"""
+    selection_len: int = 0
+    """IME selection length within the composition"""
+
+    _types = {
+        sdl2.SDL_TEXTINPUT: EvTyp.TypeEnd,
+        sdl2.SDL_TEXTEDITING: EvTyp.TypeDuring,
+    }
+
+    @staticmethod
+    def _decode_text(buf) -> str:
+        if isinstance(buf, (bytes, bytearray)):
+            raw = buf
+        else:
+            raw = bytes(buf)
+        return raw.split(b'\x00', 1)[0].decode('utf-8', errors='replace')
+
+    @classmethod
+    def _from_sdl(cls, ev, typ):
+        if typ == EvTyp.TypeEnd:
+            ev = ev.text
+            return Event._from_sdl(
+                cls, ev, typ,
+                window_id=ev.windowID,
+                text=cls._decode_text(ev.text),
+                composing=False,
+            )
+
+        elif typ == EvTyp.TypeDuring:
+            ev = ev.edit
+            return Event._from_sdl(
+                cls, ev, typ,
+                window_id=ev.windowID,
+                text=cls._decode_text(ev.text),
+                composing=True,
+                cursor=ev.start,
+                selection_len=ev.length,
+            )
+
+@Dataclass
 class MouseEvent(Event):
     window_id: int
     """ID of the window that received the event"""
@@ -346,6 +398,7 @@ class MouseEvent(Event):
 EVENT_LIST = (
     QuitEvent,
     KeyEvent,
+    TypingEvent,
     MouseEvent,
 )
 EVENT_NAMES = [

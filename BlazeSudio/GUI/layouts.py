@@ -1,9 +1,9 @@
-from .base import BaseO, Element
+from .base import Element, BaseO
 from BlazeSudio.graphicsCore.base import OpList, Vec2
 from dataclasses import dataclass
 from typing import Self, Iterable
 
-__all__ = ["Layouts"]
+__all__ = ["Lays"]
 
 @dataclass(eq=False, slots=True)
 class ElementOut:
@@ -21,14 +21,18 @@ class _BaseLayout(Element):
     __slots__ = ['_children', '_dirty', '_szesCache', 'spacing']
     _DIRECTION = None
     _FLIP = None
-    def __init__(self, *children: tuple[Element], spacing: float = 10):
-        """[Element (or None for stretch or float for spacing), isSpacing, stretch]"""
+    def __init__(self, *children: tuple[Element], spacing: float = 10, opts: BaseO = BaseO.Default):
+        """If a child is None, that will be stretch!"""
         self._children: list[tuple[Element|None|float, bool, float]] = []
+        """[Element (or None for stretch or float for spacing), isSpacing, stretch]"""
         self._dirty = False
         self._szesCache = []
         if children:
             self.add_elms(children)
         self.spacing = spacing
+        super().__init__(opts=opts)
+    def __class_getitem__(cls, args):
+        return cls(*args)
 
     def add_elm(self, oth: Element, stretch: int = 1) -> Self:
         self._children.append((oth, False, stretch))
@@ -96,14 +100,14 @@ class _BaseLayout(Element):
             # Build the list
             for c in self._children:
                 if c[1]:
-                    szes.append([0, c[0], 1, None, 0])
+                    szes.append([0, c[0], 1, None, 0, 0])
                 elif c[0] is None:
-                    szes.append([0, None, c[2], None, 0])
+                    szes.append([0, None, c[2], None, 0, 0])
                 else:
                     mn, mx = c[0]._szes(mxsze, bound)
                     szes.append([
                         (mn[self._DIRECTION] if mn is not None else 0), mx[self._DIRECTION],
-                        c[2] or 1, c[0], 0])
+                        c[2] or 1, c[0], 0, 0])
             # Find the lengths of all elements except stretch
             maxsize = mxsze[self._DIRECTION] - self.spacing*(len(szes)-1)
             while True:
@@ -144,6 +148,14 @@ class _BaseLayout(Element):
                         s[3]._szes(mxsz, bnd)[1][1-self._DIRECTION],
                         mxothsze)
 
+            # Now calculate the other offsets
+            mx = bound[1-self._DIRECTION]
+            for s in szes:
+                e = s[3]
+                if e is not None:
+                    s[5] = (0 if e.opts & BaseO.PositionTop else (1 if e.opts & BaseO.PositionBottom else 0.5)) * \
+                        max(mx-s[4],0)
+
             # Now length the stretches
             n = sum(int(i[1] is None) for i in szes)
             if n != 0:
@@ -168,7 +180,7 @@ class _BaseLayout(Element):
         offs = 0
         for s in self._getSzes(mxsze, mxsze):
             if s[3] is not None:
-                v2 = Vec2((offs, 0)[::self._FLIP])
+                v2 = Vec2((offs, s[5])[::self._FLIP])
                 sz = (s[0], s[4])[::self._FLIP]
                 li += s[3]._op(mat @ v2.mat, sz)
             offs += s[0] + self.spacing
@@ -198,10 +210,13 @@ class _BaseLayout(Element):
             add = s[0]
             if s[3] is not None:
                 nevs = []
-                trns = (-offs, 0)[::self._FLIP]
+                trns = (-offs, -s[5])[::self._FLIP]
                 for ev in evs:
                     new = ev.translated(*trns)
-                    if new.active and not (offs <= ev.pos[self._DIRECTION] <= offs+add):
+                    if new.active and not (
+                            offs <= ev.pos[self._DIRECTION] <= offs+add and
+                            s[5] <= ev.pos[1-self._DIRECTION] <= s[5]+s[4]
+                            ):
                         new.active = False
                     nevs.append(new)
                 sz = (s[0], s[4])[::self._FLIP]
@@ -209,53 +224,14 @@ class _BaseLayout(Element):
             offs += add + self.spacing
 
 
-class Layouts:
+class Lays:
     def __new__(cls, *_):
         raise NotImplementedError("This class cannot be instantiated!")
 
-    class Horiz(_BaseLayout):
+    class HBox(_BaseLayout):
         _DIRECTION = 0
         _FLIP = 1
-    class Vert(_BaseLayout):
+    class VBox(_BaseLayout):
         _DIRECTION = 1
         _FLIP = -1
-
-    @staticmethod
-    def CentreHoriz(*elms, spacing: float = 10):
-        """Centre elements horizontally"""
-        return (Layouts.Horiz(spacing=spacing)
-            .add_stretch()
-            .add_elms(elms)
-            .add_stretch())
-    @staticmethod
-    def CentreVert(*elms, spacing: float = 10):
-        """Centre elements vertically"""
-        return (Layouts.Vert(spacing=spacing)
-            .add_stretch()
-            .add_elms(elms)
-            .add_stretch())
-    @staticmethod
-    def CentreBoth(*elms, spacing: float = 10):
-        """Centre elements both vertically and horizontally"""
-        return Layouts.CentreVert(Layouts.CentreHoriz(*elms, spacing=spacing), spacing=spacing)
-
-    @staticmethod
-    def AlignLeft(elm):
-        """Returns the element (it defaults to aligning left)"""
-        return elm
-    @staticmethod
-    def AlignCentre(elm):
-        """Adds the zCentreAlign option to the element and puts it in a layout"""
-        elm.opts |= BaseO.CentreAlign
-        return (Layouts.Horiz(spacing=0)
-            .add_stretch()
-            .add_elm(elm)
-            .add_stretch())
-    @staticmethod
-    def AlignRight(elm):
-        """Adds the RightAlign option to the element and puts it in a layout"""
-        elm.opts |= BaseO.RightAlign
-        return (Layouts.Horiz(spacing=0)
-            .add_stretch()
-            .add_elm(elm))
 

@@ -49,7 +49,10 @@ class Text(UIElement):
         return self.font(
                 self.txt, self.col, mxsze[0],
                 breakOnSpace=self.opts & self.O.BreakOnWord,
-                align=0.5 if self.opts & self.O.CentreAlign else (1 if self.opts & self.O.RightAlign else 0))
+                align=0.5 if self.opts & self.O.AlignCentre else (1 if self.opts & self.O.AlignRight else 0))
+        return self._getop(self.txt, self.col, mxsze)
     def _szes(self, mxsze, _):
-        out = self.font.linesize_wid(self.txt, mxsze[0], breakOnSpace=self.opts & self.O.BreakOnWord)
+        if self.txt == "":
+            return (0, 0), (0, 0)
+        out = self.font.linesize_wid(self.txt, mxsze[0], breakOnSpace = self.opts & self.O.BreakOnWord)
         return self.font.linesize(self.txt[0]), out

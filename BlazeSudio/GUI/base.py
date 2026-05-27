@@ -90,15 +90,35 @@ class _UIBase:
 
 UI: _UITyping = _UIBase()
 
-class Element:
+
+class BaseO:
+    def __getitem__(self, it) -> int:
+        return {i: j for i, j in BaseO.__dict__.items() if not i.startswith('__')}[it]
+    none = 0
+    """No options will be applied"""
+    Default = 0
+    """The default options (None)"""
+    AlignCentre = -0b1
+    """Centres the element instead of having it align to the left (overrides AlignRight if both are applied)"""
+    AlignRight = -0b10
+    """Aligns to the right instead of the left"""
+    PositionTop = -0b100
+    """Positions the element at the top instead of the middle of layouts (overrides PositionBottom if both are applied)"""
+    PositionBottom = -0b1000
+    """Positions the element at the bottom instead of the middle of layouts"""
+
+class _ElementBase: # MUST DEFINE __slots__ WITH ['opts']
     __slots__ = []
     IMPORTANCE: int = 0
     """How important this element is (when judging element for event handling, higher = more important (handles events first))"""
+    class O(BaseO): ...
+    def __init__(self, *, opts: BaseO = BaseO.Default):
+        if opts is None:
+            self.opts = self.O.Default
+        else:
+            self.opts = opts
     def _op(self, mat, mxsze) -> Op:
         return OpList()
-    def _handleOp(self, op, mat, mxsze) -> Op:
-        op2 = op if not hasattr(op, "getNormalisedPos") else op @ -op.getNormalisedPos(0, 0)
-        return (op2 @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
     def _szes(self, mxsze, bound) -> tuple[tuple[float, float]|None, tuple[float, float]]|None:
         """
         Gets the sizes for the element. Returns a tuple of (minsize, maxsize)
@@ -111,7 +131,7 @@ class Element:
         return None, (0, 0)
     def onevent(self, ev: Events.Event) -> bool:
         """Will not recieve mouse events. Returns whether it used the event (and so no other elements are allowed to use it)"""
-        return True
+        return False
     def mouseevents(self, evs: list[Events.MouseEvent], mxsze):
         pass
     def __matmul__(self, oth) -> 'TransformedElm':
@@ -120,37 +140,55 @@ class Element:
         sze = Core.size
         return self._op(IDENTITY, (sze[0], sze[1]))
 
+    @property
+    def AlignL(self) -> Self:
+        """Removes alignment flags"""
+        self.opts = self.opts & ~(BaseO.AlignRight | BaseO.AlignCentre)
+        return self
+    @property
+    def AlignC(self) -> Self:
+        """Adds the CentreAlign flag. Note it won't centre its positionings unless aligned in a layout!"""
+        self.opts = (self.opts | BaseO.AlignCentre) & ~BaseO.AlignRight
+        return self
+    @property
+    def AlignR(self) -> Self:
+        """Adds the RightAlign flag. Note it won't right its their positionings unless aligned in a layout!"""
+        self.opts = (self.opts | BaseO.AlignRight) & ~BaseO.AlignCentre
+        return self
+    @property
+    def PositionT(self) -> Self:
+        """Adds the PositionTop flag. This will make it at the top of layouts it is in (for vertical layouts, to the left)"""
+        self.opts = (self.opts | BaseO.PositionTop) & ~BaseO.PositionBottom
+        return self
+    @property
+    def PositionM(self) -> Self:
+        """Removes positioning flags from this element. This will make it centred in the opposite direction to layouts it is in"""
+        self.opts = self.opts & ~(BaseO.AlignRight | BaseO.AlignCentre)
+        return self
+    @property
+    def PositionB(self) -> Self:
+        """Adds the PositionBottom flag. This will make it at the bottom of layouts it is in (for vertical layouts, to the right)"""
+        self.opts = (self.opts | BaseO.PositionBottom) & ~BaseO.PositionTop
+        return self
 
-class BaseO:
-    def __getitem__(self, it) -> int:
-        return {i: j for i, j in BaseO.__dict__.items() if not i.startswith('__')}[it]
-    none = 0
-    """No options will be applied"""
-    Default = 0
-    """The default options (None)"""
-    CentreAlign = -0b1
-    """Centres the element instead of having it align to the left (overrides RightAlign if both are applied)"""
-    RightAlign = -0b10
-    """Aligns to the right instead of the left"""
+class Element(_ElementBase):
+    __slots__ = ['opts']
+
 
 class UIElement(Element):
-    __slots__ = ['opts']
-    class O(BaseO): ...
-    def __init__(self, *, opts: O = O.none):
-        if opts is None:
-            self.opts = self.O.none
-        else:
-            self.opts = opts
     def _opInner(self, mxsze) -> Op:
         return OpList()
     def _op(self, mat, mxsze) -> Op:
-        return self._handleOp(self._opInner(mxsze), mat, mxsze)
+        op = self._opInner(mxsze)
+        op2 = op if not hasattr(op, "getNormalisedPos") else op @ -op.getNormalisedPos(0, 0)
+        return (op2 @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
 
-class TransformedElm(Element, Base):
-    __slots__ = ['elm', 'oth']
-    def __init__(self, elm, oth):
+class TransformedElm(_ElementBase, Base):
+    __slots__ = ['opts', 'elm', 'oth']
+    def __init__(self, elm, oth, *, opts: BaseO = BaseO.Default):
         self.elm: Element = elm
         self.oth: Trans = oth
+        _ElementBase.__init__(self, opts=opts)
     def _op(self, mat, mxsze):
         out = self.elm._op(mat, mxsze)
         rpos1 = getattr(out, "rpos", None)
@@ -183,8 +221,9 @@ class TransformedElm(Element, Base):
 
 class OpElm(Element):
     __slots__ = ['op']
-    def __init__(self, op: Op):
+    def __init__(self, op: Op, *, opts: BaseO = BaseO.Default):
         self.op = op
+        super().__init__(opts=opts)
     def _op(self, mat, mxsze):
         op = self.op if not hasattr(self.op, "getNormalisedPos") else self.op @ -self.op.getNormalisedPos(0, 0)
         return (op @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
