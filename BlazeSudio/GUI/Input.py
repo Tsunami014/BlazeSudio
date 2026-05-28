@@ -126,7 +126,7 @@ class Button(ButtonBase):
 class Input(Text):
     __slots__ = ['placehold', 'placeholdcol', 'active', 'cursor']
     class O(Text.O):
-        _NXT = BaseO._NXT
+        _NXT = Text.O._NXT
         NoBlink = (_NXT := _NXT<<1)
         """Will prevent the cursor from blinking"""
         Multiline = (_NXT := _NXT<<1)
@@ -192,7 +192,9 @@ class Input(Text):
         if self.active:
             if self.cursor >= len(rt):
                 return rt + '|'
-            return rt[:self.cursor] + ('|' if (self.opts & self.O.NoBlink) or round(time.time()*2.5)%2 == 0 else ' ') + rt[self.cursor:]
+            return rt[:self.cursor] + \
+                    ('|' if rt[self.cursor] == '\n' or (self.opts & self.O.NoBlink) or round(time.time()*2.5)%2 == 0 else ' ') + \
+                    rt[self.cursor:]
         return rt
     @txt.setter
     def txt(self, new):
