@@ -3,6 +3,7 @@ from .Elms import Text
 from BlazeSudio.graphicsCore.base import Vec2
 from BlazeSudio.graphicsCore import Draw, Trans, Events, Ix
 from typing import Callable, Iterable
+import time
 
 __all__ = [
     "Button",
@@ -122,7 +123,10 @@ class Button(ButtonBase):
 
 
 class Input(Text):
-    __slots__ = ['placehold', 'placeholdcol', 'active']
+    __slots__ = ['placehold', 'placeholdcol', 'active', 'cursor']
+    class O(Text.O):
+        NoBlink = 0b10
+        """Will prevent the cursor from blinking"""
     def __init__(self,
                  txt: str = "",
                  sze: int = 24,
@@ -130,7 +134,7 @@ class Input(Text):
                  placeholder: str = "",
                  placeholdcol: Col.colourType = Col.Grey,
                  fontOpts: Iterable[str] = None,
-                 *, opts: Text.O = Text.O.Default):
+                 *, opts: O = O.Default):
         """
         Text that you can edit! NOTE: This is not in a box, so it is not as intuative as InputBox for users. Consider using that instead.
 
@@ -145,6 +149,7 @@ class Input(Text):
         Keyword args:
             opts: The options to apply to the text
         """
+        self.cursor = 0
         self.placehold = placeholder
         self.placeholdcol = placeholdcol
         self.active = False
@@ -172,32 +177,83 @@ class Input(Text):
     @basetxt.setter
     def basetxt(self, new):
         Text.txt.__set__(self, new)
+        self.cursor = max(0, min(self.cursor, len(new)))
     @property
     def txt(self):
         rt = super().txt
         if not rt:
             return self.placehold
+        if self.active:
+            if self.cursor >= len(rt):
+                return rt + '|'
+            return rt[:self.cursor] + ('|' if (self.opts & self.O.NoBlink) or round(time.time()*2.5)%2 == 0 else ' ') + rt[self.cursor:]
         return rt
     @txt.setter
     def txt(self, new):
-        Text.txt.__set__(self, new)
+        self.basetxt = new
 
     def onevent(self, ev: Events.Event) -> bool:
         if not self.active:
             return False
         if kev := Events.KeyEvent(ev, Events.EvTyp.KeyDown):
             if kev.key == "Backspace":
-                self.basetxt = self.basetxt[:-1]
+                if self.cursor > 0:
+                    if self.cursor < len(self.basetxt)-1:
+                        self.basetxt = self.basetxt[:self.cursor-1] + self.basetxt[self.cursor:]
+                        self.cursor -= 1
+                    else:
+                        self.basetxt = self.basetxt[:-1]
+                        # By setting the text it auto caps the cursor
+                return True
+            elif kev.key == "Delete":
+                if self.cursor < len(self.basetxt):
+                    self.basetxt = self.basetxt[:self.cursor] + self.basetxt[self.cursor+1:]
+                return True
+            elif kev.key == "Left":
+                if self.cursor > 0:
+                    self.cursor -= 1
+                return True
+            elif kev.key == "Right":
+                if self.cursor < len(self.basetxt):
+                    self.cursor += 1
+                return True
+            elif kev.key == "Home":
+                self.cursor = 0
+                return True
+            elif kev.key == "End":
+                self.cursor = len(self.basetxt)
                 return True
         elif tev := Events.TypingEvent(ev, Events.EvTyp.TypeEnd):
-            self.basetxt += tev.text
+            self.basetxt = self.basetxt[:self.cursor] + tev.text + self.basetxt[self.cursor:]
+            self.cursor += len(tev.text)
             return True
         return False
 
     def mouseevents(self, evs: list[Events.MouseEvent], mxsze):
-        clicks = [e for i in evs if (e:=Events.MouseEvent(i, Events.EvTyp.MouseUp))]
+        clicks = [e for i in evs if (e := Events.MouseEvent(i, Events.EvTyp.MouseUp))]
         if clicks:
             self.active = any(i.active for i in clicks)
+            
+            if self.active:
+                click = clicks[-1]
+                align = 0.5 if self.opts & self.O.AlignCentre else (1 if self.opts & self.O.AlignRight else 0)
+                
+                if not self.basetxt:
+                    self.cursor = 0
+                else:
+                    tot_w = self.font.linewidth(self.basetxt)
+                    offset = max((mxsze[0] - tot_w) * align, 0)
+                    
+                    best_i = 0
+                    min_dist = float('inf')
+                    
+                    for i in range(len(self.basetxt) + 1):
+                        w = offset + self.font.linewidth(self.basetxt[:i])
+                        dist = abs(click.pos[0] - w)
+                        if dist < min_dist:
+                            min_dist = dist
+                            best_i = i
+                    self.cursor = best_i
 
 
 class InputBox(Input):

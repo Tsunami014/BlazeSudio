@@ -11,8 +11,8 @@ class Text(UIElement):
     class O(BaseO):
         BreakOnWord = 0b1
         """Whether to break on words if go over the width (if not, breaks mid-word)"""
+
         Default = BreakOnWord
-        """The defaults are: BreakOnWord"""
     def __init__(self,
                  txt: str,
                  sze: int = 24,
@@ -50,7 +50,6 @@ class Text(UIElement):
                 self.txt, self.col, mxsze[0],
                 breakOnSpace=self.opts & self.O.BreakOnWord,
                 align=0.5 if self.opts & self.O.AlignCentre else (1 if self.opts & self.O.AlignRight else 0))
-        return self._getop(self.txt, self.col, mxsze)
     def _szes(self, mxsze, _):
         if self.txt == "":
             return (0, 0), (0, 0)

@@ -96,8 +96,6 @@ class BaseO:
         return {i: j for i, j in BaseO.__dict__.items() if not i.startswith('__')}[it]
     none = 0
     """No options will be applied"""
-    Default = 0
-    """The default options (None)"""
     AlignCentre = -0b1
     """Centres the element instead of having it align to the left (overrides AlignRight if both are applied)"""
     AlignRight = -0b10
@@ -106,6 +104,8 @@ class BaseO:
     """Positions the element at the top instead of the middle of layouts (overrides PositionBottom if both are applied)"""
     PositionBottom = -0b1000
     """Positions the element at the bottom instead of the middle of layouts"""
+
+    Default = 0
 
 class _ElementBase: # MUST DEFINE __slots__ WITH ['opts']
     __slots__ = []

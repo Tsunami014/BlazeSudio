@@ -243,7 +243,7 @@ class Font:
                 outs[-1][0] += a
                 outs[-1][1].append(ad)
                 lastdiff = w-a
-        return [(wid, ("".join(i[0] for i in ads).strip()) if ads else "") for wid, ads in outs]
+        return [(wid, "".join(i[0] for i in ads) if ads else "") for wid, ads in outs]
 
     @lru_cache()
     def __call__(self, txt, col: np.ndarray, maxwid: int = None, breakOnSpace: bool = True, align: float = 0, *, normalise_x = None, normalise_y = None) -> _FontDrawOp:
