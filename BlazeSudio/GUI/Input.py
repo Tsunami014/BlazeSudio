@@ -101,8 +101,17 @@ class Button(ButtonBase):
             light = 25
         elif self.state == 2: # Pressing
             light = -25
-        return (Draw.Rect((0, 0), mxsze, 0, Col.lighten(self.col, light), roundness=self.round) @ Trans.MatTrans(mat)) +\
-                self.inner._op(mat @ Vec2(self.pad, self.pad).mat, (mxsze[0]-self.pad*2, mxsze[1]-self.pad*2))
+        mt = Trans.MatTrans(mat)
+        def mkRect(rad, l):
+            return Draw.Rect((0, 0), mxsze, rad, Col.lighten(self.col, light+l), roundness=self.round) @ mt
+        op = mkRect(0, 0)
+        if round(self.pad) >= 8:
+            op += mkRect(self.pad/3, -6) + mkRect(self.pad/8, -15)
+        elif round(self.pad) >= 4:
+            op += mkRect(self.pad/4, -12)
+        elif round(self.pad) >= 2:
+            op += mkRect(self.pad/2, -8)
+        return op + self.inner._op(mat @ Vec2(self.pad, self.pad).mat, (mxsze[0]-self.pad*2, mxsze[1]-self.pad*2))
 
     def mouseevents(self, evs: list[Events.MouseEvent], mxsze):
         nevs = []
