@@ -231,6 +231,10 @@ class Input(Text):
                     best_i = i
 
             self.cursor = target_line_start + best_i
+        elif target_line_idx <= 0:
+            self.cursor = 0
+        else: # >= len(lines)
+            self.cursor = len(self.basetxt)
 
     def onevent(self, ev: Events.Event) -> bool:
         if not self.active:
