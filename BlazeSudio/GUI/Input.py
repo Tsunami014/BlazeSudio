@@ -198,11 +198,45 @@ class Input(Text):
     def txt(self, new):
         self.basetxt = new
 
+    def _move_vert(self, dy: int):
+        if not (self.opts & self.O.Multiline):
+            return
+
+        lines = self.basetxt.split('\n')
+        current_line_idx = self.basetxt.count('\n', 0, self.cursor)
+        target_line_idx = current_line_idx + dy
+
+        if 0 <= target_line_idx < len(lines):
+            line_start = self.basetxt.rfind('\n', 0, self.cursor) + 1
+            current_x = self.font.linewidth(self.basetxt[line_start:self.cursor])
+
+            align = 0.5 if self.opts & self.O.AlignCentre else (1 if self.opts & self.O.AlignRight else 0)
+            if align > 0:
+                current_w = self.font.linewidth(lines[current_line_idx])
+                target_w = self.font.linewidth(lines[target_line_idx])
+                current_x += align * (target_w - current_w)
+
+            target_line = lines[target_line_idx]
+            target_line_start = sum(len(l) + 1 for l in lines[:target_line_idx])
+
+            best_i = 0
+            min_dist = float('inf')
+
+            for i in range(len(target_line) + 1):
+                dist = abs(current_x - self.font.linewidth(target_line[:i]))
+                if dist < min_dist:
+                    min_dist = dist
+                    best_i = i
+
+            self.cursor = target_line_start + best_i
+
     def onevent(self, ev: Events.Event) -> bool:
         if not self.active:
             return False
         if kev := Events.KeyEvent(ev, Events.EvTyp.KeyDown):
             if kev.key == "Enter" or kev.key == "Return":
+                if not self.opts & self.O.Multiline:
+                    return True
                 self.basetxt = self.basetxt[:self.cursor] + "\n" + self.basetxt[self.cursor:]
                 self.cursor += 1
                 return True
@@ -239,43 +273,63 @@ class Input(Text):
                     self.cursor += 1
                     init = False
                 return True
+            elif kev.key == "Up":
+                self._move_vert(-1)
+                return True
+            elif kev.key == "Down":
+                self._move_vert(1)
+                return True
             elif kev.key == "Home":
-                self.cursor = 0
+                if self.opts & self.O.Multiline:
+                    self.cursor = self.basetxt.rfind('\n', 0, self.cursor) + 1
+                else:
+                    self.cursor = 0
                 return True
             elif kev.key == "End":
-                self.cursor = len(self.basetxt)
+                if self.opts & self.O.Multiline:
+                    next_n = self.basetxt.find('\n', self.cursor)
+                    self.cursor = next_n if next_n != -1 else len(self.basetxt)
+                else:
+                    self.cursor = len(self.basetxt)
                 return True
         elif tev := Events.TypingEvent(ev, Events.EvTyp.TypeEnd):
-            self.basetxt = self.basetxt[:self.cursor] + tev.text + self.basetxt[self.cursor:]
-            self.cursor += len(tev.text)
+            txt = tev.text.replace('\n', '')
+            self.basetxt = self.basetxt[:self.cursor] + txt + self.basetxt[self.cursor:]
+            self.cursor += len(txt)
             return True
         return False
 
-    def mouseevents(self, evs: list[Events.MouseEvent], mxsze):
+    def mouseevents(self, evs: list['Events.MouseEvent'], mxsze):
         clicks = [e for i in evs if (e := Events.MouseEvent(i, Events.EvTyp.MouseUp))]
         if clicks:
             self.active = any(i.active for i in clicks)
-            
+
             if self.active:
                 click = clicks[-1]
                 align = 0.5 if self.opts & self.O.AlignCentre else (1 if self.opts & self.O.AlignRight else 0)
-                
+
                 if not self.basetxt:
                     self.cursor = 0
                 else:
-                    tot_w = self.font.linewidth(self.basetxt)
-                    offset = max((mxsze[0] - tot_w) * align, 0)
-                    
+                    lines = self.basetxt.split('\n')
+                    line_idx = max(0, min(int(click.pos[1] // max(1, self.font.lineheight)), len(lines) - 1))
+                    target_line = lines[line_idx]
+
+                    line_start = sum(len(l) + 1 for l in lines[:line_idx])
+                    line_w = self.font.linewidth(target_line)
+                    offset = max((mxsze[0] - line_w) * align, 0)
+
                     best_i = 0
                     min_dist = float('inf')
-                    
-                    for i in range(len(self.basetxt) + 1):
-                        w = offset + self.font.linewidth(self.basetxt[:i])
-                        dist = abs(click.pos[0] - w)
+
+                    for i in range(len(target_line) + 1):
+                        w = self.font.linewidth(target_line[:i])
+                        dist = abs(click.pos[0] - w - offset)
                         if dist < min_dist:
                             min_dist = dist
                             best_i = i
-                    self.cursor = best_i
+
+                    self.cursor = line_start + best_i
 
 
 class InputBox(Input):
@@ -331,3 +385,7 @@ class InputBox(Input):
     def _szes(self, mxsze, _):
         xtra = (self.pad + self.border) * 2
         return [(i[0]+xtra, i[1]+xtra) for i in super()._szes(mxsze, _)]
+
+    def mouseevents(self, evs: list['Events.MouseEvent'], mxsze):
+        xtra = self.pad + self.border
+        super().mouseevents([e.translated(-xtra, -xtra) for e in evs], [i-xtra*2 for i in mxsze])
