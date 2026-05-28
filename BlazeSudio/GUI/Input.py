@@ -132,7 +132,7 @@ class Input(Text):
                  fontOpts: Iterable[str] = None,
                  *, opts: Text.O = Text.O.Default):
         """
-        Text in a box that you can edit!
+        Text that you can edit! NOTE: This is not in a box, so it is not as intuative as InputBox for users. Consider using that instead.
 
         Args:
             txt: The initial text
@@ -198,3 +198,58 @@ class Input(Text):
         clicks = [e for i in evs if (e:=Events.MouseEvent(i, Events.EvTyp.MouseUp))]
         if clicks:
             self.active = any(i.active for i in clicks)
+
+
+class InputBox(Input):
+    __slots__ = ['pad', 'border', 'round', 'bordercol']
+    def __init__(self,
+                 txt: str = "",
+                 sze: int = 24,
+                 col: Col.colourType = Col.Black,
+                 pad: int = 8,
+                 border: int = 5,
+                 radius: int = 3,
+                 placeholder: str = "",
+                 placeholdcol: Col.colourType = Col.Grey,
+                 bordercol: Col.colourType = Col.Purple,
+                 fontOpts: Iterable[str] = None,
+                 *, opts: Text.O = Text.O.Default):
+        """
+        Text in a box that you can edit!
+
+        Args:
+            txt: The initial text
+            sze: The size of the text
+            col: The colour of the text
+            pad: The padding between the text and the border of the box
+            border: The thickness of the border
+            radius: The border radius of the box (0 to disable)
+            placeholder: The text to display when no text is inputted
+            placeholdcol: The colour of the placeholder text
+            bordercol: The colour of the border
+            fontOpts: A list of font names or files to try and load, otherwise use default
+
+        Keyword args:
+            opts: The options to apply to the text
+        """
+        self.pad = pad
+        self.border = border
+        self.round = radius
+        self.bordercol = bordercol
+        super().__init__(txt, sze, col, placeholder, placeholdcol, fontOpts, opts=opts)
+
+    def _opInner(self, mxsze):
+        hasborder = self.border > 0
+        if (not hasborder) and self.pad <= 0:
+            return super()._opInner(mxsze)
+        xtra = self.pad+self.border
+        innr = super()._opInner(mxsze) @ Vec2(0, xtra)
+        if not hasborder:
+            return innr
+        r = innr.rect()
+        col = self.bordercol if self.active else Col.lighten(self.bordercol, 40)
+        return Draw.Rect((0,0), (r[2]+xtra*2, r[3]+xtra*2), self.border, col, roundness=self.round) + innr
+
+    def _szes(self, mxsze, _):
+        xtra = (self.pad + self.border) * 2
+        return [(i[0]+xtra, i[1]+xtra) for i in super()._szes(mxsze, _)]

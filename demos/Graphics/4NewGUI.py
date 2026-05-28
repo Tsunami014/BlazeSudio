@@ -24,7 +24,7 @@ def main():
             None],
             Elms.Text("I hope you really like this extremely super long very long text as it is quite long and it is very nice and long and epic.\nNewline! Yay!"
                 ).AlignC,
-            Input.Input(placeholder="Type here!"),
+            Input.InputBox(placeholder="Type here!"),
         None]
     )
 
