@@ -186,6 +186,8 @@ class Input(Text):
     def txt(self):
         rt = super().txt
         if not rt:
+            if self.active:
+                return '|'
             return self.placehold
         if self.active:
             if self.cursor >= len(rt):
@@ -205,25 +207,37 @@ class Input(Text):
                 self.cursor += 1
                 return True
             if kev.key == "Backspace":
-                if self.cursor > 0:
+                ctrl = kev.modifs(ctrl=True)
+                init = True
+                while self.cursor > 0 and (init or (ctrl and self.basetxt[self.cursor-1] not in (' ', '\n', '\t'))):
                     if self.cursor < len(self.basetxt)-1:
                         self.basetxt = self.basetxt[:self.cursor-1] + self.basetxt[self.cursor:]
                         self.cursor -= 1
                     else:
                         self.basetxt = self.basetxt[:-1]
                         # By setting the text it auto caps the cursor
+                    init = False
                 return True
             elif kev.key == "Delete":
-                if self.cursor < len(self.basetxt):
+                ctrl = kev.modifs(ctrl=True)
+                init = True
+                while self.cursor < len(self.basetxt) and (init or (ctrl and self.basetxt[self.cursor] not in (' ', '\n', '\t'))):
                     self.basetxt = self.basetxt[:self.cursor] + self.basetxt[self.cursor+1:]
+                    init = False
                 return True
             elif kev.key == "Left":
-                if self.cursor > 0:
+                ctrl = kev.modifs(ctrl=True)
+                init = True
+                while self.cursor > 0 and (init or (ctrl and self.basetxt[self.cursor-1] not in (' ', '\n', '\t'))):
                     self.cursor -= 1
+                    init = False
                 return True
             elif kev.key == "Right":
-                if self.cursor < len(self.basetxt):
+                ctrl = kev.modifs(ctrl=True)
+                init = True
+                while self.cursor < len(self.basetxt) and (init or (ctrl and self.basetxt[self.cursor] not in (' ', '\n', '\t'))):
                     self.cursor += 1
+                    init = False
                 return True
             elif kev.key == "Home":
                 self.cursor = 0

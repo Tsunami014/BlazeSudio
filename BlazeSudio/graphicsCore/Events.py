@@ -257,15 +257,18 @@ class KeyEvent(Event):
         """
         Find out if the specified modifiers are pressed when this key is
 
-        Used like this: `ev.modifs(shift=1, ctrl=1)` returns if the shift and ctrl modifiers are pressed (can use True instead of 1 if desired)
+        Used like this: `ev.modifs(shift=True, ctrl=True)` returns if the shift and ctrl modifiers are pressed (can use 1 instead of True if desired)
 
         Modifiers present: `shift`, `ctrl`, `alt`, `gui` (windows/super/command key)
         """
-        mask = sdl2.KMOD_SHIFT * bool(shift) + \
-               sdl2.KMOD_CTRL * bool(ctrl) + \
-               sdl2.KMOD_ALT * bool(alt) + \
-               sdl2.KMOD_GUI * bool(gui)
-        return (self._modifiers & mask) == mask
+        return all(
+            (not i) or self._modifiers & j
+            for i, j in (
+                (shift, sdl2.KMOD_SHIFT),
+                (ctrl, sdl2.KMOD_CTRL),
+                (alt, sdl2.KMOD_ALT),
+                (gui, sdl2.KMOD_GUI),
+        ))
 
     _types = {
         sdl2.SDL_KEYDOWN: EvTyp.KeyDown,
