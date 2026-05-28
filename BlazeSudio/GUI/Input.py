@@ -13,7 +13,8 @@ __all__ = [
 class ButtonBase(UIElement):
     __slots__ = ['inner', 'col', 'pad', 'round', 'onclick']
     class O(BaseO):
-        FlexPad = 0b1
+        _NXT = BaseO._NXT
+        FlexPad = (_NXT := _NXT<<1)
         """If enabled, the padding will be able to shrink to nothing if the layout is too small."""
     def __init__(self,
                  inner: Element,
@@ -125,8 +126,11 @@ class Button(ButtonBase):
 class Input(Text):
     __slots__ = ['placehold', 'placeholdcol', 'active', 'cursor']
     class O(Text.O):
-        NoBlink = 0b10
+        _NXT = BaseO._NXT
+        NoBlink = (_NXT := _NXT<<1)
         """Will prevent the cursor from blinking"""
+        Multiline = (_NXT := _NXT<<1)
+        """Will allow inputting multiple lines of text"""
     def __init__(self,
                  txt: str = "",
                  sze: int = 24,
@@ -196,6 +200,10 @@ class Input(Text):
         if not self.active:
             return False
         if kev := Events.KeyEvent(ev, Events.EvTyp.KeyDown):
+            if kev.key == "Enter" or kev.key == "Return":
+                self.basetxt = self.basetxt[:self.cursor] + "\n" + self.basetxt[self.cursor:]
+                self.cursor += 1
+                return True
             if kev.key == "Backspace":
                 if self.cursor > 0:
                     if self.cursor < len(self.basetxt)-1:
@@ -299,7 +307,7 @@ class InputBox(Input):
         if (not hasborder) and self.pad <= 0:
             return super()._opInner(mxsze)
         xtra = self.pad+self.border
-        innr = super()._opInner(mxsze) @ Vec2(0, xtra)
+        innr = super()._opInner([i-xtra*2 for i in mxsze]) @ Vec2(xtra, xtra)
         if not hasborder:
             return innr
         r = innr.rect()

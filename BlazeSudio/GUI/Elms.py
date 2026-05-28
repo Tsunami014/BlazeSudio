@@ -9,7 +9,8 @@ __all__ = [
 class Text(UIElement):
     __slots__ = ['font', 'txt', 'col']
     class O(BaseO):
-        BreakOnWord = 0b1
+        _NXT = BaseO._NXT
+        BreakOnWord = (_NXT := _NXT<<1)
         """Whether to break on words if go over the width (if not, breaks mid-word)"""
 
         Default = BreakOnWord
@@ -45,7 +46,7 @@ class Text(UIElement):
     @size.setter
     def size(self, size: int):
         self.font.size = size
-    def _opInner(self, mxsze):
+    def _opInner(self, mxsze, align=True):
         return self.font(
                 self.txt, self.col, mxsze[0],
                 breakOnSpace=self.opts & self.O.BreakOnWord,
