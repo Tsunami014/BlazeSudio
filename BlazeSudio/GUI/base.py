@@ -3,11 +3,12 @@ from BlazeSudio.graphicsCore.stuff import Col, AvgClock
 from BlazeSudio.graphicsCore.base import Op, OpList, IDENTITY, Trans
 from BlazeSudio.graphicsCore.core import Core, _CoreCls
 from BlazeSudio.graphicsCore._basey import Base
-from BlazeSudio.graphicsCore import Ix, Events, Trans as T
-from typing import Self
+from BlazeSudio.graphicsCore import Ix, Events, Mouse, Trans as T
+from typing import Self, Any
 
 __all__ = [
     'UI',
+    'Mouse',
     'Element',
         'OpElm'
 ]
@@ -16,6 +17,7 @@ __all__ = [
 class _UITyping(_CoreCls):
     bgcol: Col.colourType
     clock: AvgClock
+    cursor: Any|bool
     def __call__(self, other: 'Element') -> Self: ...
     def Run(self, maxfps: float = None, *, quit_after: bool = True, fps_title: bool = False):
         """
@@ -32,7 +34,7 @@ class _UIBase:
     __instance = None
     _mine = (
         "__instance", "__new__",
-        "elm", "bgcol", "clock",
+        "elm", "bgcol", "clock", "cursor",
         "__call__", "clear", "Run", "basicIx",
     )
     def __new__(cls):
@@ -41,6 +43,7 @@ class _UIBase:
             cls.__instance = inst
             inst.bgcol = Col.Background
             inst.clock = AvgClock()
+            inst.cursor = True
 
             cls.elm = None
         return cls.__instance
@@ -55,6 +58,7 @@ class _UIBase:
 
     def Run(self, maxfps: float = None, *, quit_after: bool = True, fps_title: bool = False):
         while Ix.handleBasic():
+            self.cursor = True
             mevs = []
             for ev in Ix.loopEvs():
                 if Events.MouseEvent(ev):
@@ -72,6 +76,12 @@ class _UIBase:
             self.elm.mouseevents(mevs, (size[0], size[1]))
             if fps_title:
                 Core.title = f'FPS: {round(self.clock.get_fps(), 2)}'
+            if self.cursor is True:
+                Mouse.Default()
+            elif not self.cursor:
+                Mouse.Hide()
+            else:
+                Mouse.Set(self.cursor)
             if self.elm is None:
                 Core(Fill(self.bgcol)).rend()
             else:

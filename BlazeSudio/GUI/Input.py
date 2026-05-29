@@ -1,7 +1,7 @@
-from .base import Element, UIElement, BaseO, Col
+from .base import UI, Element, UIElement, BaseO, Col
 from .Elms import Text
 from BlazeSudio.graphicsCore.base import Vec2
-from BlazeSudio.graphicsCore import Draw, Trans, Events, Ix
+from BlazeSudio.graphicsCore import Mouse, Draw, Trans, Events, Ix
 from typing import Callable, Iterable
 import time
 
@@ -64,6 +64,7 @@ class ButtonBase(UIElement):
         for ev in evs:
             new = ev.translated(-self.pad, -self.pad)
             if ev.active:
+                UI.cursor = Mouse.HAND
                 if self.onclick is not None and Events.MouseEvent(ev, Events.EvTyp.MouseUp):
                     self.onclick(ev.pos)
                 if not (ev.pos[0] >= self.pad and ev.pos[1] >= self.pad and ev.pos[0] <= mxsze[0]-self.pad*2 and ev.pos[1] <= mxsze[1]-self.pad*2):
@@ -126,6 +127,7 @@ class Button(ButtonBase):
                     new.active = False
             nevs.append(new)
         if found:
+            UI.cursor = Mouse.HAND
             self.state = int(Ix.Mouse.left)+1
         else:
             self.state = 0
@@ -315,6 +317,8 @@ class Input(Text):
         return False
 
     def mouseevents(self, evs: list['Events.MouseEvent'], mxsze):
+        if any(e.active for e in evs):
+            UI.cursor = Mouse.TEXT
         clicks = [e for i in evs if (e := Events.MouseEvent(i, Events.EvTyp.MouseUp))]
         if clicks:
             self.active = any(i.active for i in clicks)
