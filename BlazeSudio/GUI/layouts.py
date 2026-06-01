@@ -18,6 +18,10 @@ class StackLay(LayBase):
         self._children: Iterable[Element] = list(children)
         super().__init__(opts=opts)
 
+    def clearFocus(self):
+        for c in self._children:
+            c.clearFocus()
+
     def add_elm(self, oth: Element) -> Self:
         self._children.append(oth)
         return self
@@ -104,6 +108,11 @@ class _BaseLayout(LayBase):
             self.add_elms(children)
         self.spacing = spacing
         super().__init__(opts=opts)
+
+    def clearFocus(self):
+        for e, issp, _ in self._children:
+            if (not issp) and e is not None:
+                e.clearFocus()
 
     def add_elm(self, oth: Element, stretch: int = 1) -> Self:
         self._children.append((oth, False, stretch))
@@ -228,14 +237,14 @@ class _BaseLayout(LayBase):
                         max(mx-s[4],0)
 
             # Now length the stretches
-            n = sum(int(i[1] is None) for i in szes)
+            n = sum(i[2] if i[1] is None else 0 for i in szes)
             if n != 0:
                 maxsize = bound[self._DIRECTION] - sum(i[0] for i in szes) - self.spacing*(len(szes)-1)
                 if maxsize > 0:
                     left = maxsize / n
                     for s in szes:
                         if s[1] is None:
-                            s[0] = left
+                            s[0] = left*s[2]
             self._szesCache.append(((mxsze, bound), szes))
             self._szesCache = self._szesCache[-5:]
             return szes

@@ -171,6 +171,9 @@ class Input(Text):
         self.active = False
         self.onenter = onenter
         super().__init__(txt, sze, col, fontOpts, opts=opts)
+    def clearFocus(self):
+        self.active = False
+
     @property
     def basecol(self):
         return Text.col.__get__(self, Input)

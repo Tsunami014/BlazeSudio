@@ -29,13 +29,15 @@ class _UITyping(_CoreCls):
             quit_after: If True, after exiting will quit (speeds up window closing)
             fps_title: If True, every frame it will set the window title to the current average FPS. For debugging
         """
+    def clearFocus(self):
+        """Clears the focus from all elements"""
 
 class _UIBase:
     __instance = None
     _mine = (
         "__instance", "__new__",
         "elm", "bgcol", "clock", "cursor",
-        "__call__", "clear", "Run", "basicIx",
+        "__call__", "clear", "Run", "clearFocus",
     )
     def __new__(cls):
         if cls.__instance is None:
@@ -55,6 +57,9 @@ class _UIBase:
     def clear(self) -> Self:
         self.elm = None
         return self
+
+    def clearFocus(self):
+        self.elm.clearFocus()
 
     def Run(self, maxfps: float = None, *, quit_after: bool = True, fps_title: bool = False):
         while Ix.handleBasic():
@@ -150,6 +155,9 @@ class _ElementBase: # MUST DEFINE __slots__ WITH ['opts']
         sze = Core.size
         return self._op(IDENTITY, (sze[0], sze[1]))
 
+    def clearFocus(self):
+        pass
+
     def AlignL(self) -> Self:
         """Removes alignment flags.
         Alignment flags detail what alignment the content of this element is, not where it is positioned.
@@ -199,6 +207,8 @@ class UIElement(Element):
         return (op2 @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
 
 class ElmWrapper(_ElementBase):
+    def clearFocus(self):
+        self.inner.clearFocus()
     def __getattribute__(self, name):
         if name[:5] == "Align":
             orig = super().__getattribute__(name)

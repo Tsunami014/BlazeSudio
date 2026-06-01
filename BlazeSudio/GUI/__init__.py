@@ -1,5 +1,6 @@
 from .elms import Elms
 from .input import Input
+from .term import Term
 from .layouts import Lays
 from .base import UI, OpElm, Col
 __all__ = [
@@ -8,6 +9,8 @@ __all__ = [
 
     'Input',
     'Elms',
+
+    'Term',
 
     'Lays',
 

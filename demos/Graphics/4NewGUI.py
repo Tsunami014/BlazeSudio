@@ -2,7 +2,7 @@
 def main():
     from BlazeSudio.graphicsCore import Draw
     from BlazeSudio.GUI import OpElm
-    from BlazeSudio.GUI import UI, Lays, Elms, Input, Col
+    from BlazeSudio.GUI import UI, Lays, Elms, Input, Col, Term
 
     txt = Elms.Text("")
     clks = 0
@@ -33,10 +33,11 @@ def main():
                 Input.InputBox(placeholder="Type here!",
                     opts=(O:=Input.InputBox.O).Default|O.Multiline).AlignC(),
             None],
-            Lays.Offset(10, 10, Elms.Text("Text here!").PositionT().AlignL()),
+            Lays.Offset(10, 10, Elms.Text("Alt+/ to open terminal").PositionT().AlignL()),
             Lays.VBox[None, Lays.HBox[None, Lays.Offset(-10, -10,
                 Input.Button(Elms.Text("The do-nothing\nbutton").AlignR(), Col.Secondary).PositionB()
             )]],
+            Term(),
         ]
     )
 

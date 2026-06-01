@@ -275,7 +275,7 @@ class Font:
         self.load(txt)
         return sum(
             self.cache[i].advance for i in txt[:-1]
-        )+self.cache[txt[-1]].width + 1
+        )+self.cache[txt[-1]].width + 2
     def linesize(self, txt) -> tuple[float, float]:
         return (
             self.linewidth(txt),
