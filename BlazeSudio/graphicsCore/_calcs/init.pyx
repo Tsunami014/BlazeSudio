@@ -12,86 +12,6 @@ cdef inline long clip(long v, long lo, long hi):
     return v
 
 
-cpdef drawLine(
-        cnp.ndarray[cnp.uint8_t, ndim=3] arr,
-        double[:] p1,
-        double[:] p2,
-        double thickness,
-        cnp.ndarray[cnp.uint8_t, ndim=1] col,
-        crop):
-    cdef long x = <long>p1[0]
-    cdef long y = <long>p1[1]
-    cdef long x1 = <long>p2[0]
-    cdef long y1 = <long>p2[1]
-    cdef long half = <long>(thickness) >> 1
-
-    cdef long dx = abs(x1 - x)
-    cdef long dy = abs(y1 - y)
-    cdef long err
-    cdef long sx, sy
-    cdef long ys, ye, xs, xe
-    cdef long i
-
-    cdef unsigned char rcol = col[0]
-    cdef unsigned char gcol = col[1]
-    cdef unsigned char bcol = col[2]
-    cdef unsigned char acol = col[3]
-
-    cdef long cLeft = <long>crop[0]
-    cdef long cTop = <long>crop[1]
-    cdef long cRight = <long>crop[2]
-    cdef long cBot = <long>crop[3]
-
-    if dx > dy:
-        if x > x1:
-            x, x1 = x1, x
-            y, y1 = y1, y
-        sy = 1 if y < y1 else -1
-        err = dx // 2
-        while x <= x1:
-            if x >= cLeft and x <= cRight:
-                ys = max(y - half, cTop)
-                ye = min(y + half + 1, cBot)
-                xs = min(max(x, cLeft), cRight)
-
-                if ys < ye:
-                    for i in range(ys, ye):
-                        arr[i, xs, 0] = rcol
-                        arr[i, xs, 1] = gcol
-                        arr[i, xs, 2] = bcol
-                        arr[i, xs, 3] = acol
-
-            err -= dy
-            if err < 0:
-                y += sy
-                err += dx
-            x += 1
-    else:
-        if y > y1:
-            x, x1 = x1, x
-            y, y1 = y1, y
-        sx = 1 if x < x1 else -1
-        err = dy // 2
-        while y <= y1:
-            if y >= cTop and y <= cBot:
-                xs = max(x - half, cLeft)
-                xe = min(x + half + 1, cRight)
-                ys = min(max(y, cTop), cBot)
-
-                if xs < xe:
-                    for i in range(xs, xe):
-                        arr[ys, i, 0] = rcol
-                        arr[ys, i, 1] = gcol
-                        arr[ys, i, 2] = bcol
-                        arr[ys, i, 3] = acol
-
-            err -= dx
-            if err < 0:
-                x += sx
-                err += dy
-            y += 1
-
-
 cdef void fillPolygon(
         cnp.ndarray[cnp.uint8_t, ndim=3] arr,
         double[:, :] points,
@@ -101,10 +21,16 @@ cdef void fillPolygon(
     if n < 3:
         return
 
-    cdef unsigned char rcol = col[0]
-    cdef unsigned char gcol = col[1]
-    cdef unsigned char bcol = col[2]
     cdef unsigned char acol = col[3]
+    if acol == 0:
+        return
+    cdef unsigned char inva = 255 - acol
+    cdef unsigned long rcol = col[0]
+    cdef unsigned long racol = col[0]*acol
+    cdef unsigned long gcol = col[1]
+    cdef unsigned long gacol = col[1]*acol
+    cdef unsigned long bcol = col[2]
+    cdef unsigned long bacol = col[2]*acol
 
     cdef long cLeft = <long>crop[0]
     cdef long cTop = <long>crop[1]
@@ -171,13 +97,164 @@ cdef void fillPolygon(
             if xj > cRight: xj = cRight
             for x in range(<long>xi, <long>xj + 1):
                 cell = &arr[y, x, 0]
-                cell[0] = rcol
-                cell[1] = gcol
-                cell[2] = bcol
-                cell[3] = acol
+                if acol == 255:
+                    cell[0] = <unsigned char>(rcol)
+                    cell[1] = <unsigned char>(gcol)
+                    cell[2] = <unsigned char>(bcol)
+                    cell[3] = 255
+                else:
+                    cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
+                    cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
+                    cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
+                    oa = acol + cell[3]
+                    if oa > 255:
+                        oa = 255
+                        cell[3] = <unsigned char>(oa)
             i += 2
 
     free(inters)
+
+
+cpdef drawLinePoly(
+        cnp.ndarray[cnp.uint8_t, ndim=3] arr,
+        double[:] p1,
+        double[:] p2,
+        double thickness,
+        cnp.ndarray[cnp.uint8_t, ndim=1] col,
+        crop):
+    cdef double dx = p2[0] - p1[0]
+    cdef double dy = p2[1] - p1[1]
+    cdef double length = np.sqrt(dx*dx + dy*dy)
+
+    if length == 0:
+        return
+
+    cdef double px = -dy / length
+    cdef double py = dx / length
+    cdef double half = thickness / 2.0
+
+    # Create the 4 corners of the thick line
+    cdef double[:, :] poly = np.zeros((4, 2), dtype=np.float64)
+    poly[0, 0] = p1[0] + px * half
+    poly[0, 1] = p1[1] + py * half
+    poly[1, 0] = p2[0] + px * half
+    poly[1, 1] = p2[1] + py * half
+    poly[2, 0] = p2[0] - px * half
+    poly[2, 1] = p2[1] - py * half
+    poly[3, 0] = p1[0] - px * half
+    poly[3, 1] = p1[1] - py * half
+
+    fillPolygon(arr, poly, col, crop)
+
+cpdef drawLine(
+        cnp.ndarray[cnp.uint8_t, ndim=3] arr,
+        double[:] p1,
+        double[:] p2,
+        double thickness,
+        cnp.ndarray[cnp.uint8_t, ndim=1] col,
+        crop):
+    cdef unsigned char acol = col[3]
+    if acol == 0:
+        return
+
+    if thickness > 1:
+        drawLinePoly(arr, p1, p2, thickness, col, crop)
+        return
+
+    cdef unsigned char inva = 255 - acol
+    cdef unsigned long rcol = col[0]
+    cdef unsigned long racol = col[0]*acol
+    cdef unsigned long gcol = col[1]
+    cdef unsigned long gacol = col[1]*acol
+    cdef unsigned long bcol = col[2]
+    cdef unsigned long bacol = col[2]*acol
+
+    cdef long x = <long>p1[0]
+    cdef long y = <long>p1[1]
+    cdef long x1 = <long>p2[0]
+    cdef long y1 = <long>p2[1]
+    cdef long half = <long>(thickness) >> 1
+
+    cdef long dx = abs(x1 - x)
+    cdef long dy = abs(y1 - y)
+
+    cdef long err
+    cdef long sx, sy
+    cdef long ys, ye, xs, xe
+    cdef long i, oa
+
+    cdef long cLeft = <long>crop[0]
+    cdef long cTop = <long>crop[1]
+    cdef long cRight = <long>crop[2]
+    cdef long cBot = <long>crop[3]
+
+    cdef unsigned char *cell
+    if dx > dy:
+        if x > x1:
+            x, x1 = x1, x
+            y, y1 = y1, y
+        sy = 1 if y < y1 else -1
+        err = dx // 2
+        while x <= x1:
+            if x >= cLeft and x <= cRight:
+                ys = max(y - half, cTop)
+                ye = min(y + half + 1, cBot)
+                xs = min(max(x, cLeft), cRight)
+
+                if ys < ye:
+                    for i in range(ys, ye):
+                        cell = &arr[i, xs, 0]
+                        if acol == 255:
+                            cell[0] = <unsigned char>(rcol)
+                            cell[1] = <unsigned char>(gcol)
+                            cell[2] = <unsigned char>(bcol)
+                            cell[3] = 255
+                        else:
+                            cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
+                            cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
+                            cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
+                            oa = acol + cell[3]
+                            if oa > 255:
+                                oa = 255
+                                cell[3] = <unsigned char>(oa)
+            err -= dy
+            if err < 0:
+                y += sy
+                err += dx
+            x += 1
+    else:
+        if y > y1:
+            x, x1 = x1, x
+            y, y1 = y1, y
+        sx = 1 if x < x1 else -1
+        err = dy // 2
+        while y <= y1:
+            if y >= cTop and y <= cBot:
+                xs = max(x - half, cLeft)
+                xe = min(x + half + 1, cRight)
+                ys = min(max(y, cTop), cBot)
+
+                if xs < xe:
+                    for i in range(xs, xe):
+                        cell = &arr[ys, i, 0]
+                        if acol == 255:
+                            cell[0] = <unsigned char>(rcol)
+                            cell[1] = <unsigned char>(gcol)
+                            cell[2] = <unsigned char>(bcol)
+                            cell[3] = 255
+                        else:
+                            cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
+                            cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
+                            cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
+                            oa = acol + cell[3]
+                            if oa > 255:
+                                oa = 255
+                                cell[3] = <unsigned char>(oa)
+            err -= dx
+            if err < 0:
+                x += sx
+                err += dy
+            y += 1
 
 
 cpdef drawPolyLine(
@@ -211,17 +288,26 @@ cpdef drawPolyLine(
 cdef _fill(
         cnp.ndarray[cnp.uint8_t, ndim=3] arr,
         long fromy, long toy, long fromx, long tox,
-        long rcol, long gcol, long bcol, long acol):
+        long rcol, long racol, long gcol, long gacol, long bcol, long bacol, long acol, long inva):
     cdef long y, x
     cdef long diff = tox - fromx
     cdef unsigned char *cell
     for y in range(fromy, toy):
         cell = &arr[y, fromx, 0]
         for x in range(diff):
-            cell[0] = rcol
-            cell[1] = gcol
-            cell[2] = bcol
-            cell[3] = acol
+            if acol == 255:
+                cell[0] = <unsigned char>(rcol)
+                cell[1] = <unsigned char>(gcol)
+                cell[2] = <unsigned char>(bcol)
+                cell[3] = 255
+            else:
+                cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
+                cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
+                cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
+                oa = acol + cell[3]
+                if oa > 255:
+                    oa = 255
+                    cell[3] = <unsigned char>(oa)
             cell += 4
 
 cpdef drawRect(
@@ -232,6 +318,17 @@ cpdef drawRect(
         double round,
         cnp.ndarray[cnp.uint8_t, ndim=1] col,
         crop):
+    cdef unsigned char acol = col[3]
+    if acol == 0:
+        return
+    cdef unsigned char inva = 255 - acol
+    cdef unsigned char rcol = col[0]
+    cdef unsigned long racol = col[0]*acol
+    cdef unsigned char gcol = col[1]
+    cdef unsigned long gacol = col[1]*acol
+    cdef unsigned char bcol = col[2]
+    cdef unsigned long bacol = col[2]*acol
+
     cdef long t = <long>thickness
 
     cdef long x0 = <long>pos[0]
@@ -262,11 +359,6 @@ cpdef drawRect(
     if r < 0:
         r = 0
 
-    cdef unsigned char rcol = col[0]
-    cdef unsigned char gcol = col[1]
-    cdef unsigned char bcol = col[2]
-    cdef unsigned char acol = col[3]
-
     cdef long x, y
 
     if t <= 0:
@@ -274,35 +366,44 @@ cpdef drawRect(
             _fill(arr,
                 clip(y0, cTop, cBot), clip(y1, cTop, cBot),
                 clip(x0, cLeft, cRight), clip(x1, cLeft, cRight),
-                rcol, gcol, bcol, acol)
+                rcol, racol, gcol, gacol, bcol, bacol, acol, inva)
             return
 
-        # Rounded fill (top/bottom strips + middle)
+        # Rounded fill (Middle block spanning full width)
         _fill(arr,
             clip(y0 + r, cTop, cBot), clip(y1 - r, cTop, cBot),
             clip(x0, cLeft, cRight), clip(x1, cLeft, cRight),
-            rcol, gcol, bcol, acol)
+            rcol, racol, gcol, gacol, bcol, bacol, acol, inva)
+            
+        # Top strip (between corners)
         _fill(arr,
-            clip(y0, cTop, cBot), clip(y1, cTop, cBot),
+            clip(y0, cTop, cBot), clip(y0 + r, cTop, cBot),
             clip(x0 + r, cLeft, cRight), clip(x1 - r, cLeft, cRight),
-            rcol, gcol, bcol, acol)
+            rcol, racol, gcol, gacol, bcol, bacol, acol, inva)
+            
+        # Bottom strip (between corners)
+        _fill(arr,
+            clip(y1 - r, cTop, cBot), clip(y1, cTop, cBot),
+            clip(x0 + r, cLeft, cRight), clip(x1 - r, cLeft, cRight),
+            rcol, racol, gcol, gacol, bcol, bacol, acol, inva)
     else:
         _fill(arr, # Top
-            clip(y0, cTop, cBot), clip(y0 + t, cTop, cBot),
-            x0+r, x1-r, rcol, gcol, bcol, acol)
+            clip(y0, cTop, cBot), clip(y0 + t, cTop, cBot), x0+r, x1-r,
+            rcol, racol, gcol, gacol, bcol, bacol, acol, inva)
         _fill(arr, # Bottom
-            clip(y1 - t, cTop, cBot), clip(y1, cTop, cBot),
-            x0+r, x1-r, rcol, gcol, bcol, acol)
+            clip(y1 - t, cTop, cBot), clip(y1, cTop, cBot), x0+r, x1-r,
+            rcol, racol, gcol, gacol, bcol, bacol, acol, inva)
         _fill(arr, y0+r, y1-r, # Left
             clip(x0, cLeft, cRight), clip(x0 + t, cLeft, cRight),
-            rcol, gcol, bcol, acol)
+            rcol, racol, gcol, gacol, bcol, bacol, acol, inva)
         _fill(arr, y0+r, y1-r, # Right
             clip(x1 - t, cLeft, cRight), clip(x1, cLeft, cRight),
-            rcol, gcol, bcol, acol)
+            rcol, racol, gcol, gacol, bcol, bacol, acol, inva)
 
     cdef long outer, inner, off
     cdef long cx, cy, xs, xe, ys, ye
     cdef long dx, dy, d2
+    cdef unsigned char *cell
     if r > 1:
         outer = r*r
         if t > 0:
@@ -340,10 +441,20 @@ cpdef drawRect(
                     dx = x - cx
                     d2 = dx*dx + dy*dy
                     if inner <= d2 < outer:
-                        arr[y, x, 0] = rcol
-                        arr[y, x, 1] = gcol
-                        arr[y, x, 2] = bcol
-                        arr[y, x, 3] = acol
+                        cell = &arr[y, x, 0]
+                        if acol == 255:
+                            cell[0] = <unsigned char>(rcol)
+                            cell[1] = <unsigned char>(gcol)
+                            cell[2] = <unsigned char>(bcol)
+                            cell[3] = 255
+                        else:
+                            cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
+                            cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
+                            cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
+                            oa = acol + cell[3]
+                            if oa > 255:
+                                oa = 255
+                                cell[3] = <unsigned char>(oa)
 
 
 cpdef drawCirc(
@@ -353,6 +464,17 @@ cpdef drawCirc(
         double thickness,
         cnp.ndarray[cnp.uint8_t, ndim=1] col,
         crop):
+    cdef unsigned char acol = col[3]
+    if acol == 0:
+        return
+    cdef unsigned char inva = 255 - acol
+    cdef unsigned char rcol = col[0]
+    cdef unsigned long racol = col[0]*acol
+    cdef unsigned char gcol = col[1]
+    cdef unsigned long gacol = col[1]*acol
+    cdef unsigned char bcol = col[2]
+    cdef unsigned long bacol = col[2]*acol
+
     cdef long r = <long>radius
     cdef long x = <long>pos[0]
     cdef long y = <long>pos[1]
@@ -372,14 +494,10 @@ cpdef drawCirc(
         innrad2 = max(r - <long>thickness, 0)
         innrad2 *= innrad2
 
-    cdef unsigned char rcol = col[0]
-    cdef unsigned char gcol = col[1]
-    cdef unsigned char bcol = col[2]
-    cdef unsigned char acol = col[3]
-
     cdef long xx, yy
     cdef long dx, dy
     cdef long dist_sq
+    cdef unsigned char *cell
     for yy in range(y0, y1):
         dy = yy - y
         for xx in range(x0, x1):
@@ -387,10 +505,20 @@ cpdef drawCirc(
             dist_sq = dx*dx + dy*dy
 
             if innrad2 <= dist_sq <= outrad2:
-                arr[yy, xx, 0] = rcol
-                arr[yy, xx, 1] = gcol
-                arr[yy, xx, 2] = bcol
-                arr[yy, xx, 3] = acol
+                cell = &arr[yy, xx, 0]
+                if acol == 255:
+                    cell[0] = <unsigned char>(rcol)
+                    cell[1] = <unsigned char>(gcol)
+                    cell[2] = <unsigned char>(bcol)
+                    cell[3] = 255
+                else:
+                    cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
+                    cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
+                    cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
+                    oa = acol + cell[3]
+                    if oa > 255:
+                        oa = 255
+                        cell[3] = <unsigned char>(oa)
 
 
 cpdef drawElipse(
@@ -402,6 +530,17 @@ cpdef drawElipse(
         double thickness,
         cnp.ndarray[cnp.uint8_t, ndim=1] col,
         crop):
+    cdef unsigned char acol = col[3]
+    if acol == 0:
+        return
+    cdef unsigned char inva = 255 - acol
+    cdef unsigned char rcol = col[0]
+    cdef unsigned long racol = col[0]*acol
+    cdef unsigned char gcol = col[1]
+    cdef unsigned long gacol = col[1]*acol
+    cdef unsigned char bcol = col[2]
+    cdef unsigned long bacol = col[2]*acol
+
     cdef long xrad = <long>xradius
     cdef long yrad = <long>yradius
     cdef long x = <long>pos[0]
@@ -430,11 +569,7 @@ cpdef drawElipse(
     cdef double xr, yr
     cdef double v_outer, v_inner
 
-    cdef unsigned char rcol = col[0]
-    cdef unsigned char gcol = col[1]
-    cdef unsigned char bcol = col[2]
-    cdef unsigned char acol = col[3]
-
+    cdef unsigned char *cell
     if t == 0:
         invxr = 1.0 / (xrad * xrad)
         invyr = 1.0 / (yrad * yrad)
@@ -447,10 +582,20 @@ cpdef drawElipse(
                 yr = -dx * sin_t + dy * cos_t
 
                 if xr * xr * invxr + yr * yr * invyr <= 1.0:
-                    arr[yy, xx, 0] = rcol
-                    arr[yy, xx, 1] = gcol
-                    arr[yy, xx, 2] = bcol
-                    arr[yy, xx, 3] = acol
+                    cell = &arr[yy, xx, 0]
+                    if acol == 255:
+                        cell[0] = <unsigned char>(rcol)
+                        cell[1] = <unsigned char>(gcol)
+                        cell[2] = <unsigned char>(bcol)
+                        cell[3] = 255
+                    else:
+                        cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
+                        cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
+                        cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
+                        oa = acol + cell[3]
+                        if oa > 255:
+                            oa = 255
+                            cell[3] = <unsigned char>(oa)
     else:
         inv_right = 1.0 / ((xrad + t) * (xrad + t))
         inv_bot = 1.0 / ((yrad + t) * (yrad + t))
@@ -469,8 +614,18 @@ cpdef drawElipse(
                 if v_outer <= 1.0:
                     v_inner = xr * xr * inv_left + yr * yr * inv_top
                     if v_inner > 1.0:
-                        arr[yy, xx, 0] = rcol
-                        arr[yy, xx, 1] = gcol
-                        arr[yy, xx, 2] = bcol
-                        arr[yy, xx, 3] = acol
+                        cell = &arr[yy, xx, 0]
+                        if acol == 255:
+                            cell[0] = <unsigned char>(rcol)
+                            cell[1] = <unsigned char>(gcol)
+                            cell[2] = <unsigned char>(bcol)
+                            cell[3] = 255
+                        else:
+                            cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
+                            cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
+                            cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
+                            oa = acol + cell[3]
+                            if oa > 255:
+                                oa = 255
+                                cell[3] = <unsigned char>(oa)
 
