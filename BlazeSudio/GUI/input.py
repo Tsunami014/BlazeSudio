@@ -141,6 +141,8 @@ class Input(Text):
         """Will prevent the cursor from blinking"""
         Multiline = (_NXT := _NXT<<1)
         """Will allow inputting multiple lines of text"""
+        Terminal = (_NXT := _NXT<<1)
+        """Will prefix the text with '>'"""
     def __init__(self,
                  txt: str = "",
                  sze: int = 24,
@@ -203,14 +205,15 @@ class Input(Text):
     def txt(self):
         """The text as it's displayed (including cursor and placeholder text), to get text content of box use 'basetxt'"""
         rt = super().txt
+        pref = '> ' if self.opts & self.O.Terminal else ''
         if not rt:
             if self.active:
-                return '|'
-            return self.placehold
+                return pref+'|'
+            return pref+self.placehold
         if self.active:
             if self.cursor >= len(rt):
-                return rt + '|'
-            return rt[:self.cursor] + \
+                return pref+rt + '|'
+            return pref+rt[:self.cursor] + \
                     ('|' if rt[self.cursor] == '\n' or (self.opts & self.O.NoBlink) or round(time.time()*2.5)%2 == 0 else ' ') + \
                     rt[self.cursor:]
         return rt

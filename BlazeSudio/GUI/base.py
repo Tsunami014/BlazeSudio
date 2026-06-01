@@ -269,3 +269,15 @@ class OpElm(Element):
                 out = (r[2]-r[0], r[3]-r[1])
                 return out, out
         return None, mxsze
+
+class StretchOpElm(Element):
+    __slots__ = []
+    def op(self, mxsze):
+        return OpList()
+
+    def _op(self, mat, mxsze):
+        o = self.op(mxsze)
+        op = o if not hasattr(o, "getNormalisedPos") else o @ -o.getNormalisedPos(0, 0)
+        return (op @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
+    def _szes(self, mxsze, _):
+        return None, mxsze

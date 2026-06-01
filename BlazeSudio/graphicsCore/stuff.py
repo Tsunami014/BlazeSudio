@@ -184,14 +184,17 @@ class Col:
         return (*cls.to_hsv(col), col[3])
 
     @classmethod
-    def add_rgb(cls, col: colourType, r: int, g: int, b: int, a: int = 255) -> colourType:
+    def add_alpha(cls, col: colourType, a: int) -> colourType:
+        return (col[0], col[1], col[2], max(min(col[3]+a, 255), 0))
+    @classmethod
+    def add_rgb(cls, col: colourType, r: int, g: int, b: int, a: int = 0) -> colourType:
         clamp = lambda val: max(min(val, 255), 0)
         return (clamp(col[0]+r), clamp(col[1]+g), clamp(col[2]+b), clamp(col[3]+a))
     @classmethod
     def add_rgba(cls, col: colourType, r: int, g: int, b: int, a) -> colourType:
         return cls.add_rgba(col, r, g, b, a)
     @classmethod
-    def add_hsv(cls, col: colourType, h: int, s: int, v: int, a: int = 255) -> colourType:
+    def add_hsv(cls, col: colourType, h: int, s: int, v: int, a: int = 0) -> colourType:
         clamp = lambda val, mx: max(min(val, mx), 0)
         oh, os, ov = cls.to_hsv(col)
         return cls.hsv(

@@ -1,12 +1,21 @@
-from BlazeSudio.graphicsCore import Events, Col
+from BlazeSudio.graphicsCore import Events, Col, Draw
 from BlazeSudio.graphicsCore.base import OpList
-from .base import ElmWrapper, Base, BaseO
+from .base import UI, ElmWrapper, StretchOpElm, Base, BaseO
 from .input import InputBox
 from .layouts import Lays
 from typing import Iterable
 
+class BG(StretchOpElm):
+    __slots__ = ['col', 'round']
+    def __init__(self, col):
+        self.col = col
+        self.round = 0
+        super().__init__()
+    def op(self, mxsze):
+        return Draw.Rect(1, 1, mxsze[0]-2, mxsze[1]-2, 0, self.col, roundness=self.round-2)
+
 class Term(ElmWrapper, Base):
-    __slots__ = ['inner', 'box', 'opts', 'leader']
+    __slots__ = ['inner', 'opts', 'box', 'bg', 'leader']
     def __init__(self,
                  leader: str = "/",
                  sze: int = 48,
@@ -14,6 +23,7 @@ class Term(ElmWrapper, Base):
                  border: int = 10,
                  radius: int = 30,
                  bordercol: Col.colourType = Col.Grey,
+                 bgcol: Col.colourType = Col.add_alpha(Col.LightGrey, -100),
                  fontOpts: Iterable[str] = None,
                  *, opts: BaseO = BaseO.Default):
         """
@@ -25,17 +35,26 @@ class Term(ElmWrapper, Base):
             border: The thickness of the border
             radius: The border radius of the box (0 to disable)
             bordercol: The colour of the border
+            bgcol: The colour of the background
             fontOpts: A list of font names or files to try and load, otherwise use default
 
         Keyword args:
             opts: The options to apply to this element.
         """
         self.leader = leader
+        self.bg = BG(bgcol)
         self.box = InputBox(
             sze=sze, pad=pad, border=border, radius=radius, bordercol=bordercol, fontOpts=fontOpts,
-            onenter=self.run)
-        self.inner = Lays.VBox[None, self.box].add_stretch(10)
+            onenter=self.run, opts=InputBox.O.Default|InputBox.O.Terminal)
+        self.inner = Lays.VBox[None, Lays.Stack[self.bg, self.box].PositionM()].add_stretch(10)
         ElmWrapper.__init__(self, opts=opts)
+
+    @property
+    def bgcol(self) -> Col.colourType:
+        return self.bg.col
+    @bgcol.setter
+    def bgcol(self, new):
+        self.bg.col = new
 
     @property
     def active(self):
@@ -43,6 +62,9 @@ class Term(ElmWrapper, Base):
     @active.setter
     def active(self, new):
         self.box.active = new
+
+    def clearFocus(self):
+        self.box.active = False
 
     def run(self, cmd):
         self.box.active = False
@@ -52,6 +74,7 @@ class Term(ElmWrapper, Base):
     def _op(self, mat, mxsze):
         if not self.box.active:
             return OpList()
+        self.bg.round = self.box.round
         return self.inner._op(mat, mxsze)
     def _szes(self, mxsze, bound):
         if not self.box.active:
@@ -61,7 +84,10 @@ class Term(ElmWrapper, Base):
     def onevent(self, ev: Events.Event) -> bool:
         if kev := Events.KeyEvent(ev, Events.EvTyp.KeyDown):
             if kev.key == self.leader and kev.modifs(alt=True):
-                self.box.active = not self.box.active
+                new = not self.box.active
+                if new:
+                    UI.clearFocus()
+                self.box.active = new
                 return True
         if self.box.active:
             return self.box.onevent(ev)

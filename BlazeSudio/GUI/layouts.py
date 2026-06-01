@@ -68,7 +68,8 @@ class StackLay(LayBase):
             s = c._szes(mxsze, bound)
             if s is None:
                 return None
-            mn = tuple(min(s[0][i], mn[i]) for i in range(2))
+            m1 = s[0] or (0, 0)
+            mn = tuple(min(m1[i], mn[i]) for i in range(2))
             mx = tuple(max(s[1][i], mn[i]) for i in range(2))
         return mn, mx
 
