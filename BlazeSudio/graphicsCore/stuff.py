@@ -85,6 +85,8 @@ class AvgClock(Clock):
         """
         return super().get_fps()
 
+def _rgb(*args): # To be able to see the colours here
+    return *args, 255
 class Col:
     """
     A Colour is an rgb tuple.
@@ -216,22 +218,20 @@ class Col:
     TrueWhite = (255, 255, 255, 255)
     Transparent = (0, 0, 0, 0)
 
-    Red = (247, 118, 142, 255)
-    Orange = (255, 158, 100, 255)
-    Yellow = (224, 175, 104, 255)
-    Green = (224, 175, 104, 255)
-    Blue = (42, 195, 222, 255)
-    Indigo = (122, 162, 247, 255)
-    Purple = (187, 154, 247, 255)
-    White = (192, 202, 245, 255)
-    LightGrey = (169, 177, 214, 255)
-    Grey = (86, 95, 137, 255)
-    Black = (26, 27, 38, 255)
+    Red = _rgb(237, 175, 184)
+    Orange = _rgb(252, 208, 161)
+    Yellow = _rgb(241, 227, 190)
+    Green = _rgb(165, 201, 154)
+    Blue = _rgb(145, 217, 250)
+    Indigo = _rgb(187, 201, 252)
+    Purple = _rgb(214, 194, 223)
+    White = _rgb(250, 249, 240)
+    LightGrey = _rgb(181, 182, 186)
+    Grey = _rgb(121, 123, 132)
+    Black = _rgb(35, 26, 28)
 
-    Background = (242, 250, 255, 255)
-    Primary = (130, 102, 182, 255)
-    Secondary = (55, 115, 150, 255)
-    Accent = (183, 134, 61, 255)
-    # TODO: e.g. highlight, shadow, outline
-    # TODO: Make the colours look nicer together
+    Background = _rgb(250, 252, 252)
+    Primary = _rgb(129, 108, 97)
+    Secondary = _rgb(99, 83, 91)
+    Accent = _rgb(87, 90, 75)
 

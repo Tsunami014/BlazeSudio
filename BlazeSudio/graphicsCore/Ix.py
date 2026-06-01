@@ -197,7 +197,7 @@ def flushNoUpdate():
 
 def handleBasic() -> bool:
     """
-    Updates interaction stuff, returning False if need to quit (escape key or window close events recieved) and True otherwise
+    Updates interaction stuff, returning False if need to quit (when window close events recieved) and True otherwise
 
     This can be used like `while Ix.handleBasic(): ...`
 
@@ -206,8 +206,8 @@ def handleBasic() -> bool:
     """
     _upd()
     return not any(
-            i.typ == EvTyp.Quit or
-            ((kev := KeyEvent(i, EvTyp.KeyDown)) and kev.keycode == sdl2.SDLK_ESCAPE)
+            i.typ == EvTyp.Quit# or
+            #((kev := KeyEvent(i, EvTyp.KeyDown)) and kev.keycode == sdl2.SDLK_ESCAPE)
         for i in Keys._keyEvs
     )
 

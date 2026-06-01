@@ -184,7 +184,7 @@ class Input(Text):
             col = self.placeholdcol
         else:
             col = super().col
-        return col if self.active else Col.lighten(col, 40)
+        return Col.darken(col, 30) if self.active else col
     @col.setter
     def col(self, new):
         Text.col.__set__(self, new)
@@ -256,6 +256,10 @@ class Input(Text):
         if not self.active:
             return False
         if kev := Events.KeyEvent(ev, Events.EvTyp.KeyDown):
+            if kev.key == "Escape":
+                olda = self.active
+                self.active = False
+                return olda
             if kev.key == "Enter" or kev.key == "Return":
                 if not self.opts & self.O.Multiline:
                     self.onenter(self.basetxt)
@@ -406,7 +410,7 @@ class InputBox(Input):
         if not hasborder:
             return innr
         r = innr.rect()
-        col = self.bordercol if self.active else Col.lighten(self.bordercol, 40)
+        col = Col.darken(self.bordercol, 30) if self.active else self.bordercol
         return Draw.Rect((0,0), (r[2]+xtra*2, r[3]+xtra*2), self.border, col, roundness=self.round) + innr
 
     def _szes(self, mxsze, _):
