@@ -2,8 +2,7 @@ import sys
 import os
 
 def get_demos():
-    import importlib
-    origdir = os.getcwd()
+    import importlib.util
     cmds = {}
     pth = os.path.abspath(os.path.join(__file__, "..", "demos"))
     for it in os.listdir(pth):
@@ -11,19 +10,22 @@ def get_demos():
         if '.' not in it and it[0] != '_' and os.path.isdir(full):
             alls = []
             for it2 in os.listdir(full):
-                os.chdir(full)
                 if it2[0] not in "_." and it2[-3:] == ".py":
                     try:
-                        mod = importlib.import_module(it2[:-3])
+                        spec = importlib.util.spec_from_file_location(
+                            "demo_"+it2[:-3], os.path.join(full, it2)
+                        )
+                        mod = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(mod)
                         if not hasattr(mod, 'main'):
+                            print(f"File demos/{it}/{it2} has no main function!")
                             continue
-                        nam = getattr(mod, "__doc__", it2[1:].capitalize())
+                        nam = getattr(mod, "__doc__", it2[1:-3].capitalize())
                         alls.append((it2[0], nam, os.path.join(full, it2), mod))
-                    except ImportError:
-                        pass
+                    except ImportError as e:
+                        print(f"Error importing file demos/{it}/{it2}! {type(e)}: {e}")
             alls.sort(key=lambda x: x[0])
             cmds[it] = alls
-    os.chdir(origdir)
     return cmds
 
 def cmdList(cmds):
