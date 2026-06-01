@@ -29,6 +29,12 @@ for f in files:
 
 if len(MODULES) > 0:
     print(f"Compiling modules: {', '.join(m[0] for m in MODULES)}...")
+    if sys.platform == 'win32':
+        compile_flags = ['/openmp']
+        link_flags = []
+    else:
+        compile_flags = ['-fopenmp']
+        link_flags = ['-fopenmp']
     extensions = [
         Extension(
             name=modname,
@@ -38,7 +44,9 @@ if len(MODULES) > 0:
                 ("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION"),
                 ("Py_LIMITED_API", "0x030B0000")
             ],
-            py_limited_api=True
+            py_limited_api=True,
+            extra_compile_args=compile_flags,
+            extra_link_args=link_flags,
         )
         for modname, src in MODULES
     ]

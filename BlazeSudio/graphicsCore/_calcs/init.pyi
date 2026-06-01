@@ -7,7 +7,7 @@ __cimport_types__ = [cnp.ndarray]
 def drawLinePoly(arr: cnp.ndarray, p1: memoryview, p2: memoryview, thickness: float, col: cnp.ndarray, crop):
     ...
 
-def drawLine(arr: cnp.ndarray, p1: memoryview, p2: memoryview, thickness: float, col: cnp.ndarray, crop):
+def drawLine(arr_orig: cnp.ndarray, p1: memoryview, p2: memoryview, thickness: float, col: cnp.ndarray, crop):
     ...
 
 def drawPolyLine(arr: cnp.ndarray, points: memoryview, thickness: float, col: cnp.ndarray, crop, round: bool):

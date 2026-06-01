@@ -2,7 +2,10 @@
 import numpy as np
 cimport numpy as cnp
 from BlazeSudio.speed.time cimport Timer
+from cython.parallel import prange
 __cimport_types__ = [cnp.ndarray]
+
+cdef unsigned int THRESH = 300
 
 cdef cnp.ndarray[cnp.float64_t, ndim=2] invert_affine_matrix(mat):
     cdef double a, b, tx
@@ -36,7 +39,7 @@ cdef inline void ezblit(
         yhi = min(cBot, transy + oh)
         xlo = max(cLeft, transx)
         xhi = min(cRight, transx + ow)
-        for y in range(ylo, yhi):#, nogil=True):
+        for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
             oy = y - transy
             for x in range(xlo, xhi):
                 ox = x - transx
@@ -69,7 +72,7 @@ cdef inline void ezblit(
 
     cdef double inv_scalex = 1.0 / scalex
     cdef double inv_scaley = 1.0 / scaley
-    for y in range(ylo, yhi):#, nogil=True):
+    for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
         oy = <long>((y - transy) * inv_scaley)
         if 0 <= oy < oh:
             for x in range(cLeft, cRight):
@@ -120,7 +123,7 @@ cdef inline void regblit(
     cdef double m21 = Minv[2, 1]
     cdef double m22 = Minv[2, 2]
 
-    for y in range(cTop, cBot):#, nogil=True):
+    for y in prange(cTop, cBot, use_threads_if=(cBot-cTop) > THRESH, nogil=True):
         oy_first = <long>(m10*cLeft + m11*y + m12)
         oy_last  = <long>(m10*(cRight-1) + m11*y + m12)
         if (oy_first < 0 and oy_last < 0) or (oy_first >= oh and oy_last >= oh):

@@ -1,8 +1,11 @@
 # cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
 import numpy as np
-from libc.stdlib cimport malloc, free
 cimport numpy as cnp
+from libc.stdlib cimport malloc, free
+from cython.parallel import prange
 __cimport_types__ = [cnp.ndarray]
+
+cdef unsigned int THRESH = 300
 
 cdef inline long clip(long v, long lo, long hi):
     if v < lo:
@@ -13,7 +16,7 @@ cdef inline long clip(long v, long lo, long hi):
 
 
 cdef void fillPolygon(
-        cnp.ndarray[cnp.uint8_t, ndim=3] arr,
+        cnp.ndarray[cnp.uint8_t, ndim=3] arr_orig,
         double[:, :] points,
         cnp.ndarray[cnp.uint8_t, ndim=1] col,
         crop):
@@ -31,6 +34,8 @@ cdef void fillPolygon(
     cdef unsigned long gacol = col[1]*acol
     cdef unsigned long bcol = col[2]
     cdef unsigned long bacol = col[2]*acol
+
+    cdef unsigned char[:, :, ::1] arr = arr_orig
 
     cdef long cLeft = <long>crop[0]
     cdef long cTop = <long>crop[1]
@@ -89,8 +94,7 @@ cdef void fillPolygon(
             inters[m + 1] = x
 
         # fill pairs
-        i = 0
-        while i + 1 < k:
+        for i in range(0, k-1, 2):#, nogil=True):
             xi = inters[i]
             xj = inters[i + 1]
             if xi < cLeft: xi = cLeft
@@ -110,8 +114,6 @@ cdef void fillPolygon(
                     if oa > 255:
                         oa = 255
                         cell[3] = <unsigned char>(oa)
-            i += 2
-
     free(inters)
 
 
@@ -147,7 +149,7 @@ cpdef drawLinePoly(
     fillPolygon(arr, poly, col, crop)
 
 cpdef drawLine(
-        cnp.ndarray[cnp.uint8_t, ndim=3] arr,
+        cnp.ndarray[cnp.uint8_t, ndim=3] arr_orig,
         double[:] p1,
         double[:] p2,
         double thickness,
@@ -158,8 +160,10 @@ cpdef drawLine(
         return
 
     if thickness > 1:
-        drawLinePoly(arr, p1, p2, thickness, col, crop)
+        drawLinePoly(arr_orig, p1, p2, thickness, col, crop)
         return
+
+    cdef unsigned char[:, :, ::1] arr = arr_orig
 
     cdef unsigned char inva = 255 - acol
     cdef unsigned long rcol = col[0]
@@ -189,13 +193,15 @@ cpdef drawLine(
     cdef long cBot = <long>crop[3]
 
     cdef unsigned char *cell
+    cdef long steps
     if dx > dy:
         if x > x1:
             x, x1 = x1, x
             y, y1 = y1, y
         sy = 1 if y < y1 else -1
         err = dx // 2
-        while x <= x1:
+        steps = dx + 1
+        for _ in range(steps):
             if x >= cLeft and x <= cRight:
                 ys = max(y - half, cTop)
                 ye = min(y + half + 1, cBot)
@@ -228,7 +234,8 @@ cpdef drawLine(
             y, y1 = y1, y
         sx = 1 if x < x1 else -1
         err = dy // 2
-        while y <= y1:
+        steps = dy + 1
+        for _ in range(steps):
             if y >= cTop and y <= cBot:
                 xs = max(x - half, cLeft)
                 xe = min(x + half + 1, cRight)
@@ -289,12 +296,11 @@ cdef _fill(
         cnp.ndarray[cnp.uint8_t, ndim=3] arr,
         long fromy, long toy, long fromx, long tox,
         long rcol, long racol, long gcol, long gacol, long bcol, long bacol, long acol, long inva):
-    cdef long y, x
-    cdef long diff = tox - fromx
+    cdef long y, x, oa
     cdef unsigned char *cell
-    for y in range(fromy, toy):
-        cell = &arr[y, fromx, 0]
-        for x in range(diff):
+    for y in prange(fromy, toy, use_threads_if=(toy-fromy) > THRESH, nogil=True):
+        for x in range(fromx, tox):
+            cell = &arr[y, x, 0]
             if acol == 255:
                 cell[0] = <unsigned char>(rcol)
                 cell[1] = <unsigned char>(gcol)
@@ -308,7 +314,6 @@ cdef _fill(
                 if oa > 255:
                     oa = 255
                     cell[3] = <unsigned char>(oa)
-            cell += 4
 
 cpdef drawRect(
         cnp.ndarray[cnp.uint8_t, ndim=3] arr,
@@ -431,7 +436,7 @@ cpdef drawRect(
             ys = clip(ys, cTop, cBot)
             ye = clip(ye, cTop, cBot)
 
-            for y in range(ys, ye):
+            for y in prange(ys, ye, use_threads_if=(ye-ys) > THRESH, nogil=True):
                 if y < cTop or y > cBot:
                     continue
                 dy = y - cy
@@ -498,7 +503,7 @@ cpdef drawCirc(
     cdef long dx, dy
     cdef long dist_sq
     cdef unsigned char *cell
-    for yy in range(y0, y1):
+    for yy in prange(y0, y1, use_threads_if=(y1-y0) > THRESH, nogil=True):
         dy = yy - y
         for xx in range(x0, x1):
             dx = xx - x
@@ -573,7 +578,7 @@ cpdef drawElipse(
     if t == 0:
         invxr = 1.0 / (xrad * xrad)
         invyr = 1.0 / (yrad * yrad)
-        for yy in range(y_min, y_max):
+        for yy in prange(y_min, y_max, use_threads_if=(y_max-y_min) > THRESH, nogil=True):
             dy = yy - y
             for xx in range(x_min, x_max):
                 dx = xx - x
@@ -602,7 +607,7 @@ cpdef drawElipse(
         inv_left = 1.0 / ((xrad - t) * (xrad - t))
         inv_top = 1.0 / ((yrad - t) * (yrad - t))
 
-        for yy in range(y_min, y_max):
+        for yy in prange(y_min, y_max, use_threads_if=(y_max-y_min) > THRESH, nogil=True):
             dy = yy - y
             for xx in range(x_min, x_max):
                 dx = xx - x
