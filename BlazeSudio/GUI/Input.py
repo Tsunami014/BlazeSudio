@@ -135,7 +135,7 @@ class Button(ButtonBase):
 
 
 class Input(Text):
-    __slots__ = ['placehold', 'placeholdcol', 'active', 'cursor']
+    __slots__ = ['placehold', 'placeholdcol', 'active', 'cursor', 'onenter']
     class O(Text.O):
         _NXT = Text.O._NXT
         NoBlink = (_NXT := _NXT<<1)
@@ -149,6 +149,7 @@ class Input(Text):
                  placeholder: str = "",
                  placeholdcol: Col.colourType = Col.Grey,
                  fontOpts: Iterable[str] = None,
+                 onenter: Callable = None,
                  *, opts: O = O.Default):
         """
         Text that you can edit! NOTE: This is not in a box, so it is not as intuative as InputBox for users. Consider using that instead.
@@ -160,6 +161,7 @@ class Input(Text):
             placeholder: The text to display when no text is inputted
             placeholdcol: The colour of the placeholder text
             fontOpts: A list of font names or files to try and load, otherwise use default
+            onenter: A function to call when enter is pressed ONLY if the input is NOT multiline. The first argument is the text in this input.
 
         Keyword args:
             opts: The options to apply to the text
@@ -168,6 +170,7 @@ class Input(Text):
         self.placehold = placeholder
         self.placeholdcol = placeholdcol
         self.active = False
+        self.onenter = onenter
         super().__init__(txt, sze, col, fontOpts, opts=opts)
     @property
     def basecol(self):
@@ -188,6 +191,7 @@ class Input(Text):
 
     @property
     def basetxt(self):
+        """The text content inside the box"""
         return Text.txt.__get__(self, Input)
     @basetxt.setter
     def basetxt(self, new):
@@ -195,6 +199,7 @@ class Input(Text):
         self.cursor = max(0, min(self.cursor, len(new)))
     @property
     def txt(self):
+        """The text as it's displayed (including cursor and placeholder text), to get text content of box use 'basetxt'"""
         rt = super().txt
         if not rt:
             if self.active:
@@ -253,6 +258,7 @@ class Input(Text):
         if kev := Events.KeyEvent(ev, Events.EvTyp.KeyDown):
             if kev.key == "Enter" or kev.key == "Return":
                 if not self.opts & self.O.Multiline:
+                    self.onenter(self.basetxt)
                     return True
                 self.basetxt = self.basetxt[:self.cursor] + "\n" + self.basetxt[self.cursor:]
                 self.cursor += 1
@@ -364,6 +370,7 @@ class InputBox(Input):
                  placeholdcol: Col.colourType = Col.Grey,
                  bordercol: Col.colourType = Col.Purple,
                  fontOpts: Iterable[str] = None,
+                 onenter: Callable = None,
                  *, opts: Text.O = Text.O.Default):
         """
         Text in a box that you can edit!
@@ -379,6 +386,7 @@ class InputBox(Input):
             placeholdcol: The colour of the placeholder text
             bordercol: The colour of the border
             fontOpts: A list of font names or files to try and load, otherwise use default
+            onenter: A function to call when enter is pressed ONLY if the input is NOT multiline. The first argument is the text in this input.
 
         Keyword args:
             opts: The options to apply to the text
@@ -387,7 +395,7 @@ class InputBox(Input):
         self.border = border
         self.round = radius
         self.bordercol = bordercol
-        super().__init__(txt, sze, col, placeholder, placeholdcol, fontOpts, opts=opts)
+        super().__init__(txt, sze, col, placeholder, placeholdcol, fontOpts, onenter, opts=opts)
 
     def _opInner(self, mxsze):
         hasborder = self.border > 0

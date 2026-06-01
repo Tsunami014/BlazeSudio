@@ -152,32 +152,43 @@ class _ElementBase: # MUST DEFINE __slots__ WITH ['opts']
 
     @property
     def AlignL(self) -> Self:
-        """Removes alignment flags"""
+        """Removes alignment flags.
+        Alignment flags detail what alignment the content of this element is, not where it is positioned.
         self.opts = self.opts & ~(BaseO.AlignRight | BaseO.AlignCentre)
+        Empty (default) is left."""
         return self
     @property
     def AlignC(self) -> Self:
-        """Adds the CentreAlign flag. Note it won't centre its positionings unless aligned in a layout!"""
+        """Adds the CentreAlign flag.
+        Alignment flags detail what alignment the content of this element is, not where it is positioned.
+        Empty (default) is left."""
         self.opts = (self.opts | BaseO.AlignCentre) & ~BaseO.AlignRight
         return self
     @property
     def AlignR(self) -> Self:
-        """Adds the RightAlign flag. Note it won't right its their positionings unless aligned in a layout!"""
+        """Adds the RightAlign flag.
+        Alignment flags detail what alignment the content of this element is, not where it is positioned."""
         self.opts = (self.opts | BaseO.AlignRight) & ~BaseO.AlignCentre
         return self
     @property
     def PositionT(self) -> Self:
-        """Adds the PositionTop flag. This will make it at the top of layouts it is in (for vertical layouts, to the left)"""
+        """Adds the PositionTop flag.
+        Position flags change where the element is positioned in the parent layout perpendicular to its direction (e.g. top in a vertical layout is left and in a horizontal layout is the top)
+        Empty (default) is centre."""
         self.opts = (self.opts | BaseO.PositionTop) & ~BaseO.PositionBottom
         return self
     @property
     def PositionM(self) -> Self:
-        """Removes positioning flags from this element. This will make it centred in the opposite direction to layouts it is in"""
+        """Removes positioning flags.
+        Position flags change where the element is positioned in the parent layout perpendicular to its direction (e.g. top in a vertical layout is left and in a horizontal layout is the top)
+        Empty (default) is centre."""
         self.opts = self.opts & ~(BaseO.AlignRight | BaseO.AlignCentre)
         return self
     @property
     def PositionB(self) -> Self:
-        """Adds the PositionBottom flag. This will make it at the bottom of layouts it is in (for vertical layouts, to the right)"""
+        """Adds the PositionBottom flag.
+        Position flags change where the element is positioned in the parent layout perpendicular to its direction (e.g. top in a vertical layout is left and in a horizontal layout is the top)
+        Empty (default) is centre."""
         self.opts = (self.opts | BaseO.PositionBottom) & ~BaseO.PositionTop
         return self
 

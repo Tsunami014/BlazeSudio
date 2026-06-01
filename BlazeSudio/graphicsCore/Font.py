@@ -203,6 +203,8 @@ class Font:
             )
 
     def _get_list(self, txt, maxwid, breakOnSpace=True):
+        if not txt:
+            return []
         self.load(txt)
         advs = [(i, self.cache[i].advance, self.cache[i].width) if i != '\n' else (i,0,0) for i in txt[:-1]] + \
                 [((c:=txt[-1]), (wid:=self.cache[c].width), wid)]

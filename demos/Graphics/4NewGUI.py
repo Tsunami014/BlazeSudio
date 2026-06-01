@@ -2,7 +2,7 @@
 def main():
     from BlazeSudio.graphicsCore import Draw
     from BlazeSudio.GUI import OpElm
-    from BlazeSudio.GUI import UI, Lays, Elms, Input
+    from BlazeSudio.GUI import UI, Lays, Elms, Input, Col
 
     txt = Elms.Text("")
     clks = 0
@@ -11,8 +11,13 @@ def main():
         txt.txt = f"{clks} clicks!"
         clks += 1
     onclk()
+    mtxt = Elms.Text("", opts=None).AlignC
+    def settxt(t):
+        mtxt.txt = t
     UI(
         Lays.VBox[None,
+            mtxt,
+            Input.InputBox(placeholder="Type then press enter!", bordercol=Col.Indigo, onenter=settxt).AlignC,
             Lays.HBox[None,
                 OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
                 Input.Button(
