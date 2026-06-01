@@ -150,41 +150,35 @@ class _ElementBase: # MUST DEFINE __slots__ WITH ['opts']
         sze = Core.size
         return self._op(IDENTITY, (sze[0], sze[1]))
 
-    @property
     def AlignL(self) -> Self:
         """Removes alignment flags.
         Alignment flags detail what alignment the content of this element is, not where it is positioned.
-        self.opts = self.opts & ~(BaseO.AlignRight | BaseO.AlignCentre)
         Empty (default) is left."""
+        self.opts = self.opts & ~(BaseO.AlignRight | BaseO.AlignCentre)
         return self
-    @property
     def AlignC(self) -> Self:
         """Adds the CentreAlign flag.
         Alignment flags detail what alignment the content of this element is, not where it is positioned.
         Empty (default) is left."""
         self.opts = (self.opts | BaseO.AlignCentre) & ~BaseO.AlignRight
         return self
-    @property
     def AlignR(self) -> Self:
         """Adds the RightAlign flag.
         Alignment flags detail what alignment the content of this element is, not where it is positioned."""
         self.opts = (self.opts | BaseO.AlignRight) & ~BaseO.AlignCentre
         return self
-    @property
     def PositionT(self) -> Self:
         """Adds the PositionTop flag.
         Position flags change where the element is positioned in the parent layout perpendicular to its direction (e.g. top in a vertical layout is left and in a horizontal layout is the top)
         Empty (default) is centre."""
         self.opts = (self.opts | BaseO.PositionTop) & ~BaseO.PositionBottom
         return self
-    @property
     def PositionM(self) -> Self:
         """Removes positioning flags.
         Position flags change where the element is positioned in the parent layout perpendicular to its direction (e.g. top in a vertical layout is left and in a horizontal layout is the top)
         Empty (default) is centre."""
-        self.opts = self.opts & ~(BaseO.AlignRight | BaseO.AlignCentre)
+        self.opts = self.opts & ~(BaseO.PositionBottom | BaseO.PositionTop)
         return self
-    @property
     def PositionB(self) -> Self:
         """Adds the PositionBottom flag.
         Position flags change where the element is positioned in the parent layout perpendicular to its direction (e.g. top in a vertical layout is left and in a horizontal layout is the top)
@@ -204,14 +198,24 @@ class UIElement(Element):
         op2 = op if not hasattr(op, "getNormalisedPos") else op @ -op.getNormalisedPos(0, 0)
         return (op2 @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
 
-class TransformedElm(_ElementBase, Base):
-    __slots__ = ['opts', 'elm', 'oth']
-    def __init__(self, elm, oth, *, opts: BaseO = BaseO.Default):
-        self.elm: Element = elm
+class ElmWrapper(_ElementBase):
+    def __getattribute__(self, name):
+        if name[:5] == "Align":
+            orig = super().__getattribute__(name)
+            def ret():
+                orig()
+                getattr(self.inner, name)()
+            return ret
+        return super().__getattribute__(name)
+
+class TransformedElm(ElmWrapper, Base):
+    __slots__ = ['inner', 'opts', 'oth']
+    def __init__(self, inner, oth, *, opts: BaseO = BaseO.Default):
+        self.inner: Element = inner
         self.oth: Trans = oth
-        _ElementBase.__init__(self, opts=opts)
+        ElmWrapper.__init__(self, opts=opts)
     def _op(self, mat, mxsze):
-        out = self.elm._op(mat, mxsze)
+        out = self.inner._op(mat, mxsze)
         rpos1 = getattr(out, "rpos", None)
         out @= self.oth
         rpos2 = getattr(out, "rpos", None)
@@ -222,7 +226,7 @@ class TransformedElm(_ElementBase, Base):
         return out
     def _szes(self, mxsze, bound):
         out = []
-        for sze in self.elm._szes(mxsze, bound):
+        for sze in self.inner._szes(mxsze, bound):
             outercrop = [0,0,0,0]
             if sze is None:
                 crop = outercrop
@@ -234,11 +238,11 @@ class TransformedElm(_ElementBase, Base):
         return out
 
     def onevent(self, ev):
-        return self.elm.onevent(ev)
+        return self.inner.onevent(ev)
     def mouseevents(self, evs, mxsze):
         # TODO: This (have to warp the event's positions and stuff)
         nevs = []
-        return self.elm.mouseevents(nevs, self._szes(mxsze, mxsze)[1])
+        return self.inner.mouseevents(nevs, self._szes(mxsze, mxsze)[1])
 
 class OpElm(Element):
     __slots__ = ['op']

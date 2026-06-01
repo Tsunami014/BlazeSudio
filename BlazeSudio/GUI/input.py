@@ -1,16 +1,15 @@
-from .base import UI, Element, UIElement, BaseO, Col
-from .Elms import Text
+from .base import UI, Element, UIElement, ElmWrapper, BaseO, Col
+from .elms import Text
 from BlazeSudio.graphicsCore.base import Vec2
 from BlazeSudio.graphicsCore import Mouse, Draw, Trans, Events, Ix
 from typing import Callable, Iterable
 import time
 
 __all__ = [
-    "Button",
-    "Input",
+    "Input"
 ]
 
-class ButtonBase(UIElement):
+class ButtonBase(UIElement, ElmWrapper):
     __slots__ = ['inner', 'col', 'pad', 'round', 'onclick']
     class O(BaseO):
         _NXT = BaseO._NXT
@@ -420,3 +419,10 @@ class InputBox(Input):
     def mouseevents(self, evs: list['Events.MouseEvent'], mxsze):
         xtra = self.pad + self.border
         super().mouseevents([e.translated(-xtra, -xtra) for e in evs], [i-xtra*2 for i in mxsze])
+
+
+class Input:
+    ButtonBase = ButtonBase
+    Button = Button
+    Input = Input
+    InputBox = InputBox

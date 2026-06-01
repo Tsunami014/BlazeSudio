@@ -231,7 +231,7 @@ class Col:
     Black = _rgb(35, 26, 28)
 
     Background = _rgb(250, 252, 252)
-    Primary = _rgb(129, 108, 97)
-    Secondary = _rgb(99, 83, 91)
+    Primary = _rgb(136, 107, 89)
+    Secondary = _rgb(129, 95, 100)
     Accent = _rgb(87, 90, 75)
 

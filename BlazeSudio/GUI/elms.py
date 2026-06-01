@@ -3,7 +3,7 @@ from BlazeSudio.graphicsCore import Font
 from typing import Iterable
 
 __all__ = [
-    "Text"
+    "Elms"
 ]
 
 class Text(UIElement):
@@ -56,3 +56,6 @@ class Text(UIElement):
             return (0, 0), (0, 0)
         out = self.font.linesize_wid(self.txt, mxsze[0], breakOnSpace = self.opts & self.O.BreakOnWord)
         return self.font.linesize(self.txt[0]), out
+
+class Elms:
+    Text = Text

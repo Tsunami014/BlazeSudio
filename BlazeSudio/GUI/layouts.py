@@ -5,6 +5,79 @@ from typing import Self, Iterable
 
 __all__ = ["Lays"]
 
+class LayBase(Element):
+    __slots__ = ['_children']
+    class O(BaseO):
+        Default = BaseO.Default | BaseO.PositionTop
+
+    def __class_getitem__(cls, args):
+        return cls(*args)
+
+class StackLay(LayBase):
+    def __init__(self, *children: tuple[Element], opts: LayBase.O = LayBase.O.Default):
+        self._children: Iterable[Element] = list(children)
+        super().__init__(opts=opts)
+
+    def add_elm(self, oth: Element) -> Self:
+        self._children.append(oth)
+        return self
+    def add_elms(self, oths: Iterable[Element]) -> Self:
+        self._children.extend(oths)
+        return self
+    def insert_elm(self, idx: int, oth: Element) -> Self:
+        self._children.insert(idx, oth)
+        self._dirty = True
+        return self
+    def insert_elms(self, idx: int, oths: Iterable[Element]) -> Self:
+        for i, oth in oths:
+            self._children.insert(idx+i, oth)
+            self._dirty = True
+        return self
+
+    def remove(self, oth: Element) -> bool:
+        for idx, c in enumerate(self._children):
+            if c[0] == oth:
+                self._children.pop(idx)
+                self._dirty = True
+                return True
+        return False
+    def remove_many(self, oths: list[Element]) -> bool:
+        for oth in oths:
+            if not self.remove(oth):
+                return False
+        return True
+
+    def __getitem__(self, idx) -> Element:
+        return self._children[idx]
+    def __setitem__(self, idx, new: Element):
+        self._children[idx] = new
+    def pop(self, idx) -> Element:
+        return self._children.pop(idx)
+
+    def _op(self, mat, mxsze):
+        return sum((c._op(mat, mxsze) for c in self._children), OpList())
+
+    def _szes(self, mxsze, bound):
+        mn = (0, 0)
+        mx = (0, 0)
+        for c in self._children:
+            s = c._szes(mxsze, bound)
+            if s is None:
+                return None
+            mn = tuple(min(s[0][i], mn[i]) for i in range(2))
+            mx = tuple(max(s[1][i], mn[i]) for i in range(2))
+        return mn, mx
+
+    def onevent(self, ev):
+        for c in self._children:
+            if c.onevent(ev):
+                return True
+        return False
+    def mouseevents(self, evs, mxsze):
+        for c in self._children:
+            c.mouseevents(evs, mxsze)
+
+
 @dataclass(eq=False, slots=True)
 class ElementOut:
     element: Element|float|None
@@ -17,11 +90,11 @@ class ElementOut:
     def __iter__(self):
         return iter((self.element, self.isSpacing, self.stretch))
 
-class _BaseLayout(Element):
-    __slots__ = ['_children', '_dirty', '_szesCache', 'spacing']
+class _BaseLayout(LayBase):
+    __slots__ = ['_dirty', '_szesCache', 'spacing']
     _DIRECTION = None
     _FLIP = None
-    def __init__(self, *children: tuple[Element], spacing: float = 10, opts: BaseO = BaseO.Default):
+    def __init__(self, *children: tuple[Element], spacing: float = 10, opts: LayBase.O = LayBase.O.Default):
         """If a child is None, that will be stretch!"""
         self._children: list[tuple[Element|None|float, bool, float]] = []
         """[Element (or None for stretch or float for spacing), isSpacing, stretch]"""
@@ -31,8 +104,6 @@ class _BaseLayout(Element):
             self.add_elms(children)
         self.spacing = spacing
         super().__init__(opts=opts)
-    def __class_getitem__(cls, args):
-        return cls(*args)
 
     def add_elm(self, oth: Element, stretch: int = 1) -> Self:
         self._children.append((oth, False, stretch))
@@ -119,7 +190,7 @@ class _BaseLayout(Element):
                     break
                 each = left / n
                 for s in szes:
-                    if s[2] is None or s[3] is None:
+                    if s[1] is None or s[2] is None:
                         continue
                     s[0] = s[0] + each*s[2]
                     if s[1] is not None:
@@ -140,7 +211,7 @@ class _BaseLayout(Element):
                             mxothsze)
             # Now depth the saved
             if saves:
-                mxother = max(s[4] for s in szes) or bound[1-self._DIRECTION]
+                mxother = bound[1-self._DIRECTION]
                 for s in saves:
                     mxsz = (s[0], mxothsze)[::self._FLIP]
                     bnd = (s[0], mxother)[::self._FLIP]
@@ -235,3 +306,19 @@ class Lays:
         _DIRECTION = 1
         _FLIP = -1
 
+    @staticmethod
+    def Offset(dx: float, dy: float, elm: Element):
+        """Negative values will put the spacing on the right/bottom instead of left of the element"""
+        if dy == 0:
+            out = elm
+        elif dy < 0:
+            out = Lays.VBox(elm).add_spacing(-dy)
+        else:
+            out = Lays.VBox().add_spacing(dy).add_elm(elm)
+        if dx == 0:
+            return out
+        if dx < 0:
+            return Lays.HBox(out).add_spacing(-dx)
+        return Lays.HBox().add_spacing(dx).add_elm(out)
+
+    Stack = StackLay
