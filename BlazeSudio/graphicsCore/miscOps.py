@@ -1,5 +1,5 @@
 from .base import Op, NormalisedOp, OpFlags, Vec2, Trans
-from . import _basey, _blit
+from . import _basey, _blit, _calcs
 from .core import _SurfaceBase
 from PIL import Image as _PillowImg
 from typing import overload
@@ -19,15 +19,7 @@ class Fill(Op):
         self.col = np.array(col, np.uint8)
         self.flags = OpFlags.Reset
     def apply(self, _, arr: np.ndarray, __, ___):
-        r = int(self.col[0])
-        g = int(self.col[1])
-        b = int(self.col[2])
-        if r == g == b:
-            arr.fill(r)
-        else:
-            col = (r << 16) | (g << 8) | b
-            v = arr.view(np.uint32).reshape(arr.shape[:2])
-            v.fill(col)
+        _calcs.fill_arr(arr, self.col)
         return arr
 
 

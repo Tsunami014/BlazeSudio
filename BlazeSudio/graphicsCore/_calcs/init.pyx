@@ -2,10 +2,28 @@
 import numpy as np
 cimport numpy as cnp
 from libc.stdlib cimport malloc, free
+from libc.string cimport memset
 from cython.parallel import prange
 __cimport_types__ = [cnp.ndarray]
 
 cdef unsigned int THRESH = 300
+
+cpdef fill_arr(cnp.ndarray[cnp.uint8_t, ndim=3] arr,
+               cnp.ndarray[cnp.uint8_t, ndim=1] col):
+    cdef unsigned char rcol = col[0]
+    cdef unsigned char gcol = col[1]
+    cdef unsigned char bcol = col[2]
+    cdef unsigned char *p = &arr[0,0,0]
+    if rcol == gcol and gcol == bcol:
+        memset(p, rcol, <size_t>arr.size)
+        return
+    cdef long n = arr.shape[0] * arr.shape[1]
+    cdef long i
+    for i in prange(n, use_threads_if=n > THRESH, nogil=True):
+        p[i*4+0] = rcol
+        p[i*4+1] = gcol
+        p[i*4+2] = bcol
+        p[i*4+3] = 255
 
 cdef inline long clip(long v, long lo, long hi):
     if v < lo:
