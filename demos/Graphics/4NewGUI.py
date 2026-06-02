@@ -14,6 +14,13 @@ def main():
     mtxt = Elms.Text("", opts=None).AlignC()
     def settxt(t):
         mtxt.txt = t
+
+    t = Term()
+    @t.onmessage
+    def _(t):
+        print(t)
+    t.oncmd("set")(settxt)
+
     UI(
         Lays.Stack[
             Lays.VBox[None,
@@ -37,8 +44,7 @@ def main():
             Lays.VBox[None, Lays.HBox[None, Lays.Offset(-10, -10,
                 Input.Button(Elms.Text("The do-nothing\nbutton").AlignR(), Col.Secondary).PositionB()
             )]],
-            Term(),
-        ]
+        t]
     )
 
     UI.resizable = True

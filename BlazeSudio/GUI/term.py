@@ -15,7 +15,7 @@ class BG(StretchOpElm):
         return Draw.Rect(1, 1, mxsze[0]-2, mxsze[1]-2, 0, self.col, roundness=self.round-2)
 
 class Term(ElmWrapper, Base):
-    __slots__ = ['inner', 'opts', 'box', 'bg', 'leader']
+    __slots__ = ['inner', 'opts', 'box', 'bg', 'leader', 'cmds']
     def __init__(self,
                  leader: str = "/",
                  sze: int = 48,
@@ -42,12 +42,24 @@ class Term(ElmWrapper, Base):
             opts: The options to apply to this element.
         """
         self.leader = leader
+        self.cmds = {}
         self.bg = BG(bgcol)
         self.box = InputBox(
             sze=sze, pad=pad, border=border, radius=radius, bordercol=bordercol, fontOpts=fontOpts,
             onenter=self.run, opts=InputBox.O.Default|InputBox.O.Terminal)
         self.inner = Lays.VBox[None, Lays.Stack[self.bg, self.box].PositionM()].add_stretch(10)
         ElmWrapper.__init__(self, opts=opts)
+
+    def oncmd(self, cmd):
+        """Use as a decorator on a function which takes an input of the command arguments (to get all use *args)"""
+        def ret(fn):
+            self.cmds[cmd] = self.cmds.get(cmd, [])+[fn]
+            return fn
+        return ret
+    @property
+    def onmessage(self):
+        """Use as a decorator on a function which takes an input of the text (will not run when text is a command)"""
+        return self.oncmd("")
 
     @property
     def bgcol(self) -> Col.colourType:
@@ -69,7 +81,17 @@ class Term(ElmWrapper, Base):
     def run(self, cmd):
         self.box.active = False
         self.box.basetxt = ""
-        print(cmd)
+        if not cmd:
+            return
+        if cmd[0] == '/':
+            name, *args = [i for i in cmd[1:].split(' ') if i]
+            if (not name) or name not in self.cmds:
+                return
+            for fn in self.cmds[name]:
+                fn(*args)
+            return
+        for fn in self.cmds.get("", []):
+            fn(cmd)
 
     def _op(self, mat, mxsze):
         if not self.box.active:
