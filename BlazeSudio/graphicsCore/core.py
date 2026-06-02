@@ -190,16 +190,11 @@ class _CoreCls(_SurfaceBase):
         """
         Render the entire screen.
         """
-        pixels = ctypes.c_void_p()
-        pitch = ctypes.c_int()
-
-        sdl2.SDL_LockTexture(self._texture, None, ctypes.byref(pixels), ctypes.byref(pitch))
-        ctypes.memmove(pixels, self.arr.ctypes.data, self.arr.nbytes)
-        sdl2.SDL_UnlockTexture(self._texture)
-
+        pitch = ctypes.c_int(self.arr.strides[0])
+        ptr = ctypes.c_void_p(self.arr.ctypes.data)
+        sdl2.SDL_UpdateTexture(self._texture, None, ptr, pitch)
         sdl2.SDL_RenderCopy(self._renderer, self._texture, None, None)
         sdl2.SDL_RenderPresent(self._renderer)
-
 
     @property
     def title(self) -> str:
