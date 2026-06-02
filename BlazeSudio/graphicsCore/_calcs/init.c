@@ -1166,6 +1166,7 @@ static int __Pyx_init_co_variables(void) {
 #include "numpy/arrayscalars.h"
 #include "numpy/ufuncobject.h"
 #include <stdlib.h>
+#include <stdint.h>
 #include "pythread.h"
 #ifdef _OPENMP
 #include <omp.h>
@@ -3047,6 +3048,9 @@ __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
 static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value);
 
 /* CIntFromPy.proto */
+static CYTHON_INLINE uint32_t __Pyx_PyLong_As_uint32_t(PyObject *);
+
+/* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *);
 
 /* PyObjectCall2Args.proto (used by PyObjectCallMethod1) */
@@ -3208,6 +3212,8 @@ static CYTHON_INLINE char *__pyx_f_5numpy_7ndarray_4data_data(PyArrayObject *__p
 /* Module declarations from "numpy" */
 
 /* Module declarations from "libc.stdlib" */
+
+/* Module declarations from "libc.stdint" */
 
 /* Module declarations from "BlazeSudio.graphicsCore._calcs.init" */
 static unsigned int __pyx_v_10BlazeSudio_12graphicsCore_6_calcs_4init_THRESH;
@@ -3385,7 +3391,7 @@ typedef struct {
   PyObject *__pyx_slice[1];
   PyObject *__pyx_tuple[2];
   PyObject *__pyx_string_tab[134];
-  PyObject *__pyx_number_tab[6];
+  PyObject *__pyx_number_tab[7];
 /* #### Code section: module_state_contents ### */
 /* CodeObjectCache.module_state_decls */
 struct __Pyx_CodeObjectCache __pyx_code_cache;
@@ -3555,6 +3561,7 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_int_2 __pyx_number_tab[3]
 #define __pyx_int_4 __pyx_number_tab[4]
 #define __pyx_int_136983863 __pyx_number_tab[5]
+#define __pyx_int_4278190080 __pyx_number_tab[6]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -3596,7 +3603,7 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_slice[i]); }
   for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
   for (int i=0; i<134; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<6; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
+  for (int i=0; i<7; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* #### Code section: module_state_clear_end ### */
 return 0;
@@ -3640,7 +3647,7 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_slice[i]); }
   for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
   for (int i=0; i<134; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<6; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
+  for (int i=0; i<7; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* #### Code section: module_state_traverse_end ### */
 return 0;
@@ -18635,7 +18642,7 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-/* "BlazeSudio/graphicsCore/_calcs/init.pyx":11
+/* "BlazeSudio/graphicsCore/_calcs/init.pyx":12
  * cdef unsigned int THRESH = 300
  * 
  * cpdef fill_arr(cnp.ndarray[cnp.uint8_t, ndim=3] arr,             # <<<<<<<<<<<<<<
@@ -18656,6 +18663,8 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
   unsigned char __pyx_v_bcol;
   unsigned char *__pyx_v_p;
   long __pyx_v_n;
+  uint32_t __pyx_v_color32;
+  uint32_t *__pyx_v_p32;
   long __pyx_v_i;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_arr;
   __Pyx_Buffer __pyx_pybuffer_arr;
@@ -18668,9 +18677,12 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
   Py_ssize_t __pyx_t_3;
   int __pyx_t_4;
   int __pyx_t_5;
-  long __pyx_t_6;
-  long __pyx_t_7;
-  long __pyx_t_8;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  uint32_t __pyx_t_8;
+  long __pyx_t_9;
+  long __pyx_t_10;
+  long __pyx_t_11;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -18685,16 +18697,16 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 11, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 12, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 11, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 12, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":13
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":14
  * cpdef fill_arr(cnp.ndarray[cnp.uint8_t, ndim=3] arr,
  *                cnp.ndarray[cnp.uint8_t, ndim=1] col):
  *     cdef unsigned char rcol = col[0]             # <<<<<<<<<<<<<<
@@ -18704,7 +18716,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
   __pyx_t_1 = 0;
   __pyx_v_rcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":14
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":15
  *                cnp.ndarray[cnp.uint8_t, ndim=1] col):
  *     cdef unsigned char rcol = col[0]
  *     cdef unsigned char gcol = col[1]             # <<<<<<<<<<<<<<
@@ -18714,7 +18726,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
   __pyx_t_1 = 1;
   __pyx_v_gcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":15
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":16
  *     cdef unsigned char rcol = col[0]
  *     cdef unsigned char gcol = col[1]
  *     cdef unsigned char bcol = col[2]             # <<<<<<<<<<<<<<
@@ -18724,7 +18736,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
   __pyx_t_1 = 2;
   __pyx_v_bcol = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_col.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_col.diminfo[0].strides));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":16
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":17
  *     cdef unsigned char gcol = col[1]
  *     cdef unsigned char bcol = col[2]
  *     cdef unsigned char *p = &arr[0,0,0]             # <<<<<<<<<<<<<<
@@ -18736,7 +18748,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
   __pyx_t_3 = 0;
   __pyx_v_p = (&(*__Pyx_BufPtrStrided3d(__pyx_t_5numpy_uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_2, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_3, __pyx_pybuffernd_arr.diminfo[2].strides)));
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":17
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":18
  *     cdef unsigned char bcol = col[2]
  *     cdef unsigned char *p = &arr[0,0,0]
  *     if rcol == gcol and gcol == bcol:             # <<<<<<<<<<<<<<
@@ -18754,7 +18766,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_4) {
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":18
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":19
  *     cdef unsigned char *p = &arr[0,0,0]
  *     if rcol == gcol and gcol == bcol:
  *         memset(p, rcol, <size_t>arr.size)             # <<<<<<<<<<<<<<
@@ -18763,18 +18775,18 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
 */
     (void)(memset(__pyx_v_p, __pyx_v_rcol, ((size_t)__pyx_f_5numpy_7ndarray_4size_size(((PyArrayObject *)__pyx_v_arr)))));
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":19
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":20
  *     if rcol == gcol and gcol == bcol:
  *         memset(p, rcol, <size_t>arr.size)
  *         return             # <<<<<<<<<<<<<<
  *     cdef long n = arr.shape[0] * arr.shape[1]
- *     cdef long i
+ *     cdef uint32_t color32 = (rcol) | (gcol << 8) | (bcol << 16) | (255 << 24)
 */
     __Pyx_XDECREF(__pyx_r);
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":17
+    /* "BlazeSudio/graphicsCore/_calcs/init.pyx":18
  *     cdef unsigned char bcol = col[2]
  *     cdef unsigned char *p = &arr[0,0,0]
  *     if rcol == gcol and gcol == bcol:             # <<<<<<<<<<<<<<
@@ -18783,28 +18795,53 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
 */
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":20
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":21
  *         memset(p, rcol, <size_t>arr.size)
  *         return
  *     cdef long n = arr.shape[0] * arr.shape[1]             # <<<<<<<<<<<<<<
- *     cdef long i
- *     for i in prange(n, use_threads_if=n > THRESH, nogil=True):
+ *     cdef uint32_t color32 = (rcol) | (gcol << 8) | (bcol << 16) | (255 << 24)
+ *     cdef uint32_t *p32 = <uint32_t*> p
 */
   __pyx_v_n = ((__pyx_f_5numpy_7ndarray_5shape_shape(((PyArrayObject *)__pyx_v_arr))[0]) * (__pyx_f_5numpy_7ndarray_5shape_shape(((PyArrayObject *)__pyx_v_arr))[1]));
 
   /* "BlazeSudio/graphicsCore/_calcs/init.pyx":22
+ *         return
  *     cdef long n = arr.shape[0] * arr.shape[1]
+ *     cdef uint32_t color32 = (rcol) | (gcol << 8) | (bcol << 16) | (255 << 24)             # <<<<<<<<<<<<<<
+ *     cdef uint32_t *p32 = <uint32_t*> p
  *     cdef long i
- *     for i in prange(n, use_threads_if=n > THRESH, nogil=True):             # <<<<<<<<<<<<<<
- *         p[i*4+0] = rcol
- *         p[i*4+1] = gcol
+*/
+  __pyx_t_6 = __Pyx_PyLong_From_long(((__pyx_v_rcol | (__pyx_v_gcol << 8)) | (__pyx_v_bcol << 16))); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = PyNumber_Or(__pyx_t_6, __pyx_mstate_global->__pyx_int_4278190080); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_8 = __Pyx_PyLong_As_uint32_t(__pyx_t_7); if (unlikely((__pyx_t_8 == ((uint32_t)-1)) && PyErr_Occurred())) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __pyx_v_color32 = __pyx_t_8;
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":23
+ *     cdef long n = arr.shape[0] * arr.shape[1]
+ *     cdef uint32_t color32 = (rcol) | (gcol << 8) | (bcol << 16) | (255 << 24)
+ *     cdef uint32_t *p32 = <uint32_t*> p             # <<<<<<<<<<<<<<
+ *     cdef long i
+ *     for i in prange(n, nogil=True, use_threads_if=n > THRESH):
+*/
+  __pyx_v_p32 = ((uint32_t *)__pyx_v_p);
+
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":25
+ *     cdef uint32_t *p32 = <uint32_t*> p
+ *     cdef long i
+ *     for i in prange(n, nogil=True, use_threads_if=n > THRESH):             # <<<<<<<<<<<<<<
+ *         p32[i] = color32
+ * 
 */
   {
       PyThreadState * _save;
       _save = PyEval_SaveThread();
       __Pyx_FastGIL_Remember();
       /*try:*/ {
-        __pyx_t_6 = __pyx_v_n;
+        __pyx_t_9 = __pyx_v_n;
         {
             #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
                 #undef likely
@@ -18812,8 +18849,8 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
                 #define likely(x)   (x)
                 #define unlikely(x) (x)
             #endif
-            __pyx_t_8 = (__pyx_t_6 - 0 + 1 - 1/abs(1)) / 1;
-            if (__pyx_t_8 > 0)
+            __pyx_t_11 = (__pyx_t_9 - 0 + 1 - 1/abs(1)) / 1;
+            if (__pyx_t_11 > 0)
             {
                 #ifdef _OPENMP
                 #pragma omp parallel if((__pyx_v_n > __pyx_v_10BlazeSudio_12graphicsCore_6_calcs_4init_THRESH))
@@ -18822,45 +18859,18 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
                     #ifdef _OPENMP
                     #pragma omp for firstprivate(__pyx_v_i) lastprivate(__pyx_v_i)
                     #endif /* _OPENMP */
-                    for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_8; __pyx_t_7++){
+                    for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_11; __pyx_t_10++){
                         {
-                            __pyx_v_i = (long)(0 + 1 * __pyx_t_7);
-
-                            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":23
- *     cdef long i
- *     for i in prange(n, use_threads_if=n > THRESH, nogil=True):
- *         p[i*4+0] = rcol             # <<<<<<<<<<<<<<
- *         p[i*4+1] = gcol
- *         p[i*4+2] = bcol
-*/
-                            (__pyx_v_p[((__pyx_v_i * 4) + 0)]) = __pyx_v_rcol;
-
-                            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":24
- *     for i in prange(n, use_threads_if=n > THRESH, nogil=True):
- *         p[i*4+0] = rcol
- *         p[i*4+1] = gcol             # <<<<<<<<<<<<<<
- *         p[i*4+2] = bcol
- *         p[i*4+3] = 255
-*/
-                            (__pyx_v_p[((__pyx_v_i * 4) + 1)]) = __pyx_v_gcol;
-
-                            /* "BlazeSudio/graphicsCore/_calcs/init.pyx":25
- *         p[i*4+0] = rcol
- *         p[i*4+1] = gcol
- *         p[i*4+2] = bcol             # <<<<<<<<<<<<<<
- *         p[i*4+3] = 255
- * 
-*/
-                            (__pyx_v_p[((__pyx_v_i * 4) + 2)]) = __pyx_v_bcol;
+                            __pyx_v_i = (long)(0 + 1 * __pyx_t_10);
 
                             /* "BlazeSudio/graphicsCore/_calcs/init.pyx":26
- *         p[i*4+1] = gcol
- *         p[i*4+2] = bcol
- *         p[i*4+3] = 255             # <<<<<<<<<<<<<<
+ *     cdef long i
+ *     for i in prange(n, nogil=True, use_threads_if=n > THRESH):
+ *         p32[i] = color32             # <<<<<<<<<<<<<<
  * 
  * cdef inline long clip(long v, long lo, long hi):
 */
-                            (__pyx_v_p[((__pyx_v_i * 4) + 3)]) = 0xFF;
+                            (__pyx_v_p32[__pyx_v_i]) = __pyx_v_color32;
                         }
                     }
                 }
@@ -18874,12 +18884,12 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
         #endif
       }
 
-      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":22
- *     cdef long n = arr.shape[0] * arr.shape[1]
+      /* "BlazeSudio/graphicsCore/_calcs/init.pyx":25
+ *     cdef uint32_t *p32 = <uint32_t*> p
  *     cdef long i
- *     for i in prange(n, use_threads_if=n > THRESH, nogil=True):             # <<<<<<<<<<<<<<
- *         p[i*4+0] = rcol
- *         p[i*4+1] = gcol
+ *     for i in prange(n, nogil=True, use_threads_if=n > THRESH):             # <<<<<<<<<<<<<<
+ *         p32[i] = color32
+ * 
 */
       /*finally:*/ {
         /*normal exit:*/{
@@ -18891,7 +18901,7 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
       }
   }
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":11
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":12
  * cdef unsigned int THRESH = 300
  * 
  * cpdef fill_arr(cnp.ndarray[cnp.uint8_t, ndim=3] arr,             # <<<<<<<<<<<<<<
@@ -18903,6 +18913,8 @@ static PyObject *__pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(PyAr
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
   { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
     __Pyx_PyThreadState_declare
     __Pyx_PyThreadState_assign
@@ -18961,39 +18973,39 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_arr,&__pyx_mstate_global->__pyx_n_u_col,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 11, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 12, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 11, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 12, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 11, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 12, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "fill_arr", 0) < (0)) __PYX_ERR(0, 11, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "fill_arr", 0) < (0)) __PYX_ERR(0, 12, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 2; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("fill_arr", 1, 2, 2, i); __PYX_ERR(0, 11, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("fill_arr", 1, 2, 2, i); __PYX_ERR(0, 12, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 11, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 12, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 11, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 12, __pyx_L3_error)
     }
     __pyx_v_arr = ((PyArrayObject *)values[0]);
     __pyx_v_col = ((PyArrayObject *)values[1]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("fill_arr", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 11, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("fill_arr", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 12, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -19004,8 +19016,8 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 11, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 12, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 12, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_col), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "col", 0))) __PYX_ERR(0, 13, __pyx_L1_error)
   __pyx_r = __pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(__pyx_self, __pyx_v_arr, __pyx_v_col);
 
   /* function exit code */
@@ -19047,16 +19059,16 @@ static PyObject *__pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(CYT
   __pyx_pybuffernd_col.rcbuffer = &__pyx_pybuffer_col;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 11, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) __PYX_ERR(0, 12, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 11, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_col.rcbuffer->pybuffer, (PyObject*)__pyx_v_col, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 12, __pyx_L1_error)
   }
   __pyx_pybuffernd_col.diminfo[0].strides = __pyx_pybuffernd_col.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_col.diminfo[0].shape = __pyx_pybuffernd_col.rcbuffer->pybuffer.shape[0];
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(__pyx_v_arr, __pyx_v_col, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(__pyx_v_arr, __pyx_v_col, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -19085,7 +19097,7 @@ static PyObject *__pyx_pf_10BlazeSudio_12graphicsCore_6_calcs_4init_fill_arr(CYT
 }
 
 /* "BlazeSudio/graphicsCore/_calcs/init.pyx":28
- *         p[i*4+3] = 255
+ *         p32[i] = color32
  * 
  * cdef inline long clip(long v, long lo, long hi):             # <<<<<<<<<<<<<<
  *     if v < lo:
@@ -19165,7 +19177,7 @@ static CYTHON_INLINE long __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_clip
   goto __pyx_L0;
 
   /* "BlazeSudio/graphicsCore/_calcs/init.pyx":28
- *         p[i*4+3] = 255
+ *         p32[i] = color32
  * 
  * cdef inline long clip(long v, long lo, long hi):             # <<<<<<<<<<<<<<
  *     if v < lo:
@@ -29262,19 +29274,19 @@ __Pyx_RefNannySetupContext("PyInit_init", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_np, __pyx_t_4) < (0)) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":7
- * from libc.string cimport memset
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":8
+ * from libc.stdint cimport uint32_t
  * from cython.parallel import prange
  * __cimport_types__ = [cnp.ndarray]             # <<<<<<<<<<<<<<
  * 
  * cdef unsigned int THRESH = 300
 */
-  __pyx_t_4 = __Pyx_PyList_Pack(1, ((PyObject *)__pyx_mstate_global->__pyx_ptype_5numpy_ndarray)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyList_Pack(1, ((PyObject *)__pyx_mstate_global->__pyx_ptype_5numpy_ndarray)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_cimport_types, __pyx_t_4) < (0)) __PYX_ERR(0, 7, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_cimport_types, __pyx_t_4) < (0)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":9
+  /* "BlazeSudio/graphicsCore/_calcs/init.pyx":10
  * __cimport_types__ = [cnp.ndarray]
  * 
  * cdef unsigned int THRESH = 300             # <<<<<<<<<<<<<<
@@ -29512,15 +29524,16 @@ const char* const bytes = ": All dimensions preceding dimension %d must be index
     PyObject **numbertab = __pyx_mstate->__pyx_number_tab + 0;
     int8_t const cint_constants_1[] = {0,-1,1,2,4};
     int32_t const cint_constants_4[] = {136983863L};
-    for (int i = 0; i < 6; i++) {
-      numbertab[i] = PyLong_FromLong((i < 5 ? cint_constants_1[i - 0] : cint_constants_4[i - 5]));
+    int64_t const cint_constants_8[] = {4278190080LL};
+    for (int i = 0; i < 7; i++) {
+      numbertab[i] = PyLong_FromLongLong((i < 5 ? cint_constants_1[i - 0] : (i < 6 ? cint_constants_4[i - 5] : cint_constants_8[i - 6])));
       if (unlikely(!numbertab[i])) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #if CYTHON_IMMORTAL_CONSTANTS
   {
     PyObject **table = __pyx_mstate->__pyx_number_tab;
-    for (Py_ssize_t i=0; i<6; ++i) {
+    for (Py_ssize_t i=0; i<7; ++i) {
       #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
       #if PY_VERSION_HEX < 0x030E0000
       if (_Py_IsOwnedByCurrentThread(table[i]) && Py_REFCNT(table[i]) == 1)
@@ -34569,6 +34582,28 @@ static const char* __Pyx_BufFmt_CheckString(__Pyx_BufFmt_Context* ctx, const cha
       return result;
   }
   
+/* CIntFromPyVerify */
+  #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
+      __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
+  #define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
+      __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
+  #define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
+      {\
+          func_type value = func_value;\
+          if (sizeof(target_type) < sizeof(func_type)) {\
+              if (unlikely(value != (func_type) (target_type) value)) {\
+                  func_type zero = 0;\
+                  if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
+                      return (target_type) -1;\
+                  if (is_unsigned && unlikely(value < zero))\
+                      goto raise_neg_overflow;\
+                  else\
+                      goto raise_overflow;\
+              }\
+          }\
+          return (target_type) value;\
+      }
+  
 /* ObjectToMemviewSlice */
   static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_unsigned_char(PyObject *obj, int writable_flag) {
       __Pyx_memviewslice result = __Pyx_MEMSLICE_INIT;
@@ -34591,28 +34626,6 @@ static const char* __Pyx_BufFmt_CheckString(__Pyx_BufFmt_Context* ctx, const cha
       result.data = NULL;
       return result;
   }
-  
-/* CIntFromPyVerify */
-  #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
-      __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
-  #define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
-      __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
-  #define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
-      {\
-          func_type value = func_value;\
-          if (sizeof(target_type) < sizeof(func_type)) {\
-              if (unlikely(value != (func_type) (target_type) value)) {\
-                  func_type zero = 0;\
-                  if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
-                      return (target_type) -1;\
-                  if (is_unsigned && unlikely(value < zero))\
-                      goto raise_neg_overflow;\
-                  else\
-                      goto raise_overflow;\
-              }\
-          }\
-          return (target_type) value;\
-      }
   
 /* MemviewDtypeToObject */
   static CYTHON_INLINE PyObject *__pyx_memview_get_double(const char *itemp) {
@@ -35228,6 +35241,256 @@ static const char* __Pyx_BufFmt_CheckString(__Pyx_BufFmt_Context* ctx, const cha
           return result;
   #endif
       }
+  }
+  
+/* CIntFromPy */
+  static CYTHON_INLINE uint32_t __Pyx_PyLong_As_uint32_t(PyObject *x) {
+  #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wconversion"
+  #endif
+      const uint32_t neg_one = (uint32_t) -1, const_zero = (uint32_t) 0;
+  #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+  #pragma GCC diagnostic pop
+  #endif
+      const int is_unsigned = neg_one > const_zero;
+      if (unlikely(!PyLong_Check(x))) {
+          uint32_t val;
+          PyObject *tmp = __Pyx_PyNumber_Long(x);
+          if (!tmp) return (uint32_t) -1;
+          val = __Pyx_PyLong_As_uint32_t(tmp);
+          Py_DECREF(tmp);
+          return val;
+      }
+      if (is_unsigned) {
+  #if CYTHON_USE_PYLONG_INTERNALS
+          if (unlikely(__Pyx_PyLong_IsNeg(x))) {
+              goto raise_neg_overflow;
+          } else if (__Pyx_PyLong_IsCompact(x)) {
+              __PYX_VERIFY_RETURN_INT(uint32_t, __Pyx_compact_upylong, __Pyx_PyLong_CompactValueUnsigned(x))
+          } else {
+              const digit* digits = __Pyx_PyLong_Digits(x);
+              assert(__Pyx_PyLong_DigitCount(x) > 1);
+              switch (__Pyx_PyLong_DigitCount(x)) {
+                  case 2:
+                      if ((8 * sizeof(uint32_t) > 1 * PyLong_SHIFT)) {
+                          if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                              __PYX_VERIFY_RETURN_INT(uint32_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                          } else if ((8 * sizeof(uint32_t) >= 2 * PyLong_SHIFT)) {
+                              return (uint32_t) (((((uint32_t)digits[1]) << PyLong_SHIFT) | (uint32_t)digits[0]));
+                          }
+                      }
+                      break;
+                  case 3:
+                      if ((8 * sizeof(uint32_t) > 2 * PyLong_SHIFT)) {
+                          if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                              __PYX_VERIFY_RETURN_INT(uint32_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                          } else if ((8 * sizeof(uint32_t) >= 3 * PyLong_SHIFT)) {
+                              return (uint32_t) (((((((uint32_t)digits[2]) << PyLong_SHIFT) | (uint32_t)digits[1]) << PyLong_SHIFT) | (uint32_t)digits[0]));
+                          }
+                      }
+                      break;
+                  case 4:
+                      if ((8 * sizeof(uint32_t) > 3 * PyLong_SHIFT)) {
+                          if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                              __PYX_VERIFY_RETURN_INT(uint32_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                          } else if ((8 * sizeof(uint32_t) >= 4 * PyLong_SHIFT)) {
+                              return (uint32_t) (((((((((uint32_t)digits[3]) << PyLong_SHIFT) | (uint32_t)digits[2]) << PyLong_SHIFT) | (uint32_t)digits[1]) << PyLong_SHIFT) | (uint32_t)digits[0]));
+                          }
+                      }
+                      break;
+              }
+          }
+  #endif
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX < 0x030C00A7
+          if (unlikely(Py_SIZE(x) < 0)) {
+              goto raise_neg_overflow;
+          }
+  #else
+          {
+              int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+              if (unlikely(result < 0))
+                  return (uint32_t) -1;
+              if (unlikely(result == 1))
+                  goto raise_neg_overflow;
+          }
+  #endif
+          if ((sizeof(uint32_t) <= sizeof(unsigned long))) {
+              __PYX_VERIFY_RETURN_INT_EXC(uint32_t, unsigned long, PyLong_AsUnsignedLong(x))
+          } else if ((sizeof(uint32_t) <= sizeof(unsigned PY_LONG_LONG))) {
+              __PYX_VERIFY_RETURN_INT_EXC(uint32_t, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+          }
+      } else {
+  #if CYTHON_USE_PYLONG_INTERNALS
+          if (__Pyx_PyLong_IsCompact(x)) {
+              __PYX_VERIFY_RETURN_INT(uint32_t, __Pyx_compact_pylong, __Pyx_PyLong_CompactValue(x))
+          } else {
+              const digit* digits = __Pyx_PyLong_Digits(x);
+              assert(__Pyx_PyLong_DigitCount(x) > 1);
+              switch (__Pyx_PyLong_SignedDigitCount(x)) {
+                  case -2:
+                      if ((8 * sizeof(uint32_t) - 1 > 1 * PyLong_SHIFT)) {
+                          if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                              __PYX_VERIFY_RETURN_INT(uint32_t, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                          } else if ((8 * sizeof(uint32_t) - 1 > 2 * PyLong_SHIFT)) {
+                              return (uint32_t) (((uint32_t)-1)*(((((uint32_t)digits[1]) << PyLong_SHIFT) | (uint32_t)digits[0])));
+                          }
+                      }
+                      break;
+                  case 2:
+                      if ((8 * sizeof(uint32_t) > 1 * PyLong_SHIFT)) {
+                          if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                              __PYX_VERIFY_RETURN_INT(uint32_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                          } else if ((8 * sizeof(uint32_t) - 1 > 2 * PyLong_SHIFT)) {
+                              return (uint32_t) ((((((uint32_t)digits[1]) << PyLong_SHIFT) | (uint32_t)digits[0])));
+                          }
+                      }
+                      break;
+                  case -3:
+                      if ((8 * sizeof(uint32_t) - 1 > 2 * PyLong_SHIFT)) {
+                          if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                              __PYX_VERIFY_RETURN_INT(uint32_t, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                          } else if ((8 * sizeof(uint32_t) - 1 > 3 * PyLong_SHIFT)) {
+                              return (uint32_t) (((uint32_t)-1)*(((((((uint32_t)digits[2]) << PyLong_SHIFT) | (uint32_t)digits[1]) << PyLong_SHIFT) | (uint32_t)digits[0])));
+                          }
+                      }
+                      break;
+                  case 3:
+                      if ((8 * sizeof(uint32_t) > 2 * PyLong_SHIFT)) {
+                          if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                              __PYX_VERIFY_RETURN_INT(uint32_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                          } else if ((8 * sizeof(uint32_t) - 1 > 3 * PyLong_SHIFT)) {
+                              return (uint32_t) ((((((((uint32_t)digits[2]) << PyLong_SHIFT) | (uint32_t)digits[1]) << PyLong_SHIFT) | (uint32_t)digits[0])));
+                          }
+                      }
+                      break;
+                  case -4:
+                      if ((8 * sizeof(uint32_t) - 1 > 3 * PyLong_SHIFT)) {
+                          if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                              __PYX_VERIFY_RETURN_INT(uint32_t, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                          } else if ((8 * sizeof(uint32_t) - 1 > 4 * PyLong_SHIFT)) {
+                              return (uint32_t) (((uint32_t)-1)*(((((((((uint32_t)digits[3]) << PyLong_SHIFT) | (uint32_t)digits[2]) << PyLong_SHIFT) | (uint32_t)digits[1]) << PyLong_SHIFT) | (uint32_t)digits[0])));
+                          }
+                      }
+                      break;
+                  case 4:
+                      if ((8 * sizeof(uint32_t) > 3 * PyLong_SHIFT)) {
+                          if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                              __PYX_VERIFY_RETURN_INT(uint32_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                          } else if ((8 * sizeof(uint32_t) - 1 > 4 * PyLong_SHIFT)) {
+                              return (uint32_t) ((((((((((uint32_t)digits[3]) << PyLong_SHIFT) | (uint32_t)digits[2]) << PyLong_SHIFT) | (uint32_t)digits[1]) << PyLong_SHIFT) | (uint32_t)digits[0])));
+                          }
+                      }
+                      break;
+              }
+          }
+  #endif
+          if ((sizeof(uint32_t) <= sizeof(long))) {
+              __PYX_VERIFY_RETURN_INT_EXC(uint32_t, long, PyLong_AsLong(x))
+          } else if ((sizeof(uint32_t) <= sizeof(PY_LONG_LONG))) {
+              __PYX_VERIFY_RETURN_INT_EXC(uint32_t, PY_LONG_LONG, PyLong_AsLongLong(x))
+          }
+      }
+      {
+          uint32_t val;
+          int ret = -1;
+  #if PY_VERSION_HEX >= 0x030d00A6 && !CYTHON_COMPILING_IN_LIMITED_API
+          Py_ssize_t bytes_copied = PyLong_AsNativeBytes(
+              x, &val, sizeof(val), Py_ASNATIVEBYTES_NATIVE_ENDIAN | (is_unsigned ? Py_ASNATIVEBYTES_UNSIGNED_BUFFER | Py_ASNATIVEBYTES_REJECT_NEGATIVE : 0));
+          if (unlikely(bytes_copied == -1)) {
+          } else if (unlikely(bytes_copied > (Py_ssize_t) sizeof(val))) {
+              goto raise_overflow;
+          } else {
+              ret = 0;
+          }
+  #elif PY_VERSION_HEX < 0x030d0000 && !(CYTHON_COMPILING_IN_PYPY || CYTHON_COMPILING_IN_LIMITED_API) || defined(_PyLong_AsByteArray)
+          int one = 1; int is_little = (int)*(unsigned char *)&one;
+          unsigned char *bytes = (unsigned char *)&val;
+          ret = _PyLong_AsByteArray((PyLongObject *)x,
+                                      bytes, sizeof(val),
+                                      is_little, !is_unsigned);
+  #else
+          PyObject *v;
+          PyObject *stepval = NULL, *mask = NULL, *shift = NULL;
+          int bits, remaining_bits, is_negative = 0;
+          int chunk_size = (sizeof(long) < 8) ? 30 : 62;
+          if (likely(PyLong_CheckExact(x))) {
+              v = __Pyx_NewRef(x);
+          } else {
+              v = PyNumber_Long(x);
+              if (unlikely(!v)) return (uint32_t) -1;
+              assert(PyLong_CheckExact(v));
+          }
+          {
+              int result = PyObject_RichCompareBool(v, Py_False, Py_LT);
+              if (unlikely(result < 0)) {
+                  Py_DECREF(v);
+                  return (uint32_t) -1;
+              }
+              is_negative = result == 1;
+          }
+          if (is_unsigned && unlikely(is_negative)) {
+              Py_DECREF(v);
+              goto raise_neg_overflow;
+          } else if (is_negative) {
+              stepval = PyNumber_Invert(v);
+              Py_DECREF(v);
+              if (unlikely(!stepval))
+                  return (uint32_t) -1;
+          } else {
+              stepval = v;
+          }
+          v = NULL;
+          val = (uint32_t) 0;
+          mask = PyLong_FromLong((1L << chunk_size) - 1); if (unlikely(!mask)) goto done;
+          shift = PyLong_FromLong(chunk_size); if (unlikely(!shift)) goto done;
+          for (bits = 0; bits < (int) sizeof(uint32_t) * 8 - chunk_size; bits += chunk_size) {
+              PyObject *tmp, *digit;
+              long idigit;
+              digit = PyNumber_And(stepval, mask);
+              if (unlikely(!digit)) goto done;
+              idigit = PyLong_AsLong(digit);
+              Py_DECREF(digit);
+              if (unlikely(idigit < 0)) goto done;
+              val |= ((uint32_t) idigit) << bits;
+              tmp = PyNumber_Rshift(stepval, shift);
+              if (unlikely(!tmp)) goto done;
+              Py_DECREF(stepval); stepval = tmp;
+          }
+          Py_DECREF(shift); shift = NULL;
+          Py_DECREF(mask); mask = NULL;
+          {
+              long idigit = PyLong_AsLong(stepval);
+              if (unlikely(idigit < 0)) goto done;
+              remaining_bits = ((int) sizeof(uint32_t) * 8) - bits - (is_unsigned ? 0 : 1);
+              if (unlikely(idigit >= (1L << remaining_bits)))
+                  goto raise_overflow;
+              val |= ((uint32_t) idigit) << bits;
+          }
+          if (!is_unsigned) {
+              if (unlikely(val & (((uint32_t) 1) << (sizeof(uint32_t) * 8 - 1))))
+                  goto raise_overflow;
+              if (is_negative)
+                  val = ~val;
+          }
+          ret = 0;
+      done:
+          Py_XDECREF(shift);
+          Py_XDECREF(mask);
+          Py_XDECREF(stepval);
+  #endif
+          if (unlikely(ret))
+              return (uint32_t) -1;
+          return val;
+      }
+  raise_overflow:
+      PyErr_SetString(PyExc_OverflowError,
+          "value too large to convert to uint32_t");
+      return (uint32_t) -1;
+  raise_neg_overflow:
+      PyErr_SetString(PyExc_OverflowError,
+          "can't convert negative value to uint32_t");
+      return (uint32_t) -1;
   }
   
 /* CIntFromPy */

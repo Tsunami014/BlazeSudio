@@ -3,6 +3,7 @@ import numpy as np
 cimport numpy as cnp
 from libc.stdlib cimport malloc, free
 from libc.string cimport memset
+from libc.stdint cimport uint32_t
 from cython.parallel import prange
 __cimport_types__ = [cnp.ndarray]
 
@@ -18,12 +19,11 @@ cpdef fill_arr(cnp.ndarray[cnp.uint8_t, ndim=3] arr,
         memset(p, rcol, <size_t>arr.size)
         return
     cdef long n = arr.shape[0] * arr.shape[1]
+    cdef uint32_t color32 = (rcol) | (gcol << 8) | (bcol << 16) | (255 << 24)
+    cdef uint32_t *p32 = <uint32_t*> p
     cdef long i
-    for i in prange(n, use_threads_if=n > THRESH, nogil=True):
-        p[i*4+0] = rcol
-        p[i*4+1] = gcol
-        p[i*4+2] = bcol
-        p[i*4+3] = 255
+    for i in prange(n, nogil=True, use_threads_if=n > THRESH):
+        p32[i] = color32
 
 cdef inline long clip(long v, long lo, long hi):
     if v < lo:
