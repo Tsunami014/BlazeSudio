@@ -7,6 +7,7 @@ __all__ = ['Clock', 'AvgClock', 'Col']
 class Clock():
     def __init__(self):
         self.dt = 0
+        """The amount of seconds since the last tick"""
         self._lastTime = None
 
     def tick(self, maxfps: float = None):
@@ -19,9 +20,7 @@ class Clock():
         t = time.perf_counter()
         slept = False
         if self._lastTime is not None:
-            # raw delta-time
             delta = t - self._lastTime
-            # enforce max FPS if requested
             if maxfps is not None:
                 target_dt = 1.0 / maxfps
                 target = target_dt - delta - 0.001
