@@ -4,6 +4,15 @@ from . import _calcs
 import numpy as np
 import math
 
+__all__ = [
+    "Polygon",
+        "Line",
+        "Rect",
+        "Rect",
+    "Elipse",
+        "Circle",
+]
+
 Point = Tuple[float, float]
 
 class Polygon(NormalisedOp):

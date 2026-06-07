@@ -9,8 +9,34 @@ __cimport_types__ = [cnp.ndarray]
 
 cdef unsigned int THRESH = 300
 
+cdef fill_trans(cnp.ndarray[cnp.uint8_t, ndim=3] arr,
+                cnp.ndarray[cnp.uint8_t, ndim=1] col):
+    cdef unsigned char acol = col[3]
+    if acol == 0:
+        return
+    cdef unsigned char inva = 256 - acol
+    cdef unsigned long racol = col[0]*acol
+    cdef unsigned long gacol = col[1]*acol
+    cdef unsigned long bacol = col[2]*acol
+    cdef unsigned char *p = &arr[0,0,0]
+    cdef long n = arr.shape[0] * arr.shape[1]
+    cdef long i
+    cdef unsigned char *cell
+    for i in prange(n, nogil=True, use_threads_if=n > THRESH):
+        cell = &p[i*4]
+        cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
+        cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
+        cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
+        oa = acol + ((cell[3]*inva) >> 8)
+        if oa > 255:
+            oa = 255
+        cell[3] = <unsigned char>(oa)
+
 cpdef fill_arr(cnp.ndarray[cnp.uint8_t, ndim=3] arr,
                cnp.ndarray[cnp.uint8_t, ndim=1] col):
+    if col[3] < 255:
+        fill_trans(arr, col)
+        return
     cdef unsigned char rcol = col[0]
     cdef unsigned char gcol = col[1]
     cdef unsigned char bcol = col[2]
@@ -45,7 +71,7 @@ cdef void fillPolygon(
     cdef unsigned char acol = col[3]
     if acol == 0:
         return
-    cdef unsigned char inva = 255 - acol
+    cdef unsigned char inva = 256 - acol
     cdef unsigned long rcol = col[0]
     cdef unsigned long racol = col[0]*acol
     cdef unsigned long gcol = col[1]
@@ -128,10 +154,10 @@ cdef void fillPolygon(
                     cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
                     cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
                     cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
-                    oa = acol + cell[3]
+                    oa = acol + ((cell[3]*inva) >> 8)
                     if oa > 255:
                         oa = 255
-                        cell[3] = <unsigned char>(oa)
+                    cell[3] = <unsigned char>(oa)
     free(inters)
 
 
@@ -183,7 +209,7 @@ cpdef drawLine(
 
     cdef unsigned char[:, :, ::1] arr = arr_orig
 
-    cdef unsigned char inva = 255 - acol
+    cdef unsigned char inva = 256 - acol
     cdef unsigned long rcol = col[0]
     cdef unsigned long racol = col[0]*acol
     cdef unsigned long gcol = col[1]
@@ -237,10 +263,10 @@ cpdef drawLine(
                             cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
                             cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
                             cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
-                            oa = acol + cell[3]
+                            oa = acol + ((cell[3]*inva) >> 8)
                             if oa > 255:
                                 oa = 255
-                                cell[3] = <unsigned char>(oa)
+                            cell[3] = <unsigned char>(oa)
             err -= dy
             if err < 0:
                 y += sy
@@ -271,10 +297,10 @@ cpdef drawLine(
                             cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
                             cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
                             cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
-                            oa = acol + cell[3]
+                            oa = acol + ((cell[3]*inva) >> 8)
                             if oa > 255:
                                 oa = 255
-                                cell[3] = <unsigned char>(oa)
+                            cell[3] = <unsigned char>(oa)
             err -= dx
             if err < 0:
                 x += sx
@@ -328,10 +354,10 @@ cdef _fill(
                 cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
                 cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
                 cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
-                oa = acol + cell[3]
+                oa = acol + ((cell[3]*inva) >> 8)
                 if oa > 255:
                     oa = 255
-                    cell[3] = <unsigned char>(oa)
+                cell[3] = <unsigned char>(oa)
 
 cpdef drawRect(
         cnp.ndarray[cnp.uint8_t, ndim=3] arr,
@@ -344,7 +370,7 @@ cpdef drawRect(
     cdef unsigned char acol = col[3]
     if acol == 0:
         return
-    cdef unsigned char inva = 255 - acol
+    cdef unsigned char inva = 256 - acol
     cdef unsigned char rcol = col[0]
     cdef unsigned long racol = col[0]*acol
     cdef unsigned char gcol = col[1]
@@ -474,10 +500,10 @@ cpdef drawRect(
                             cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
                             cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
                             cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
-                            oa = acol + cell[3]
+                            oa = acol + ((cell[3]*inva) >> 8)
                             if oa > 255:
                                 oa = 255
-                                cell[3] = <unsigned char>(oa)
+                            cell[3] = <unsigned char>(oa)
 
 
 cpdef drawCirc(
@@ -490,7 +516,7 @@ cpdef drawCirc(
     cdef unsigned char acol = col[3]
     if acol == 0:
         return
-    cdef unsigned char inva = 255 - acol
+    cdef unsigned char inva = 256 - acol
     cdef unsigned char rcol = col[0]
     cdef unsigned long racol = col[0]*acol
     cdef unsigned char gcol = col[1]
@@ -538,10 +564,10 @@ cpdef drawCirc(
                     cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
                     cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
                     cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
-                    oa = acol + cell[3]
+                    oa = acol + ((cell[3]*inva) >> 8)
                     if oa > 255:
                         oa = 255
-                        cell[3] = <unsigned char>(oa)
+                    cell[3] = <unsigned char>(oa)
 
 
 cpdef drawElipse(
@@ -556,7 +582,7 @@ cpdef drawElipse(
     cdef unsigned char acol = col[3]
     if acol == 0:
         return
-    cdef unsigned char inva = 255 - acol
+    cdef unsigned char inva = 256 - acol
     cdef unsigned char rcol = col[0]
     cdef unsigned long racol = col[0]*acol
     cdef unsigned char gcol = col[1]
@@ -615,10 +641,10 @@ cpdef drawElipse(
                         cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
                         cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
                         cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
-                        oa = acol + cell[3]
+                        oa = acol + ((cell[3]*inva) >> 8)
                         if oa > 255:
                             oa = 255
-                            cell[3] = <unsigned char>(oa)
+                        cell[3] = <unsigned char>(oa)
     else:
         inv_right = 1.0 / ((xrad + t) * (xrad + t))
         inv_bot = 1.0 / ((yrad + t) * (yrad + t))
@@ -647,8 +673,8 @@ cpdef drawElipse(
                             cell[0] = <unsigned char>((racol + cell[0]*inva) >> 8)
                             cell[1] = <unsigned char>((gacol + cell[1]*inva) >> 8)
                             cell[2] = <unsigned char>((bacol + cell[2]*inva) >> 8)
-                            oa = acol + cell[3]
+                            oa = acol + ((cell[3]*inva) >> 8)
                             if oa > 255:
                                 oa = 255
-                                cell[3] = <unsigned char>(oa)
+                            cell[3] = <unsigned char>(oa)
 
