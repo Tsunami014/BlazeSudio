@@ -6,21 +6,29 @@ from typing import overload
 import numpy as np
 
 __all__ = [
-    'Fill',
+    'Overlay',
+        'Fill',
     'Crop',
     'Surf',
         'Image',
         'Preserve'
 ]
 
-class Fill(Op):
+class Overlay(Op):
     __slots__ = ['col']
     def __init__(self, col):
+        """Overlays a colour on the screen (best used with transparency - if no transparency, use Fill instead)"""
         self.col = np.array(col, np.uint8)
-        self.flags = OpFlags.Reset
     def apply(self, _, arr: np.ndarray, __, ___):
         _calcs.fill_arr(arr, self.col)
         return arr
+
+class Fill(Overlay):
+    __slots__ = []
+    def __init__(self, col):
+        """Will override all previous operations!! To include previous ops, use Overlay instead."""
+        super().__init__(col)
+        self.flags = OpFlags.Reset
 
 
 class Crop(Trans, _basey.Base):

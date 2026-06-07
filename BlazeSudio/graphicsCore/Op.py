@@ -1,5 +1,5 @@
 from .base import Anchors, Vec2
-from .miscOps import Fill, Crop, Image, Surf, Preserve
+from .miscOps import Overlay, Fill, Crop, Image, Surf, Preserve
 from . import Trans, Draw
 
 __all__ = [
@@ -7,6 +7,7 @@ __all__ = [
     'Anchors',
     'Vec2',
 
+    'Overlay',
     'Fill',
     'Crop',
     'Surf', 'Image', 'Preserve'
