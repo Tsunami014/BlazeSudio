@@ -35,6 +35,7 @@ if len(MODULES) > 0:
     else:
         compile_flags = ['-fopenmp']
         link_flags = ['-fopenmp']
+    compile_flags.extend(["-O3", "-ffast-math", "-funroll-loops"])
     extensions = [
         Extension(
             name=modname,

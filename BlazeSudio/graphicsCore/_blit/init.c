@@ -21,7 +21,10 @@
             "/nix/store/zi1xkq8fj3i3bij9i43slzg9vm5li4wn-python3.13-numpy-2.3.4/lib/python3.13/site-packages/numpy/_core/include/numpy/ufuncobject.h"
         ],
         "extra_compile_args": [
-            "-fopenmp"
+            "-fopenmp",
+            "-O3",
+            "-ffast-math",
+            "-funroll-loops"
         ],
         "extra_link_args": [
             "-fopenmp"
@@ -19173,7 +19176,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
  *         yhi = min(cBot, transy + oh)
  *         xlo = max(cLeft, transx)             # <<<<<<<<<<<<<<
  *         xhi = min(cRight, transx + ow)
- *         for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
+ *         for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):
 */
     __pyx_t_4 = __pyx_v_transx;
     __pyx_t_5 = __pyx_v_cLeft;
@@ -19189,7 +19192,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
  *         yhi = min(cBot, transy + oh)
  *         xlo = max(cLeft, transx)
  *         xhi = min(cRight, transx + ow)             # <<<<<<<<<<<<<<
- *         for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
+ *         for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):
  *             oy = y - transy
 */
     __pyx_t_3 = (__pyx_v_transx + __pyx_v_ow);
@@ -19205,7 +19208,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
     /* "BlazeSudio/graphicsCore/_blit/init.pyx":42
  *         xlo = max(cLeft, transx)
  *         xhi = min(cRight, transx + ow)
- *         for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):             # <<<<<<<<<<<<<<
+ *         for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):             # <<<<<<<<<<<<<<
  *             oy = y - transy
  *             for x in range(xlo, xhi):
 */
@@ -19231,7 +19234,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
                   #endif /* _OPENMP */
                   {
                       #ifdef _OPENMP
-                      #pragma omp for firstprivate(__pyx_v_dstrow) lastprivate(__pyx_v_dstrow) firstprivate(__pyx_v_inva) lastprivate(__pyx_v_inva) firstprivate(__pyx_v_oa) lastprivate(__pyx_v_oa) firstprivate(__pyx_v_ox) lastprivate(__pyx_v_ox) firstprivate(__pyx_v_oy) lastprivate(__pyx_v_oy) firstprivate(__pyx_v_sa) lastprivate(__pyx_v_sa) firstprivate(__pyx_v_srcrow) lastprivate(__pyx_v_srcrow) firstprivate(__pyx_v_x) lastprivate(__pyx_v_x) firstprivate(__pyx_v_y) lastprivate(__pyx_v_y)
+                      #pragma omp for firstprivate(__pyx_v_dstrow) lastprivate(__pyx_v_dstrow) firstprivate(__pyx_v_inva) lastprivate(__pyx_v_inva) firstprivate(__pyx_v_oa) lastprivate(__pyx_v_oa) firstprivate(__pyx_v_ox) lastprivate(__pyx_v_ox) firstprivate(__pyx_v_oy) lastprivate(__pyx_v_oy) firstprivate(__pyx_v_sa) lastprivate(__pyx_v_sa) firstprivate(__pyx_v_srcrow) lastprivate(__pyx_v_srcrow) firstprivate(__pyx_v_x) lastprivate(__pyx_v_x) firstprivate(__pyx_v_y) lastprivate(__pyx_v_y) schedule(static)
                       #endif /* _OPENMP */
                       for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_6; __pyx_t_4++){
                           {
@@ -19239,7 +19242,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
 
                               /* "BlazeSudio/graphicsCore/_blit/init.pyx":43
  *         xhi = min(cRight, transx + ow)
- *         for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
+ *         for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):
  *             oy = y - transy             # <<<<<<<<<<<<<<
  *             for x in range(xlo, xhi):
  *                 ox = x - transx
@@ -19247,7 +19250,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
                               __pyx_v_oy = (__pyx_v_y - __pyx_v_transy);
 
                               /* "BlazeSudio/graphicsCore/_blit/init.pyx":44
- *         for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
+ *         for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):
  *             oy = y - transy
  *             for x in range(xlo, xhi):             # <<<<<<<<<<<<<<
  *                 ox = x - transx
@@ -19390,7 +19393,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
  *                         dstrow[0] = <unsigned char>((srcrow[0]*sa + dstrow[0]*inva) >> 8)
  *                         dstrow[1] = <unsigned char>((srcrow[1]*sa + dstrow[1]*inva) >> 8)             # <<<<<<<<<<<<<<
  *                         dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)
- *                         oa = sa + dstrow[3]
+ *                         oa = sa + ((dstrow[3]*inva) >> 8)
 */
                                     (__pyx_v_dstrow[1]) = ((unsigned char)((((__pyx_v_srcrow[1]) * __pyx_v_sa) + ((__pyx_v_dstrow[1]) * __pyx_v_inva)) >> 8));
 
@@ -19398,7 +19401,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
  *                         dstrow[0] = <unsigned char>((srcrow[0]*sa + dstrow[0]*inva) >> 8)
  *                         dstrow[1] = <unsigned char>((srcrow[1]*sa + dstrow[1]*inva) >> 8)
  *                         dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)             # <<<<<<<<<<<<<<
- *                         oa = sa + dstrow[3]
+ *                         oa = sa + ((dstrow[3]*inva) >> 8)
  *                         if oa > 255:
 */
                                     (__pyx_v_dstrow[2]) = ((unsigned char)((((__pyx_v_srcrow[2]) * __pyx_v_sa) + ((__pyx_v_dstrow[2]) * __pyx_v_inva)) >> 8));
@@ -19406,48 +19409,48 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
                                     /* "BlazeSudio/graphicsCore/_blit/init.pyx":60
  *                         dstrow[1] = <unsigned char>((srcrow[1]*sa + dstrow[1]*inva) >> 8)
  *                         dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)
- *                         oa = sa + dstrow[3]             # <<<<<<<<<<<<<<
+ *                         oa = sa + ((dstrow[3]*inva) >> 8)             # <<<<<<<<<<<<<<
  *                         if oa > 255:
  *                             oa = 255
 */
-                                    __pyx_v_oa = (__pyx_v_sa + (__pyx_v_dstrow[3]));
+                                    __pyx_v_oa = (__pyx_v_sa + (((__pyx_v_dstrow[3]) * __pyx_v_inva) >> 8));
 
                                     /* "BlazeSudio/graphicsCore/_blit/init.pyx":61
  *                         dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)
- *                         oa = sa + dstrow[3]
+ *                         oa = sa + ((dstrow[3]*inva) >> 8)
  *                         if oa > 255:             # <<<<<<<<<<<<<<
  *                             oa = 255
- *                             dstrow[3] = <unsigned char>(oa)
+ *                         dstrow[3] = <unsigned char>(oa)
 */
                                     __pyx_t_1 = (__pyx_v_oa > 0xFF);
                                     if (__pyx_t_1) {
 
                                       /* "BlazeSudio/graphicsCore/_blit/init.pyx":62
- *                         oa = sa + dstrow[3]
+ *                         oa = sa + ((dstrow[3]*inva) >> 8)
  *                         if oa > 255:
  *                             oa = 255             # <<<<<<<<<<<<<<
- *                             dstrow[3] = <unsigned char>(oa)
+ *                         dstrow[3] = <unsigned char>(oa)
  *         return
 */
                                       __pyx_v_oa = 0xFF;
 
-                                      /* "BlazeSudio/graphicsCore/_blit/init.pyx":63
+                                      /* "BlazeSudio/graphicsCore/_blit/init.pyx":61
+ *                         dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)
+ *                         oa = sa + ((dstrow[3]*inva) >> 8)
+ *                         if oa > 255:             # <<<<<<<<<<<<<<
+ *                             oa = 255
+ *                         dstrow[3] = <unsigned char>(oa)
+*/
+                                    }
+
+                                    /* "BlazeSudio/graphicsCore/_blit/init.pyx":63
  *                         if oa > 255:
  *                             oa = 255
- *                             dstrow[3] = <unsigned char>(oa)             # <<<<<<<<<<<<<<
+ *                         dstrow[3] = <unsigned char>(oa)             # <<<<<<<<<<<<<<
  *         return
  * 
 */
-                                      (__pyx_v_dstrow[3]) = ((unsigned char)__pyx_v_oa);
-
-                                      /* "BlazeSudio/graphicsCore/_blit/init.pyx":61
- *                         dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)
- *                         oa = sa + dstrow[3]
- *                         if oa > 255:             # <<<<<<<<<<<<<<
- *                             oa = 255
- *                             dstrow[3] = <unsigned char>(oa)
-*/
-                                    }
+                                    (__pyx_v_dstrow[3]) = ((unsigned char)__pyx_v_oa);
                                   }
                                   __pyx_L16:;
 
@@ -19476,7 +19479,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
         /* "BlazeSudio/graphicsCore/_blit/init.pyx":42
  *         xlo = max(cLeft, transx)
  *         xhi = min(cRight, transx + ow)
- *         for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):             # <<<<<<<<<<<<<<
+ *         for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):             # <<<<<<<<<<<<<<
  *             oy = y - transy
  *             for x in range(xlo, xhi):
 */
@@ -19492,7 +19495,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
 
     /* "BlazeSudio/graphicsCore/_blit/init.pyx":64
  *                             oa = 255
- *                             dstrow[3] = <unsigned char>(oa)
+ *                         dstrow[3] = <unsigned char>(oa)
  *         return             # <<<<<<<<<<<<<<
  * 
  *     cdef double dx = transx + ow * scalex
@@ -19631,7 +19634,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
  * 
  *     cdef double inv_scalex = 1.0 / scalex             # <<<<<<<<<<<<<<
  *     cdef double inv_scaley = 1.0 / scaley
- *     for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
+ *     for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):
 */
   __pyx_v_inv_scalex = (1.0 / __pyx_v_scalex);
 
@@ -19639,7 +19642,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
  * 
  *     cdef double inv_scalex = 1.0 / scalex
  *     cdef double inv_scaley = 1.0 / scaley             # <<<<<<<<<<<<<<
- *     for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
+ *     for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):
  *         oy = <long>((y - transy) * inv_scaley)
 */
   __pyx_v_inv_scaley = (1.0 / __pyx_v_scaley);
@@ -19647,7 +19650,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
   /* "BlazeSudio/graphicsCore/_blit/init.pyx":75
  *     cdef double inv_scalex = 1.0 / scalex
  *     cdef double inv_scaley = 1.0 / scaley
- *     for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):             # <<<<<<<<<<<<<<
+ *     for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):             # <<<<<<<<<<<<<<
  *         oy = <long>((y - transy) * inv_scaley)
  *         if 0 <= oy < oh:
 */
@@ -19673,7 +19676,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
                 #endif /* _OPENMP */
                 {
                     #ifdef _OPENMP
-                    #pragma omp for firstprivate(__pyx_v_dstrow) lastprivate(__pyx_v_dstrow) firstprivate(__pyx_v_inva) lastprivate(__pyx_v_inva) firstprivate(__pyx_v_oa) lastprivate(__pyx_v_oa) firstprivate(__pyx_v_ox) lastprivate(__pyx_v_ox) firstprivate(__pyx_v_oy) lastprivate(__pyx_v_oy) firstprivate(__pyx_v_sa) lastprivate(__pyx_v_sa) firstprivate(__pyx_v_srcrow) lastprivate(__pyx_v_srcrow) firstprivate(__pyx_v_x) lastprivate(__pyx_v_x) firstprivate(__pyx_v_y) lastprivate(__pyx_v_y)
+                    #pragma omp for firstprivate(__pyx_v_dstrow) lastprivate(__pyx_v_dstrow) firstprivate(__pyx_v_inva) lastprivate(__pyx_v_inva) firstprivate(__pyx_v_oa) lastprivate(__pyx_v_oa) firstprivate(__pyx_v_ox) lastprivate(__pyx_v_ox) firstprivate(__pyx_v_oy) lastprivate(__pyx_v_oy) firstprivate(__pyx_v_sa) lastprivate(__pyx_v_sa) firstprivate(__pyx_v_srcrow) lastprivate(__pyx_v_srcrow) firstprivate(__pyx_v_x) lastprivate(__pyx_v_x) firstprivate(__pyx_v_y) lastprivate(__pyx_v_y) schedule(static)
                     #endif /* _OPENMP */
                     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_5; __pyx_t_4++){
                         {
@@ -19681,7 +19684,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
 
                             /* "BlazeSudio/graphicsCore/_blit/init.pyx":76
  *     cdef double inv_scaley = 1.0 / scaley
- *     for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
+ *     for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):
  *         oy = <long>((y - transy) * inv_scaley)             # <<<<<<<<<<<<<<
  *         if 0 <= oy < oh:
  *             for x in range(cLeft, cRight):
@@ -19689,7 +19692,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
                             __pyx_v_oy = ((long)((__pyx_v_y - __pyx_v_transy) * __pyx_v_inv_scaley));
 
                             /* "BlazeSudio/graphicsCore/_blit/init.pyx":77
- *     for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
+ *     for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):
  *         oy = <long>((y - transy) * inv_scaley)
  *         if 0 <= oy < oh:             # <<<<<<<<<<<<<<
  *             for x in range(cLeft, cRight):
@@ -19858,7 +19861,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
  *                             dstrow[0] = <unsigned char>((srcrow[0]*sa + dstrow[0]*inva) >> 8)
  *                             dstrow[1] = <unsigned char>((srcrow[1]*sa + dstrow[1]*inva) >> 8)             # <<<<<<<<<<<<<<
  *                             dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)
- *                             oa = sa + dstrow[3]
+ *                             oa = sa + ((dstrow[3]*inva) >> 8)
 */
                                       (__pyx_v_dstrow[1]) = ((unsigned char)((((__pyx_v_srcrow[1]) * __pyx_v_sa) + ((__pyx_v_dstrow[1]) * __pyx_v_inva)) >> 8));
 
@@ -19866,7 +19869,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
  *                             dstrow[0] = <unsigned char>((srcrow[0]*sa + dstrow[0]*inva) >> 8)
  *                             dstrow[1] = <unsigned char>((srcrow[1]*sa + dstrow[1]*inva) >> 8)
  *                             dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)             # <<<<<<<<<<<<<<
- *                             oa = sa + dstrow[3]
+ *                             oa = sa + ((dstrow[3]*inva) >> 8)
  *                             if oa > 255:
 */
                                       (__pyx_v_dstrow[2]) = ((unsigned char)((((__pyx_v_srcrow[2]) * __pyx_v_sa) + ((__pyx_v_dstrow[2]) * __pyx_v_inva)) >> 8));
@@ -19874,15 +19877,15 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
                                       /* "BlazeSudio/graphicsCore/_blit/init.pyx":95
  *                             dstrow[1] = <unsigned char>((srcrow[1]*sa + dstrow[1]*inva) >> 8)
  *                             dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)
- *                             oa = sa + dstrow[3]             # <<<<<<<<<<<<<<
+ *                             oa = sa + ((dstrow[3]*inva) >> 8)             # <<<<<<<<<<<<<<
  *                             if oa > 255:
  *                                 oa = 255
 */
-                                      __pyx_v_oa = (__pyx_v_sa + (__pyx_v_dstrow[3]));
+                                      __pyx_v_oa = (__pyx_v_sa + (((__pyx_v_dstrow[3]) * __pyx_v_inva) >> 8));
 
                                       /* "BlazeSudio/graphicsCore/_blit/init.pyx":96
  *                             dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)
- *                             oa = sa + dstrow[3]
+ *                             oa = sa + ((dstrow[3]*inva) >> 8)
  *                             if oa > 255:             # <<<<<<<<<<<<<<
  *                                 oa = 255
  *                             dstrow[3] = <unsigned char>(oa)
@@ -19891,7 +19894,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
                                       if (__pyx_t_1) {
 
                                         /* "BlazeSudio/graphicsCore/_blit/init.pyx":97
- *                             oa = sa + dstrow[3]
+ *                             oa = sa + ((dstrow[3]*inva) >> 8)
  *                             if oa > 255:
  *                                 oa = 255             # <<<<<<<<<<<<<<
  *                             dstrow[3] = <unsigned char>(oa)
@@ -19901,7 +19904,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
 
                                         /* "BlazeSudio/graphicsCore/_blit/init.pyx":96
  *                             dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)
- *                             oa = sa + dstrow[3]
+ *                             oa = sa + ((dstrow[3]*inva) >> 8)
  *                             if oa > 255:             # <<<<<<<<<<<<<<
  *                                 oa = 255
  *                             dstrow[3] = <unsigned char>(oa)
@@ -19939,7 +19942,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
                               }
 
                               /* "BlazeSudio/graphicsCore/_blit/init.pyx":77
- *     for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
+ *     for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):
  *         oy = <long>((y - transy) * inv_scaley)
  *         if 0 <= oy < oh:             # <<<<<<<<<<<<<<
  *             for x in range(cLeft, cRight):
@@ -19962,7 +19965,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
       /* "BlazeSudio/graphicsCore/_blit/init.pyx":75
  *     cdef double inv_scalex = 1.0 / scalex
  *     cdef double inv_scaley = 1.0 / scaley
- *     for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):             # <<<<<<<<<<<<<<
+ *     for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):             # <<<<<<<<<<<<<<
  *         oy = <long>((y - transy) * inv_scaley)
  *         if 0 <= oy < oh:
 */
@@ -20136,7 +20139,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
  *     cdef double m21 = Minv[2, 1]
  *     cdef double m22 = Minv[2, 2]             # <<<<<<<<<<<<<<
  * 
- *     for y in prange(cTop, cBot, use_threads_if=(cBot-cTop) > THRESH, nogil=True):
+ *     for y in prange(cTop, cBot, nogil=True, schedule='static', use_threads_if=(cBot-cTop) > THRESH):
 */
   __pyx_t_1 = 2;
   __pyx_t_2 = 2;
@@ -20145,7 +20148,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
   /* "BlazeSudio/graphicsCore/_blit/init.pyx":126
  *     cdef double m22 = Minv[2, 2]
  * 
- *     for y in prange(cTop, cBot, use_threads_if=(cBot-cTop) > THRESH, nogil=True):             # <<<<<<<<<<<<<<
+ *     for y in prange(cTop, cBot, nogil=True, schedule='static', use_threads_if=(cBot-cTop) > THRESH):             # <<<<<<<<<<<<<<
  *         oy_first = <long>(m10*cLeft + m11*y + m12)
  *         oy_last  = <long>(m10*(cRight-1) + m11*y + m12)
 */
@@ -20171,7 +20174,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
                 #endif /* _OPENMP */
                 {
                     #ifdef _OPENMP
-                    #pragma omp for firstprivate(__pyx_v_dstrow) lastprivate(__pyx_v_dstrow) firstprivate(__pyx_v_inva) lastprivate(__pyx_v_inva) firstprivate(__pyx_v_invz) lastprivate(__pyx_v_invz) firstprivate(__pyx_v_oa) lastprivate(__pyx_v_oa) firstprivate(__pyx_v_ox) lastprivate(__pyx_v_ox) firstprivate(__pyx_v_oy) lastprivate(__pyx_v_oy) firstprivate(__pyx_v_oy_first) lastprivate(__pyx_v_oy_first) firstprivate(__pyx_v_oy_last) lastprivate(__pyx_v_oy_last) firstprivate(__pyx_v_sa) lastprivate(__pyx_v_sa) firstprivate(__pyx_v_srcrow) lastprivate(__pyx_v_srcrow) firstprivate(__pyx_v_sx) lastprivate(__pyx_v_sx) firstprivate(__pyx_v_sy) lastprivate(__pyx_v_sy) firstprivate(__pyx_v_x) lastprivate(__pyx_v_x) firstprivate(__pyx_v_y) lastprivate(__pyx_v_y) firstprivate(__pyx_v_z) lastprivate(__pyx_v_z)
+                    #pragma omp for firstprivate(__pyx_v_dstrow) lastprivate(__pyx_v_dstrow) firstprivate(__pyx_v_inva) lastprivate(__pyx_v_inva) firstprivate(__pyx_v_invz) lastprivate(__pyx_v_invz) firstprivate(__pyx_v_oa) lastprivate(__pyx_v_oa) firstprivate(__pyx_v_ox) lastprivate(__pyx_v_ox) firstprivate(__pyx_v_oy) lastprivate(__pyx_v_oy) firstprivate(__pyx_v_oy_first) lastprivate(__pyx_v_oy_first) firstprivate(__pyx_v_oy_last) lastprivate(__pyx_v_oy_last) firstprivate(__pyx_v_sa) lastprivate(__pyx_v_sa) firstprivate(__pyx_v_srcrow) lastprivate(__pyx_v_srcrow) firstprivate(__pyx_v_sx) lastprivate(__pyx_v_sx) firstprivate(__pyx_v_sy) lastprivate(__pyx_v_sy) firstprivate(__pyx_v_x) lastprivate(__pyx_v_x) firstprivate(__pyx_v_y) lastprivate(__pyx_v_y) firstprivate(__pyx_v_z) lastprivate(__pyx_v_z) schedule(static)
                     #endif /* _OPENMP */
                     for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_6; __pyx_t_5++){
                         {
@@ -20179,7 +20182,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
 
                             /* "BlazeSudio/graphicsCore/_blit/init.pyx":127
  * 
- *     for y in prange(cTop, cBot, use_threads_if=(cBot-cTop) > THRESH, nogil=True):
+ *     for y in prange(cTop, cBot, nogil=True, schedule='static', use_threads_if=(cBot-cTop) > THRESH):
  *         oy_first = <long>(m10*cLeft + m11*y + m12)             # <<<<<<<<<<<<<<
  *         oy_last  = <long>(m10*(cRight-1) + m11*y + m12)
  *         if (oy_first < 0 and oy_last < 0) or (oy_first >= oh and oy_last >= oh):
@@ -20187,7 +20190,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
                             __pyx_v_oy_first = ((long)(((__pyx_v_m10 * __pyx_v_cLeft) + (__pyx_v_m11 * __pyx_v_y)) + __pyx_v_m12));
 
                             /* "BlazeSudio/graphicsCore/_blit/init.pyx":128
- *     for y in prange(cTop, cBot, use_threads_if=(cBot-cTop) > THRESH, nogil=True):
+ *     for y in prange(cTop, cBot, nogil=True, schedule='static', use_threads_if=(cBot-cTop) > THRESH):
  *         oy_first = <long>(m10*cLeft + m11*y + m12)
  *         oy_last  = <long>(m10*(cRight-1) + m11*y + m12)             # <<<<<<<<<<<<<<
  *         if (oy_first < 0 and oy_last < 0) or (oy_first >= oh and oy_last >= oh):
@@ -20645,7 +20648,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
       /* "BlazeSudio/graphicsCore/_blit/init.pyx":126
  *     cdef double m22 = Minv[2, 2]
  * 
- *     for y in prange(cTop, cBot, use_threads_if=(cBot-cTop) > THRESH, nogil=True):             # <<<<<<<<<<<<<<
+ *     for y in prange(cTop, cBot, nogil=True, schedule='static', use_threads_if=(cBot-cTop) > THRESH):             # <<<<<<<<<<<<<<
  *         oy_first = <long>(m10*cLeft + m11*y + m12)
  *         oy_last  = <long>(m10*(cRight-1) + m11*y + m12)
 */

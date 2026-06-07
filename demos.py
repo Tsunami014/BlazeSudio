@@ -53,16 +53,10 @@ if __name__ == '__main__':
         run(li[idx])
 
     import sys
-    if len(sys.argv) == 1:
-        pass
-    elif len(sys.argv) == 2:
+    if len(sys.argv) >= 2:
         idx = int(sys.argv[1])
         runFn(idx)
         exit()
-    else:
-        raise ValueError(
-            'Too many arguments!'
-        )
 
     try:
         import tkinter as Tk

@@ -39,7 +39,7 @@ cdef inline void ezblit(
         yhi = min(cBot, transy + oh)
         xlo = max(cLeft, transx)
         xhi = min(cRight, transx + ow)
-        for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
+        for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):
             oy = y - transy
             for x in range(xlo, xhi):
                 ox = x - transx
@@ -57,10 +57,10 @@ cdef inline void ezblit(
                         dstrow[0] = <unsigned char>((srcrow[0]*sa + dstrow[0]*inva) >> 8)
                         dstrow[1] = <unsigned char>((srcrow[1]*sa + dstrow[1]*inva) >> 8)
                         dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)
-                        oa = sa + dstrow[3]
+                        oa = sa + ((dstrow[3]*inva) >> 8)
                         if oa > 255:
                             oa = 255
-                            dstrow[3] = <unsigned char>(oa)
+                        dstrow[3] = <unsigned char>(oa)
         return
 
     cdef double dx = transx + ow * scalex
@@ -72,7 +72,7 @@ cdef inline void ezblit(
 
     cdef double inv_scalex = 1.0 / scalex
     cdef double inv_scaley = 1.0 / scaley
-    for y in prange(ylo, yhi, use_threads_if=(yhi-ylo) > THRESH, nogil=True):
+    for y in prange(ylo, yhi, nogil=True, schedule='static', use_threads_if=(yhi-ylo) > THRESH):
         oy = <long>((y - transy) * inv_scaley)
         if 0 <= oy < oh:
             for x in range(cLeft, cRight):
@@ -92,7 +92,7 @@ cdef inline void ezblit(
                             dstrow[0] = <unsigned char>((srcrow[0]*sa + dstrow[0]*inva) >> 8)
                             dstrow[1] = <unsigned char>((srcrow[1]*sa + dstrow[1]*inva) >> 8)
                             dstrow[2] = <unsigned char>((srcrow[2]*sa + dstrow[2]*inva) >> 8)
-                            oa = sa + dstrow[3]
+                            oa = sa + ((dstrow[3]*inva) >> 8)
                             if oa > 255:
                                 oa = 255
                             dstrow[3] = <unsigned char>(oa)
@@ -123,7 +123,7 @@ cdef inline void regblit(
     cdef double m21 = Minv[2, 1]
     cdef double m22 = Minv[2, 2]
 
-    for y in prange(cTop, cBot, use_threads_if=(cBot-cTop) > THRESH, nogil=True):
+    for y in prange(cTop, cBot, nogil=True, schedule='static', use_threads_if=(cBot-cTop) > THRESH):
         oy_first = <long>(m10*cLeft + m11*y + m12)
         oy_last  = <long>(m10*(cRight-1) + m11*y + m12)
         if (oy_first < 0 and oy_last < 0) or (oy_first >= oh and oy_last >= oh):

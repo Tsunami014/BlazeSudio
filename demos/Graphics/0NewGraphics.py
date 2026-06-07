@@ -7,11 +7,15 @@ def main():
         3: "Images",
         4: "Rotate large",
         5: "Font",
+        6: "Effects",
     }
     def PRINT_run(thing, thingcol, nam):
         print(f"\nRunning \033[{thingcol}m{thing}\033[0m with \033[93m{NAMES[nam]}\033[0m:")
     def PRINT_fps(fps):
         print(f"Average FPS: \033[94m{round(fps, 3)}\033[m", end="\r")
+
+    import sys
+    rot = 'rot' in sys.argv
 
     from BlazeSudio.graphicsCore import Core, Ix, AvgClock, Col, Op, Font
 
@@ -98,14 +102,25 @@ def main():
                 def _5perframe(f):
                     Core(ops + fnt("FPS: "+str(avgFPS), (255, 125, 0, 255))@Op.Trans.Translate(80, 80))
                 perframe = _5perframe
+            case 6: # Effects
+                def _6perframe(f):
+                    Core(ops +
+                         Op.Draw.Circle((100, 100), 50, 0, Col.Black) +
+                         Op.Overlay((255, 50, 50, 125)) +
+                         Op.Draw.Circle((130, 130), 50, 0, Col.White))
+                perframe = _6perframe
         ops.freeze()
 
 
     Core.resize()
     changeOp(1)
 
+    nxtchng = None
     while Ix.handleBasic():
-        if Ix.Keys['1']:
+        if nxtchng is not None:
+            changeOp(nxtchng)
+            nxtchng = None
+        elif Ix.Keys['1']:
             changeOp(1)
         elif Ix.Keys['2']:
             changeOp(2)
@@ -115,6 +130,8 @@ def main():
             changeOp(4)
         elif Ix.Keys['5']:
             changeOp(5)
+        elif Ix.Keys['6']:
+            changeOp(6)
         elif Ix.Keys['0']:
             changeOp(0)
         perframe(f)
@@ -123,7 +140,12 @@ def main():
         c.tick()
         if f % 20 == 0:
             times.append(c.get_fps())
-            times = times[-20:]
+            if rot and len(times) > 20:
+                if cur == 0:
+                    break
+                nxtchng = cur+1 if cur <= 5 else 0
+            else:
+                times = times[-20:]
             avgFPS = sum(times)/len(times)
             PRINT_fps(avgFPS)
             Core.title = f'FPS: {avgFPS}'
@@ -145,13 +167,17 @@ def main():
     fnt = pygame.font.Font(None, 80)
     times = []
     r = True
+    nxtchng = None
     while r:
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT or (ev.type == pygame.KEYDOWN and ev.key == pygame.K_ESCAPE):
                 r = False
         ks = pygame.key.get_pressed()
         new = None
-        if ks[pygame.K_1]:
+        if nxtchng is not None:
+            new = nxtchng
+            nxtchng = None
+        elif ks[pygame.K_1]:
             new = 1
         elif ks[pygame.K_2]:
             new = 2
@@ -161,6 +187,8 @@ def main():
             new = 4
         elif ks[pygame.K_5]:
             new = 5
+        elif ks[pygame.K_6]:
+            new = 6
         elif ks[pygame.K_0]:
             new = 0
         if new is not None and new != cur or init:
@@ -229,13 +257,25 @@ def main():
                 WIN.blit(rot, new_rect)
             case 5: # Font
                 WIN.blit(fnt.render("FPS: "+str(avgFPS), 0, (255, 125, 0)), (80, 80))
+            case 6: # Effects
+                if cache is None:
+                    cache = pygame.Surface(WIN.get_size(), pygame.SRCALPHA)
+                    cache.fill((255, 50, 50, 125))
+                pygame.draw.circle(WIN, 0, (100, 100), 50)
+                WIN.blit(cache, (0, 0))
+                pygame.draw.circle(WIN, (255, 255, 255), (130, 130), 50)
 
         if not ks[pygame.K_SPACE]:
             pygame.display.flip()
         c.tick()
         if f % 20 == 0:
             times.append(c.get_fps())
-            times = times[-20:]
+            if rot and len(times) > 20:
+                if cur == 0:
+                    break
+                nxtchng = cur+1 if cur <= 5 else 0
+            else:
+                times = times[-20:]
             avgFPS = sum(times)/len(times)
             PRINT_fps(avgFPS)
             pygame.display.set_caption(f'FPS: {avgFPS}')

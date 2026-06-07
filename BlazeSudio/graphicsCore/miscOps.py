@@ -19,6 +19,7 @@ class Overlay(Op):
     def __init__(self, col):
         """Overlays a colour on the screen (best used with transparency - if no transparency, use Fill instead)"""
         self.col = np.array(col, np.uint8)
+        self.flags = OpFlags.NoFlags
     def apply(self, _, arr: np.ndarray, __, ___):
         _calcs.fill_arr(arr, self.col)
         return arr

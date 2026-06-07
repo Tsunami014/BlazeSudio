@@ -1,3 +1,11 @@
+"""# Informative info about Op classes
+
+- `Op` - for drawing that modifies every pixel in the same way, e.g. fill
+    - `NormalisedOp` - for shapes and images that only affect a part of the output not all of it.
+- `Trans` - for modifications to groups of operations, e.g. rotate or fancy effects that apply to the whole screen
+    - `MatTrans` - for matrix transformations
+    - `Layer` - draws its ops onto a blank buffer that can have effects applied afterwards
+"""
 from . import _basey
 from typing import Self, overload
 from abc import ABC, abstractmethod
@@ -12,6 +20,7 @@ __all__ = [
     'Trans',
         'Vec2',
         'MatTrans',
+        'Layer',
     'Op',
         'NormalisedOp',
         'OpList',
@@ -61,6 +70,8 @@ class TransFlags(IntEnum):
     """Is a TransGroup"""
     Matrix = 0b10
     """Is a matrix transformation"""
+    Layer = 0b100
+    """Is a layer transformation"""
 
 
 class Trans(ABC):
@@ -86,8 +97,10 @@ class Trans(ABC):
 
     def __iter__(self):
         return iter((self,))
+    def flat(self):
+        yield self
     def flatten(self):
-        return [self]
+        return list(self.flat())
 
 class MatTrans(Trans, _basey.Base):
     __slots__ = ['mat']
@@ -98,6 +111,16 @@ class MatTrans(Trans, _basey.Base):
 
     def apply(self, mat: np.ndarray, crop, defSmth: bool):
         return mat @ self.mat, crop, defSmth
+
+class Layer(Trans):
+    __slots__ = ['mat']
+    flags = TransFlags.Layer
+
+    @abstractmethod
+    def effect(self, mat: np.ndarray, defSmth: bool): ...
+
+    def apply(self, mat: np.ndarray, crop, defSmth: bool):
+        pass # TODO: This
 
 class Vec2(MatTrans):
     __slots__ = ['pos']
@@ -211,10 +234,11 @@ class TransGroup(Trans):
         if not self._fixed:
             self.fix()
         return iter(self.membs)
-    def flatten(self):
+    def flat(self):
         if not self._fixed:
             self.fix()
-        return self.membs
+        for m in self.membs:
+            yield from m.flat()
 
 
 class Op(ABC, _basey.Base):
@@ -248,8 +272,10 @@ class Op(ABC, _basey.Base):
 
     def __iter__(self):
         return iter((self,))
+    def flat(self):
+        yield self
     def flatten(self):
-        return [self]
+        return list(self.flat())
 
 class NormalisedBase:
     def rect(self):
@@ -381,10 +407,11 @@ class OpList(Op, NormalisedBase):
         if not self._fixed:
             self.fix()
         return iter(self.ops)
-    def flatten(self):
+    def flat(self):
         if not self._fixed:
             self.fix()
-        return self.ops
+        for o in self.ops:
+            yield from o.flat()
 
 class TransOp(Op, _basey.Base, NormalisedBase):
     __slots__ = ['op', 'trans']
@@ -411,8 +438,8 @@ class TransOp(Op, _basey.Base, NormalisedBase):
 
     def __iter__(self):
         return iter(self.op)
-    def flatten(self):
-        return self.op
+    def flat(self):
+        yield from self.op.flat()
 
     def rect(self):
         """Returns a tuple in the format (topleft_x, topleft_y, width, height)"""
