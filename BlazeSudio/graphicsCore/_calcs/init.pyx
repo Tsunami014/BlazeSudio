@@ -6,7 +6,7 @@ from libc.stdint cimport uint32_t
 from cython.parallel import prange
 __cimport_types__ = [cnp.ndarray]
 
-cdef unsigned int THRESH = 512
+cdef unsigned int THRESH = 256
 
 cdef inline void blend(unsigned char* pixel,
          unsigned char rcol, unsigned char gcol, unsigned char bcol,

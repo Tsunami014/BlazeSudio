@@ -18641,7 +18641,7 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
 }
 
 /* "BlazeSudio/graphicsCore/_calcs/init.pyx":11
- * cdef unsigned int THRESH = 512
+ * cdef unsigned int THRESH = 256
  * 
  * cdef inline void blend(unsigned char* pixel,             # <<<<<<<<<<<<<<
  *          unsigned char rcol, unsigned char gcol, unsigned char bcol,
@@ -18720,7 +18720,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_6_calcs_4init_blen
   __pyx_L3:;
 
   /* "BlazeSudio/graphicsCore/_calcs/init.pyx":11
- * cdef unsigned int THRESH = 512
+ * cdef unsigned int THRESH = 256
  * 
  * cdef inline void blend(unsigned char* pixel,             # <<<<<<<<<<<<<<
  *          unsigned char rcol, unsigned char gcol, unsigned char bcol,
@@ -27898,7 +27898,7 @@ __Pyx_RefNannySetupContext("PyInit_init", 0);
  * from cython.parallel import prange
  * __cimport_types__ = [cnp.ndarray]             # <<<<<<<<<<<<<<
  * 
- * cdef unsigned int THRESH = 512
+ * cdef unsigned int THRESH = 256
 */
   __pyx_t_4 = __Pyx_PyList_Pack(1, ((PyObject *)__pyx_mstate_global->__pyx_ptype_5numpy_ndarray)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
@@ -27908,11 +27908,11 @@ __Pyx_RefNannySetupContext("PyInit_init", 0);
   /* "BlazeSudio/graphicsCore/_calcs/init.pyx":9
  * __cimport_types__ = [cnp.ndarray]
  * 
- * cdef unsigned int THRESH = 512             # <<<<<<<<<<<<<<
+ * cdef unsigned int THRESH = 256             # <<<<<<<<<<<<<<
  * 
  * cdef inline void blend(unsigned char* pixel,
 */
-  __pyx_v_10BlazeSudio_12graphicsCore_6_calcs_4init_THRESH = 0x200;
+  __pyx_v_10BlazeSudio_12graphicsCore_6_calcs_4init_THRESH = 0x100;
 
   /* "BlazeSudio/graphicsCore/_calcs/init.pyx":1
  * # cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True, initializedcheck=False             # <<<<<<<<<<<<<<
