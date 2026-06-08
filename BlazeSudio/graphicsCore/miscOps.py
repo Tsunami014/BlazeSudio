@@ -1,17 +1,16 @@
-from .base import Op, NormalisedOp, OpFlags, Vec2, Trans
+from .base import Op, NormalisedOp, OpFlags, Vec2, Trans, IDENTITY
 from . import _basey, _blit, _misc
-from .core import _SurfaceBase
 from PIL import Image as _PillowImg
 from typing import overload
 import numpy as np
+import math
 
 __all__ = [
     'Overlay',
         'Fill',
     'Crop',
-    'Surf',
-        'Image',
-        'Preserve'
+    'Image',
+    'Rend',
 ]
 
 class Overlay(Op):
@@ -22,7 +21,6 @@ class Overlay(Op):
         self.flags = OpFlags.NoFlags
     def apply(self, _, arr: np.ndarray, __, ___):
         _misc.fill_arr(arr, self.col)
-        return arr
 
 class Fill(Overlay):
     __slots__ = []
@@ -37,14 +35,12 @@ class Crop(Trans, _basey.Base):
 
     @overload
     def __init__(self,
-            x: float, y: float, wid: float, hei: float,
-            *, normalise_x = None, normalise_y = None):
+            x: float, y: float, wid: float, hei: float, **norm):
         """Crop the sub-ops to the rect (x, y, wid, hei) (as a union with the parent crops)"""
     @overload
-    def __init__(self, pos, sze,
-            *, normalise_x = None, normalise_y = None):
+    def __init__(self, pos, sze, **norm):
         """Crop the sub-ops to the rect (pos, sze) (as a union with the parent crops)"""
-    def __init__(self, *args, normalise_x = None, normalise_y = None):
+    def __init__(self, *args, **norm):
         match len(args):
             case 2:
                 r = [*args[0], *args[1]]
@@ -55,10 +51,10 @@ class Crop(Trans, _basey.Base):
                     f'Incorrect number of arguments! Expected 2 or 4, found {len(args)}!'
                 )
         self.pos = list(r[:2])
-        if normalise_x is not None:
-            self.pos[0] += r[2] * normalise_x
-        if normalise_y is not None:
-            self.pos[1] += r[3] * normalise_y
+        if (nx := norm.get('normalise_x', None)) is not None:
+            self.pos[0] += r[2] * nx
+        if (ny := norm.get('normalise_y', None)) is not None:
+            self.pos[1] += r[3] * ny
         self.size = (r[2]-r[0], r[3]-r[1])
 
     @property
@@ -88,7 +84,7 @@ class _ImageBase(NormalisedOp):
     def __init__(self, **kwargs):
         self._p = Vec2(0, 0)
         self._cropop = Crop((0, 0), self._sze)
-        NormalisedOp.__init__(self, **kwargs)
+        super().__init__(**kwargs)
     @property
     def pos(self):
         return self._p
@@ -101,37 +97,18 @@ class _ImageBase(NormalisedOp):
         if args is not None:
             mat, crop, defSmth = args
             _blit.blit(mat @ self._p.mat, self.arr, arr, crop)
-        return arr
 
     def rect(self):
         return (*self._p, *self._sze)
     def _translate(self, *args):
         self._p += args
 
-class Surf(_SurfaceBase, _ImageBase):
-    """A surface for running operations on, allows ops to be cached"""
-    @overload
-    def __init__(self, wid: float, height: float, *, normalise_x = None, normalise_y = None): ...
-    @overload
-    def __init__(self, sze, *, normalise_x = None, normalise_y = None): ...
-    def __init__(self, *args, **kwargs):
-        match len(args):
-            case 1:
-                _SurfaceBase.__init__(self, args[0])
-            case 2:
-                _SurfaceBase.__init__(self, args)
-            case _:
-                raise TypeError(
-                    f'Incorrect number of arguments! Expected 1 or 2, found {len(args)}!'
-                )
-        _ImageBase.__init__(self, **kwargs)
-
 class Image(_ImageBase):
     __slots__ = ['_im', '_arr']
-    def __init__(self, pth: str, *, normalise_x = None, normalise_y = None):
+    def __init__(self, pth: str, **norm):
         self._arr = None
         self.image = _PillowImg.open(pth)
-        super().__init__(normalise_x=normalise_x, normalise_y=normalise_y)
+        super().__init__(**norm)
 
     @property
     def _sze(self):
@@ -152,17 +129,20 @@ class Image(_ImageBase):
         else:
             self._im = new
 
-def Preserve(op: NormalisedOp) -> Surf:
-    if not hasattr(op, 'rect'):
-        raise ValueError(
-            'Op is not normalised - it has no rect function!'
-        )
-    x, y, wid, hei = op.rect()
-    if x is None:
-        raise ValueError(
-            'Op seems normalised but rect returns None!'
-        )
-    s = Surf(wid, hei)(op)
-    s._p = x, y
-    return s
+class Rend(_ImageBase):
+    def __init__(self, op: NormalisedOp, *, smooth = True, **norm):
+        if not hasattr(op, 'rect'):
+            raise ValueError(
+                'Op is not normalised - it has no rect function!'
+            )
+        l, t, r, b = op.rect()
+        if l is None:
+            raise ValueError(
+                'Op seems normalised but rect returns None!'
+            )
+        self._sze = (math.ceil(r-l), math.ceil(b-t))
+        self.arr = np.zeros((self._sze[1], self._sze[0], 4), np.uint8)
+        nop = op @ (-l, -t)
+        nop.apply(IDENTITY, self.arr, (0, 0, *self._sze), smooth)
+        super().__init__(**norm)
 

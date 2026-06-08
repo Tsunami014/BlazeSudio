@@ -152,7 +152,6 @@ class _FontDrawOp(NormalisedOp):
                 arrs.append((char.bitmap*(self.col[-1]/255)).clip(0, 255).astype(np.uint8))
                 _blit.blit(args[0], np.stack(arrs, axis=-1), arr, args[1])
             xoffs += char.advance
-        return arr
 
 class Font:
     __slots__ = ["face", "_pth", "cache"]

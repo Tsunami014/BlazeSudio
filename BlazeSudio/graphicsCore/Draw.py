@@ -63,14 +63,13 @@ class Polygon(NormalisedOp):
     def apply(self, mat: np.ndarray, arr: np.ndarray, crop, defSmth) -> np.ndarray:
         ps = self.ps
         if len(ps) < 2:
-            return arr
+            return
         A = mat[:2, :2]
         sx2 = A[0,0]*A[0,0] + A[1,0]*A[1,0]
         sy2 = A[0,1]*A[0,1] + A[1,1]*A[1,1]
         t = self.thickness * ((sx2 + sy2) * 0.5) ** 0.5
         newps = self._warpPs(mat, ps)
         _calcs.drawPolyLine(arr, newps, t, self.col, crop, self.round)
-        return arr
 
 class Line(Polygon):
     @overload
@@ -210,7 +209,6 @@ class Rect(Polygon):
         else:
             # If not, draw the lines
             super().apply(mat, arr, crop, defSmth)
-        return arr
 
 
 # TODO: Add an input for rotation
@@ -294,7 +292,6 @@ class Elipse(NormalisedOp):
             raise NotImplementedError(
                 'Cannot have projective transform with circles yet!'
             )
-        return arr
 
 class Circle(Elipse):
     @overload

@@ -79,7 +79,7 @@ class Trans(ABC):
     flags = TransFlags.NoFlags
 
     @abstractmethod
-    def apply(self, mat: np.ndarray, crop: tuple, defSmth: bool) -> tuple[np.ndarray, tuple, bool]: ...
+    def apply(self, mat: np.ndarray, crop: tuple, defSmth: bool): ...
 
     def __pos__(self) -> Self: return self
     def __add__(self, oth) -> 'Trans':
@@ -245,7 +245,7 @@ class Op(ABC, _basey.Base):
     __slots__ = ['flags']
 
     @abstractmethod
-    def apply(self, mat: np.ndarray, arr: np.ndarray, crop, defSmth: bool) -> np.ndarray: ...
+    def apply(self, mat: np.ndarray, arr: np.ndarray, crop, defSmth: bool): ...
 
     def frozen(self) -> Self:
         """Get the frozen verson of this operation"""
@@ -391,8 +391,7 @@ class OpList(Op, NormalisedBase):
         if not self._fixed:
             self.fix() # Lazily fix it so it won't every new addition
         for op in self.ops:
-            arr = op.apply(mat, arr, crop, defSmth)
-        return arr
+            op.apply(mat, arr, crop, defSmth)
 
     def __add__(self, oth) -> 'OpList':
         if not self.flags & OpFlags.List:
@@ -431,10 +430,10 @@ class TransOp(Op, _basey.Base, NormalisedBase):
     def apply(self, mat: np.ndarray, arr: np.ndarray, crop, defSmth):
         if self.trans is not None:
             args = self.trans.apply(mat, crop, defSmth)
-            if args is None:
-                return arr
-            return self.op.apply(args[0], arr, *args[1:])
-        return self.op.apply(mat, arr, crop, defSmth)
+            if args is not None:
+                self.op.apply(args[0], arr, *args[1:])
+        else:
+            self.op.apply(mat, arr, crop, defSmth)
 
     def __iter__(self):
         return iter(self.op)
@@ -453,4 +452,3 @@ class TransOp(Op, _basey.Base, NormalisedBase):
             return None, None, None, None
         box = self._warpbbx(args[0], (r[0], r[1], r[2]+r[0],r[3]+r[1]), (0,0,0,0))
         return box[0], box[1], box[2]-box[0], box[3]-box[1]
-

@@ -12,8 +12,6 @@ class _SurfaceBase:
     def __init__(self, sze):
         self._sze = sze
         self.op: Op|None = None
-        self._cachedout = None
-        self._cachedarr = None
         self.smooth = False
 
     @overload
@@ -43,11 +41,7 @@ class _SurfaceBase:
                 raise TypeError(
                     f'Too many arguments! Expected 1-2, found {len(args)}!'
                 )
-
-        if self._sze != sze:
-            self._cachedout = None
-            self._cachedarr = None
-            self._sze = sze
+        self._sze = sze
 
     @property
     def size(self) -> Iterable[int]:
@@ -59,25 +53,10 @@ class _SurfaceBase:
     def __call__(self, other: Op) -> Self:
         if self.op != other:
             self.op = other
-            self._cachedout = None
         return self
-
-    @property
-    def arr(self) -> np.ndarray:
-        if self._cachedout is None:
-            if self._cachedarr is None:
-                self._cachedarr = np.ndarray((self._sze[1], self._sze[0], 4), np.uint8)
-            if self.op is not None:
-                self._cachedout = self.op.apply(IDENTITY, self._cachedarr, (0, 0, *self._sze), self.smooth)
-            else:
-                self._cachedout = self._cachedarr
-        return self._cachedout
 
     def clear(self):
         self.op = None
-        self._cachedout = None
-    def clearsurf(self):
-        self._cachedarr = None
 
 
 _PIXFMT = sdl2.SDL_PIXELFORMAT_ABGR8888 # NOTE: This *may* display funny on big-endian systems
@@ -134,14 +113,14 @@ class _CoreCls(_SurfaceBase):
     def resize(self, *args):
         if len(args) == 0:
             args = (0, 0)
-        super().resize(*args)
         if self._sze[0] == 0 and self._sze[1] == 0:
             sdl2.SDL_SetWindowFullscreen(self._mainWin, sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP)
             w, h = ctypes.c_int(), ctypes.c_int()
             sdl2.SDL_GetWindowSize(self._mainWin, ctypes.byref(w), ctypes.byref(h))
-            self._sze = (w.value, h.value)
+            args = (w.value, h.value)
         else:
             sdl2.SDL_SetWindowSize(self._mainWin, *self._sze)
+        super().resize(*args)
 
         sdl2.SDL_DestroyTexture(self._texture)
         self._texture = sdl2.SDL_CreateTexture(self._renderer, _PIXFMT, sdl2.SDL_TEXTUREACCESS_STREAMING, *self._sze)
@@ -188,11 +167,27 @@ class _CoreCls(_SurfaceBase):
 
     def rend(self):
         """
-        Render the entire screen.
+        Render the entire screen by writing directly to SDL memory.
         """
-        pitch = ctypes.c_int(self.arr.strides[0])
-        ptr = ctypes.c_void_p(self.arr.ctypes.data)
-        sdl2.SDL_UpdateTexture(self._texture, None, ptr, pitch)
+        if self.op is None:
+            sdl2.SDL_RenderClear(self._renderer)
+            sdl2.SDL_RenderPresent(self._renderer)
+            return
+
+        pixels = ctypes.c_void_p()
+        pitch = ctypes.c_int()
+        
+        sdl2.SDL_LockTexture(self._texture, None, ctypes.byref(pixels), ctypes.byref(pitch))
+        buf = (ctypes.c_uint8 * (self._sze[1] * pitch.value)).from_address(pixels.value)
+        arr = np.ndarray(
+            shape=(self._sze[1], self._sze[0], 4),
+            dtype=np.uint8,
+            buffer=buf,
+            strides=(pitch.value, 4, 1) 
+        )
+        self.op.apply(IDENTITY, arr, (0, 0, *self._sze), self.smooth)
+        
+        sdl2.SDL_UnlockTexture(self._texture)
         sdl2.SDL_RenderCopy(self._renderer, self._texture, None, None)
         sdl2.SDL_RenderPresent(self._renderer)
 

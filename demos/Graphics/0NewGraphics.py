@@ -83,7 +83,7 @@ def main():
                 perframe = _2perframe
             case 3: # Images
                 im = Op.Image("text.png")
-                im2 = Op.Surf(im.rsze*2, **Op.Anchors.Middle)(im @ Op.Trans.Scale(2, 2))
+                im2 = Op.Rend(im @ Op.Trans.Scale(2, 2))
                 def _3perframe(f):
                     Core(ops +
                     (im3 := im2 @ Op.Trans.Rotate(f/2)) @ (
