@@ -14,6 +14,7 @@ def main():
     def PRINT_fps(fps):
         print(f"Average FPS: \033[94m{round(fps, 3)}\033[m", end="\r")
 
+    import time
     import sys
     rot = 'rot' in sys.argv
 
@@ -21,15 +22,14 @@ def main():
 
     fnt = Font.SysFonts.default()
     fnt.size = 80
-    c = AvgClock()
+    c = AvgClock(3)
     cur = None
     f = 0
-    times = []
     perframe = None
-    avgFPS = 0
+    start = time.time()
 
     def changeOp(new):
-        nonlocal cur, f, times, perframe, avgFPS
+        nonlocal cur, f, c, perframe, avgFPS
         if new == cur:
             return
         PRINT_run("new graphics engine", 92, new)
@@ -37,7 +37,7 @@ def main():
         avgFPS = 0
         cur = new
         f = 1
-        times = []
+        c = AvgClock()
 
         ops = Op.Fill(Col.Background)
         match new:
@@ -100,7 +100,7 @@ def main():
                 perframe = _4perframe
             case 5: # Font
                 def _5perframe(f):
-                    Core(ops + fnt("FPS: "+str(avgFPS), (255, 125, 0, 255))@Op.Trans.Translate(80, 80))
+                    Core(ops + fnt("FPS: "+str(c.get_fps()), (255, 125, 0, 255))@Op.Trans.Translate(80, 80))
                 perframe = _5perframe
             case 6: # Effects
                 def _6perframe(f):
@@ -139,16 +139,13 @@ def main():
             Core.rend()
         c.tick()
         if f % 20 == 0:
-            times.append(c.get_fps())
-            if rot and len(times) > 20:
+            if rot and time.time() - start > 3:
                 if cur == 0:
                     break
+                start = time.time()
                 nxtchng = cur+1 if cur <= 5 else 0
-            else:
-                times = times[-20:]
-            avgFPS = sum(times)/len(times)
-            PRINT_fps(avgFPS)
-            Core.title = f'FPS: {avgFPS}'
+            PRINT_fps(c.get_fps())
+            Core.title = f'FPS: {c.get_fps()}'
         f = (f + 1) % 720
 
     Core.Quit()
@@ -166,6 +163,8 @@ def main():
     cache = None
     fnt = pygame.font.Font(None, 80)
     times = []
+    start = time.time()
+    avgFPS = 0
     r = True
     nxtchng = None
     while r:
@@ -270,12 +269,13 @@ def main():
         c.tick()
         if f % 20 == 0:
             times.append(c.get_fps())
-            if rot and len(times) > 20:
+            if rot and time.time() - start > 3 and len(times) >= 30:
                 if cur == 0:
                     break
+                start = time.time()
                 nxtchng = cur+1 if cur <= 5 else 0
             else:
-                times = times[-20:]
+                times = times[-30:]
             avgFPS = sum(times)/len(times)
             PRINT_fps(avgFPS)
             pygame.display.set_caption(f'FPS: {avgFPS}')

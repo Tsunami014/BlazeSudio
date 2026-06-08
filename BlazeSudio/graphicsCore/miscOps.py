@@ -1,5 +1,5 @@
 from .base import Op, NormalisedOp, OpFlags, Vec2, Trans
-from . import _basey, _blit, _calcs
+from . import _basey, _blit, _misc
 from .core import _SurfaceBase
 from PIL import Image as _PillowImg
 from typing import overload
@@ -21,7 +21,7 @@ class Overlay(Op):
         self.col = np.array(col, np.uint8)
         self.flags = OpFlags.NoFlags
     def apply(self, _, arr: np.ndarray, __, ___):
-        _calcs.fill_arr(arr, self.col)
+        _misc.fill_arr(arr, self.col)
         return arr
 
 class Fill(Overlay):

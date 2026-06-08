@@ -49,7 +49,6 @@ class AvgClock(Clock):
             secs: The number of seconds to average the fps over. Defaults to 5
         """
         self.secs = secs
-        self.goodEnough = False
         self._frameTimes = deque()
         super().__init__()
 
@@ -66,17 +65,17 @@ class AvgClock(Clock):
         # drop any frames older than time s
         cutoff = self._lastTime - self.secs
         while self._frameTimes and self._frameTimes[0] < cutoff:
-            self.goodEnough = True
             self._frameTimes.popleft()
 
     def get_fps(self):
         """
         Returns the average FPS over the last secs seconds.
         """
-        if not self.goodEnough:
-            return self.get_fps_inst() # If the specified time hasn't passed, get the instant FPS
         count = len(self._frameTimes)
-        return count / self.secs if self.secs > 0 else 0
+        if count == 0:
+            return 0
+        time = self._lastTime - self._frameTimes[0]
+        return count / time if time > 0 else 0
 
     def get_fps_inst(self):
         """

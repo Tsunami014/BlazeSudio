@@ -1,11 +1,12 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, initializedcheck=False
 import numpy as np
 cimport numpy as cnp
+from libc.stdint cimport uint32_t
 from BlazeSudio.speed.time cimport Timer
 from cython.parallel import prange
 __cimport_types__ = [cnp.ndarray]
 
-cdef unsigned int THRESH = 300
+cdef unsigned int THRESH = 512
 
 cdef cnp.ndarray[cnp.float64_t, ndim=2] invert_affine_matrix(mat):
     cdef double a, b, tx
@@ -48,10 +49,7 @@ cdef inline void ezblit(
                 if sa != 0:
                     dstrow = &dst_mv[y, x, 0]
                     if sa == 255:
-                        dstrow[0] = srcrow[0]
-                        dstrow[1] = srcrow[1]
-                        dstrow[2] = srcrow[2]
-                        dstrow[3] = 255
+                        (<uint32_t*>dstrow)[0] = srcrow[0] | (<uint32_t>srcrow[1] << 8) | (<uint32_t>srcrow[2] << 16) | (<uint32_t>255 << 24)
                     else:
                         inva = 255 - sa
                         dstrow[0] = <unsigned char>((srcrow[0]*sa + dstrow[0]*inva) >> 8)
@@ -83,10 +81,7 @@ cdef inline void ezblit(
                     if sa != 0:
                         dstrow = &dst_mv[y, x, 0]
                         if sa == 255:
-                            dstrow[0] = srcrow[0]
-                            dstrow[1] = srcrow[1]
-                            dstrow[2] = srcrow[2]
-                            dstrow[3] = 255
+                            (<uint32_t*>dstrow)[0] = srcrow[0] | (<uint32_t>srcrow[1] << 8) | (<uint32_t>srcrow[2] << 16) | (<uint32_t>255 << 24)
                         else:
                             inva = 255 - sa
                             dstrow[0] = <unsigned char>((srcrow[0]*sa + dstrow[0]*inva) >> 8)

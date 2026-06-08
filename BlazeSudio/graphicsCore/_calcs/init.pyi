@@ -4,9 +4,6 @@ import numpy as cnp
 
 __cimport_types__ = [cnp.ndarray]
 
-def fill_arr(arr: cnp.ndarray, col: cnp.ndarray):
-    ...
-
 def drawLinePoly(arr: cnp.ndarray, p1: memoryview, p2: memoryview, thickness: float, col: cnp.ndarray, crop):
     ...
 
