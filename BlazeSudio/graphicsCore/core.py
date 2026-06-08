@@ -8,59 +8,8 @@ import sdl2
 __all__ = ['Core']
 
 
-class _SurfaceBase:
-    def __init__(self, sze):
-        self._sze = sze
-        self.op: Op|None = None
-        self.smooth = False
-
-    @overload
-    def resize(self, sze: Iterable[int] ,/):
-        """
-        Resize the surface
-
-        Args:
-            sze (Iterable[int]): The new size
-        """
-    @overload
-    def resize(self, width: int, height: int ,/):
-        """
-        Resize the surface
-
-        Args:
-            width (int): The new width
-            height (int): The new height
-        """
-    def resize(self, *args):
-        match len(args):
-            case 1:
-                sze = args[0]
-            case 2:
-                sze = (args[0], args[1])
-            case _:
-                raise TypeError(
-                    f'Too many arguments! Expected 1-2, found {len(args)}!'
-                )
-        self._sze = sze
-
-    @property
-    def size(self) -> Iterable[int]:
-        return self._sze
-    @size.setter
-    def size(self, newSze):
-        self.resize(newSze)
-
-    def __call__(self, other: Op) -> Self:
-        if self.op != other:
-            self.op = other
-        return self
-
-    def clear(self):
-        self.op = None
-
-
 _PIXFMT = sdl2.SDL_PIXELFORMAT_ABGR8888 # NOTE: This *may* display funny on big-endian systems
-class _CoreCls(_SurfaceBase):
+class _CoreCls:
     def __new__(cls): # Incase someone weird gets ahold of this class
         if not hasattr(cls, '_instance'):
             cls._instance = super().__new__(cls)
@@ -78,7 +27,10 @@ class _CoreCls(_SurfaceBase):
             sdl2.SDL_RENDERER_ACCELERATED)
         self._texture = sdl2.SDL_CreateTexture(self._renderer, _PIXFMT, sdl2.SDL_TEXTUREACCESS_STREAMING, 800, 500)
 
-        super().__init__((800, 500))
+        self._arr = None
+        self._sze = (800, 500)
+        self.op: Op|None = None
+        self.smooth = False
 
     def Quit(self):
         """
@@ -111,19 +63,42 @@ class _CoreCls(_SurfaceBase):
             height (int): The height of the new window
         """
     def resize(self, *args):
-        if len(args) == 0:
-            args = (0, 0)
-        if self._sze[0] == 0 and self._sze[1] == 0:
+        match len(args):
+            case 0:
+                sze = (0, 0)
+            case 1:
+                sze = args[0]
+            case 2:
+                sze = (args[0], args[1])
+            case _:
+                raise TypeError(
+                    f'Too many arguments! Expected 1-2, found {len(args)}!'
+                )
+        if sze[0] == 0 and sze[1] == 0:
             sdl2.SDL_SetWindowFullscreen(self._mainWin, sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP)
             w, h = ctypes.c_int(), ctypes.c_int()
             sdl2.SDL_GetWindowSize(self._mainWin, ctypes.byref(w), ctypes.byref(h))
-            args = (w.value, h.value)
+            sze = (w.value, h.value)
         else:
             sdl2.SDL_SetWindowSize(self._mainWin, *self._sze)
-        super().resize(*args)
+        self._sze = sze
 
+        if self._arr is not None:
+            sdl2.SDL_UnlockTexture(self._texture)
+            self._arr = None
         sdl2.SDL_DestroyTexture(self._texture)
         self._texture = sdl2.SDL_CreateTexture(self._renderer, _PIXFMT, sdl2.SDL_TEXTUREACCESS_STREAMING, *self._sze)
+
+    def __del__(self):
+        if self._arr is not None:
+            sdl2.SDL_UnlockTexture(self._texture)
+
+    @property
+    def size(self) -> Iterable[int]:
+        return self._sze
+    @size.setter
+    def size(self, newSze):
+        self.resize(newSze)
 
     @property
     def resizable(self) -> bool:
@@ -174,22 +149,40 @@ class _CoreCls(_SurfaceBase):
             sdl2.SDL_RenderPresent(self._renderer)
             return
 
-        pixels = ctypes.c_void_p()
-        pitch = ctypes.c_int()
-        
-        sdl2.SDL_LockTexture(self._texture, None, ctypes.byref(pixels), ctypes.byref(pitch))
-        buf = (ctypes.c_uint8 * (self._sze[1] * pitch.value)).from_address(pixels.value)
-        arr = np.ndarray(
-            shape=(self._sze[1], self._sze[0], 4),
-            dtype=np.uint8,
-            buffer=buf,
-            strides=(pitch.value, 4, 1) 
-        )
-        self.op.apply(IDENTITY, arr, (0, 0, *self._sze), self.smooth)
-        
+        if self._arr is None:
+            pixels = ctypes.c_void_p()
+            pitch  = ctypes.c_int()
+            sdl2.SDL_LockTexture(self._texture, None, ctypes.byref(pixels), ctypes.byref(pitch))
+            raw = (ctypes.c_uint8 * (self._sze[1] * pitch.value)).from_address(pixels.value)
+            self._arr = (np.ndarray(
+                shape=(self._sze[1], self._sze[0], 4),
+                dtype=np.uint8,
+                buffer=raw,
+                strides=(pitch.value, 4, 1),
+            ), pixels.value)
+
+        self.op.apply(IDENTITY, self._arr[0], (0, 0, *self._sze), self.smooth)
+
         sdl2.SDL_UnlockTexture(self._texture)
         sdl2.SDL_RenderCopy(self._renderer, self._texture, None, None)
         sdl2.SDL_RenderPresent(self._renderer)
+        pixels = ctypes.c_void_p()
+        pitch = ctypes.c_int()
+        sdl2.SDL_LockTexture(self._texture, None, ctypes.byref(pixels), ctypes.byref(pitch))
+        if pixels.value != self._arr[1]:
+            self._arr = None # Rebuild
+
+    def clear(self):
+        self.op = None
+        self._arr = None
+    def redraw(self):
+        self._arr = None
+
+    def __call__(self, other: Op) -> Self:
+        if self.op != other:
+            self.op = other
+            self._arr = None
+        return self
 
     @property
     def title(self) -> str:
