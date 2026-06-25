@@ -2,7 +2,8 @@
 def main():
     from BlazeSudio.graphicsCore import Draw
     from BlazeSudio.GUI import OpElm
-    from BlazeSudio.GUI import UI, Lays, Elms, Input, Col, Term
+    from BlazeSudio.GUI import UI, Lays, Elms, Font, Input, Col, Term
+    Font.SysFonts.set_default(italic=True, bold=False, monospace=False, weight='normal')
 
     txt = Elms.Text("")
     clks = 0

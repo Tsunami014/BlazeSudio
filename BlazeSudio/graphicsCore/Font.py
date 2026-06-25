@@ -8,6 +8,9 @@ from . import _blit
 import platform
 import os
 
+from typing import overload
+from collections.abc import Callable, Iterable
+
 __all__ = [
     'SysFonts', 'Font'
 ]
@@ -20,12 +23,59 @@ class FChar:
     xoffs: float
     yoffs: float
 
-class SysFonts:
-    __slots__ = []
-    _fs: object
-    _def: object
+_WEIGHT_KEYWORDS = {
+    'extrablack': 'black', 'ultrablack': 'black', 'black': 'black', 'heavy': 'black',
+    'extrabold': 'extrabold', 'ultrabold': 'extrabold',
+    'semibold': 'semibold', 'demibold': 'semibold',
+    'bold': 'bold',
+    'medium': 'medium',
+    'extralight': 'extralight', 'ultralight': 'extralight',
+    'light': 'light',
+    'thin': 'thin', 'hairline': 'thin',
+    'regular': 'regular', 'normal': 'regular', 'book': 'regular', 'roman': 'regular',
+}
 
+
+@dataclass(frozen=True)
+class FontInfo:
+    """Metadata describing a single font file installed on the system, used by
+    SysFonts to select fonts by properties rather than by filename."""
+    path: str
+    family: str
+    style: str
+    italic: bool
+    bold: bool
+    weight: str
+    monospace: bool
+    scalable: bool
+    condensed: bool
+
+class SysFonts:
     EXTRA_FONT_DIRS = []
+    _fonts_cache = None
+    _default_override = None
+    _default = None
+
+    @overload
+    def __new__(cls,
+                families: str | Iterable[str] | None = None,
+                *,
+                italic: bool | None = None,
+                bold: bool | None = False,
+                weight: str | None = None,
+                monospace: bool | None = None,
+                scalable: bool | None = None,
+                condensed: bool | None = None,
+                exclude_families: str | Iterable[str] | None = None,
+                name_contains: str | None = None,
+                where: Callable[[FontInfo], bool] | None = None,
+                sze: float = 24) -> 'Font':
+        ...
+    def __new__(cls, families=None, *, sze=24, **kwargs):
+        path = cls._pick_path(families=families, **kwargs)
+        if path is None:
+            path = cls.default_path()
+        return Font(path, sze=sze)
 
     @classmethod
     def _iter_fonts(cls):
@@ -56,49 +106,176 @@ class SysFonts:
                     yield os.path.join(root, f)
 
     @classmethod
-    def get_all(cls) -> dict[str, str]:
-        """Returns a mapping of font names to their location"""
-        if getattr(cls, '_fs', None) is None:
-            cls._fs = dict()
-            for f in cls._iter_fonts():
-                if f.lower().endswith((".ttf", ".otf")):
-                    cls._fs[f[f.rindex('/')+1:f.rindex('.')]] = f
-        if len(cls._fs) == 0:
+    def _load_info(cls, path: str) -> FontInfo | None:
+        """Opens a font file just far enough to read its metadata (no glyphs loaded)"""
+        def _decode(x) -> str:
+            """freetype-py hands back bytes for name fields - normalise to str"""
+            if isinstance(x, bytes):
+                return x.decode('utf-8', 'ignore')
+            return x or ""
+        try:
+            face = freetype.Face(path)
+        except Exception:
+            return None
+        family = _decode(face.family_name)
+        if not family:
+            return None
+        style = _decode(face.style_name)
+        style_flags = face.style_flags
+        face_flags = face.face_flags
+        style_lower = style.lower()
+        is_bold = bool(style_flags & freetype.FT_STYLE_FLAG_BOLD)
+        # FT_STYLE_FLAG_ITALIC misses "Oblique" styles in some fonts, so also keyword-match
+        is_italic = bool(style_flags & freetype.FT_STYLE_FLAG_ITALIC) \
+            or 'italic' in style_lower or 'oblique' in style_lower
+
+        hay = f"{style} {family}".lower()
+        for kw, canon in _WEIGHT_KEYWORDS.items():
+            if kw in hay:
+                wei = canon
+                break
+        else:
+            wei = 'bold' if is_bold else 'regular'
+
+        return FontInfo(
+            path=path,
+            family=family,
+            style=style,
+            italic=is_italic,
+            bold=is_bold,
+            weight=wei,
+            monospace=bool(face_flags & freetype.FT_FACE_FLAG_FIXED_WIDTH),
+            scalable=bool(face_flags & freetype.FT_FACE_FLAG_SCALABLE),
+            condensed=any(k in style_lower for k in ('condensed', 'narrow', 'compressed')),
+        )
+
+    @classmethod
+    def _all_fonts(cls) -> list[FontInfo]:
+        if cls._fonts_cache is None:
+            seen = set()
+            infos = []
+            for path in cls._iter_fonts():
+                if not path.lower().endswith((".ttf", ".otf", ".ttc")):
+                    continue
+                if path in seen:
+                    continue
+                seen.add(path)
+                info = cls._load_info(path)
+                if info is not None:
+                    infos.append(info)
+            infos.sort(key=lambda i: (i.family.lower(), i.style.lower()))
+            cls._fonts_cache = infos
+        if len(cls._fonts_cache) == 0:
             raise ValueError(
                 'No fonts were found on this system!'
             )
-        return cls._fs
+        return cls._fonts_cache
+
     @classmethod
     def clear(cls):
-        """Clears the cached mapping of font names to their locations"""
-        cls._fs = None
+        """Clears the cached font metadata, forcing the next lookup to rescan the system"""
+        cls._fonts_cache = None
     @classmethod
-    def __getitem__(cls, it: str) -> str|None:
-        """Get the location of a specific font by its name"""
-        if os.path.exists(it):
-            return it
-        return cls.get_all().get(it, None)
+    def list_fonts(cls) -> list[FontInfo]:
+        """Returns metadata for every font discovered on the system"""
+        return list(cls._all_fonts())
+
     @classmethod
-    def pick_path(cls, *options) -> str|None:
-        """Pick the first provided font name that exists and return the name"""
-        li = cls.get_all()
-        for opt in options:
-            if opt in li or os.path.exists(opt):
-                return opt
+    def families(cls) -> list[str]:
+        """Returns every distinct font family name available on the system, in case
+        you want to know what's available to pass as `families=...`"""
+        out = []
+        for info in cls._all_fonts():
+            if info.family not in out:
+                out.append(info.family)
+        return out
+
+    @staticmethod
+    def _matches(info: FontInfo, families, italic=None, bold=None, weight=None, monospace=None,
+                scalable=None, condensed=None, exclude_families=None, name_contains=None,
+                where=None) -> bool:
+        if families is not None:
+            fams = {families.lower()} if isinstance(families, str) else {f.lower() for f in families}
+            if info.family.lower() not in fams:
+                return False
+        if exclude_families is not None:
+            exf = {exclude_families.lower()} if isinstance(exclude_families, str) else {f.lower() for f in exclude_families}
+            if info.family.lower() in exf:
+                return False
+        if ((italic is not None and info.italic != italic) or
+            (bold is not None and info.bold != bold) or
+            (weight is not None and info.weight != _WEIGHT_KEYWORDS.get(weight.lower(), '')) or
+            (monospace is not None and info.monospace != monospace) or
+            (scalable is not None and info.scalable != scalable) or
+            (condensed is not None and info.condensed != condensed)):
+            return False
+        if name_contains is not None:
+            needle = name_contains.lower()
+            if needle not in info.family.lower() and needle not in info.style.lower():
+                return False
+        if where is not None and not where(info):
+            return False
+        return True
+
+    @classmethod
+    def _pick_path(cls, families=None, **kwargs) -> str | None:
+        # Shortcut: a single string that's already a real file path is used directly,
+        # same as the old behaviour of being able to pass an explicit font file.
+        if isinstance(families, str) and os.path.exists(families):
+            return families
+        for info in cls._all_fonts():
+            if cls._matches(info, families, **kwargs):
+                return info.path
         return None
+
     @classmethod
-    def pick(cls, *options) -> 'Font':
-        """Pick the first provided font that exists and return the Font object (will use default if none found)"""
-        return Font(cls.pick_path(*options))
+    @overload
+    def set_default(cls,
+                     families: str | Iterable[str] | None = None,
+                     *,
+                     italic: bool | None = None,
+                     bold: bool | None = None,
+                     weight: str | None = None,
+                     monospace: bool | None = None,
+                     scalable: bool | None = None,
+                     condensed: bool | None = None,
+                     exclude_families: str | Iterable[str] | None = None,
+                     name_contains: str | None = None,
+                     where: Callable[[FontInfo], bool] | None = None) -> None:
+        """
+        Sets the default font used everywhere a font of `None` is requested.
+
+        Call with no arguments at all to reset back to the ordinary system default.
+
+        If it doesn't work it may be because your criteria was too specific and it couldn't find a matching font.
+        """
     @classmethod
-    def default_path(cls) -> str|None:
-        """Gets the 'default' font path (the first one found on the system)"""
-        li = cls.get_all()
-        return li[list(li.keys())[0]]
+    def set_default(cls, families=None, **kwargs):
+        if families is None and (not kwargs or all(v is None for v in kwargs.values())):
+            cls._default_override = None
+            return
+        path = cls._pick_path(families=families, **kwargs)
+        if path is None:
+            cls._default_override = None
+        else:
+            cls._default_override = path
+
+    @classmethod
+    def default_path(cls) -> str:
+        """Gets the path of the current default font (the first one found on the
+        system, unless overridden with `set_default`)"""
+        if cls._default_override is not None:
+            return cls._default_override
+        if cls._default is None:
+            cls._default = cls._pick_path()
+            if cls._default is None:
+                cls._default = cls._all_fonts()[0].path
+        return cls._default
     @classmethod
     def default(cls) -> 'Font':
-        """Gets the 'default' font as a Font object (the first one found on the system)"""
+        """Gets the current default font as a Font object"""
         return Font(cls.default_path())
+
 
 class _FontDrawOp(NormalisedOp):
     __slots__ = ['_p', 'font', 'text', 'col', 'aligns', '_cache', '_cachehash']
@@ -165,8 +342,10 @@ class Font:
     @size.setter
     def size(self, size: int):
         self.face.set_pixel_sizes(0, size)
+        self.cache = dict()
     def set_size_pt(self, size: float):
         self.face.set_char_size(size * 64)
+        self.cache = dict()
         return self
 
     @property
@@ -205,8 +384,9 @@ class Font:
         if not txt:
             return []
         self.load(txt)
-        advs = [(i, self.cache[i].advance, self.cache[i].width) if i != '\n' else (i,0,0) for i in txt[:-1]] + \
-                [((c:=txt[-1]), (wid:=self.cache[c].width), wid)]
+        extent = lambda ch: self.cache[ch].xoffs + self.cache[ch].width
+        advs = [(i, self.cache[i].advance, extent(i)) if i != '\n' else (i,0,0) for i in txt[:-1]] + \
+                [((c:=txt[-1]), (ext:=extent(c)), ext)]
         if breakOnSpace:
             advs2 = []
             txt = ""
@@ -244,6 +424,7 @@ class Font:
                 outs[-1][0] += a
                 outs[-1][1].append(ad)
                 lastdiff = w-a
+        outs[-1][0] += lastdiff
         return [(wid, "".join(i[0] for i in ads) if ads else "") for wid, ads in outs]
 
     @lru_cache()
@@ -272,9 +453,18 @@ class Font:
         if '\n' in txt:
             return max(self.linewidth(i) for i in txt.split('\n'))
         self.load(txt)
-        return sum(
-            self.cache[i].advance for i in txt[:-1]
-        )+self.cache[txt[-1]].width + 2
+        # The line's true width is the furthest any glyph's bitmap actually
+        # reaches to the right - not just the sum of advances, and not just the
+        # last glyph's bitmap width. For most glyphs `advance >= xoffs + width`
+        running = 0.0
+        maxw = 0.0
+        for ch in txt:
+            c = self.cache[ch]
+            reach = running + c.xoffs + c.width
+            if reach > maxw:
+                maxw = reach
+            running += c.advance
+        return maxw
     def linesize(self, txt) -> tuple[float, float]:
         return (
             self.linewidth(txt),
@@ -286,4 +476,3 @@ class Font:
             return (0, 0)
         wids = [i[0] for i in self._get_list(txt, maxwid, breakOnSpace)]
         return (max(wids)+1, len(wids)*self.lineheight)
-
