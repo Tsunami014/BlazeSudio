@@ -56,6 +56,15 @@ class SysFonts:
     _default_override = None
     _default = None
 
+    _PREFERRED_TRAITS = {
+        'italic': (False, 3),
+        'bold': (False, 2),
+        'weight': ('regular', 2),
+        'monospace': (False, 3),
+        'condensed': (False, 1),
+        'scalable': (True, 1),
+    }
+
     @overload
     def __new__(cls,
                 families: str | Iterable[str] | None = None,
@@ -137,6 +146,9 @@ class SysFonts:
         else:
             wei = 'bold' if is_bold else 'regular'
 
+        is_monospace = bool(face_flags & freetype.FT_FACE_FLAG_FIXED_WIDTH) \
+            or 'mono' in hay or 'monospace' in hay
+
         return FontInfo(
             path=path,
             family=family,
@@ -144,7 +156,7 @@ class SysFonts:
             italic=is_italic,
             bold=is_bold,
             weight=wei,
-            monospace=bool(face_flags & freetype.FT_FACE_FLAG_FIXED_WIDTH),
+            monospace=is_monospace,
             scalable=bool(face_flags & freetype.FT_FACE_FLAG_SCALABLE),
             condensed=any(k in style_lower for k in ('condensed', 'narrow', 'compressed')),
         )
@@ -180,16 +192,6 @@ class SysFonts:
         """Returns metadata for every font discovered on the system"""
         return list(cls._all_fonts())
 
-    @classmethod
-    def families(cls) -> list[str]:
-        """Returns every distinct font family name available on the system, in case
-        you want to know what's available to pass as `families=...`"""
-        out = []
-        for info in cls._all_fonts():
-            if info.family not in out:
-                out.append(info.family)
-        return out
-
     @staticmethod
     def _matches(info: FontInfo, families, italic=None, bold=None, weight=None, monospace=None,
                 scalable=None, condensed=None, exclude_families=None, name_contains=None,
@@ -202,12 +204,17 @@ class SysFonts:
             exf = {exclude_families.lower()} if isinstance(exclude_families, str) else {f.lower() for f in exclude_families}
             if info.family.lower() in exf:
                 return False
-        if ((italic is not None and info.italic != italic) or
-            (bold is not None and info.bold != bold) or
-            (weight is not None and info.weight != _WEIGHT_KEYWORDS.get(weight.lower(), '')) or
-            (monospace is not None and info.monospace != monospace) or
-            (scalable is not None and info.scalable != scalable) or
-            (condensed is not None and info.condensed != condensed)):
+
+        if any(wanted is not None and wanted != actual for wanted, actual in (
+            (italic, info.italic),
+            (bold, info.bold),
+            (monospace, info.monospace),
+            (scalable, info.scalable),
+            (condensed, info.condensed),
+        )):
+            return False
+
+        if weight is not None and info.weight != _WEIGHT_KEYWORDS.get(weight.lower(), ''):
             return False
         if name_contains is not None:
             needle = name_contains.lower()
@@ -219,14 +226,21 @@ class SysFonts:
 
     @classmethod
     def _pick_path(cls, families=None, **kwargs) -> str | None:
-        # Shortcut: a single string that's already a real file path is used directly,
-        # same as the old behaviour of being able to pass an explicit font file.
         if isinstance(families, str) and os.path.exists(families):
             return families
+        best_path, best_distance = None, None
         for info in cls._all_fonts():
-            if cls._matches(info, families, **kwargs):
+            if not cls._matches(info, families, **kwargs):
+                continue
+            distance = sum(
+                sco if getattr(info, trait) != preferred else 0
+                for trait, (preferred, sco) in cls._PREFERRED_TRAITS.items()
+            )
+            if distance == 0:
                 return info.path
-        return None
+            if best_distance is None or distance < best_distance:
+                best_path, best_distance = info.path, distance
+        return best_path
 
     @classmethod
     @overload
@@ -262,8 +276,7 @@ class SysFonts:
 
     @classmethod
     def default_path(cls) -> str:
-        """Gets the path of the current default font (the first one found on the
-        system, unless overridden with `set_default`)"""
+        """Gets the path of the current default font, unless overridden with `set_default`"""
         if cls._default_override is not None:
             return cls._default_override
         if cls._default is None:
