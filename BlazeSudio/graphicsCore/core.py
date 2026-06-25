@@ -20,7 +20,7 @@ class _CoreCls:
             return
         self._init = True
 
-        self._mainWin = sdl2.SDL_CreateWindow(b"Blaze Sudio game", 
+        self._mainWin = sdl2.SDL_CreateWindow(b"Blaze Sudio game",
                             sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED, 800, 500,
                             sdl2.SDL_WINDOW_SHOWN)
         self._renderer = sdl2.SDL_CreateRenderer(self._mainWin, -1,
@@ -80,7 +80,7 @@ class _CoreCls:
             sdl2.SDL_GetWindowSize(self._mainWin, ctypes.byref(w), ctypes.byref(h))
             sze = (w.value, h.value)
         else:
-            sdl2.SDL_SetWindowSize(self._mainWin, *self._sze)
+            sdl2.SDL_SetWindowSize(self._mainWin, *sze)
         self._sze = sze
 
         if self._arr is not None:

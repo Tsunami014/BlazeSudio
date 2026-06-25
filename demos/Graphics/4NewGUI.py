@@ -37,7 +37,7 @@ def main():
                 None],
                 Elms.Text("I hope you really like this extremely super long very long text as it is quite long and it is very nice and long and epic. I totally spent so long on it.\nNewline! Yay!"
                     ).AlignC(),
-                Input.InputBox(placeholder="Type here!",
+                Input.InputBox(placeholder="Type multiline here!",
                     opts=(O:=Input.InputBox.O).Default|O.Multiline).AlignC(),
             None],
             Lays.Offset(10, 10, Elms.Text("Alt+/ to open terminal").PositionT().AlignL()),
