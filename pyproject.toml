@@ -23,7 +23,7 @@ classifiers = [
     "Operating System :: Unix",
     "Operating System :: Microsoft :: Windows"
 ]
-# Development Status options: 
+# Development Status options:
 # 1 - Planning
 # 2 - Pre-Alpha
 # 3 - Alpha
@@ -48,11 +48,13 @@ BlazeSudio = "BlazeSudio:main"
 
 [project.optional-dependencies]
 graphics = [
-    "pysdl2",
-    "pysdl2-dll",
     "numpy",
     "pillow",
     "freetype-py",
+]
+oldgraphics = [
+    "pysdl2",
+    "pysdl2-dll",
 ]
 
 image = [

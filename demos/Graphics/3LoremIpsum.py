@@ -1,4 +1,4 @@
-"""Lorem Ipsum [graphics]"""
+"""Lorem Ipsum [oldgraphics]"""
 def main():
     from BlazeSudio.graphics import Screen, RunInstantly, Loading, options as GO, GUI
 
@@ -16,5 +16,5 @@ def main():
             fin, _ = load()
             if not fin:
                 self.Abort()
-    
+
     Test()

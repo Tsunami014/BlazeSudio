@@ -1,4 +1,4 @@
-"""Theme playground [graphics]"""
+"""Theme playground [oldgraphics]"""
 def main():
     try:
         from tkinter.filedialog import askopenfilename
@@ -20,13 +20,13 @@ def main():
             self.pos = pos
             self.held = False
             self.offset = offset
-        
+
         def draw(self, win):
             if self.dir == 0:
                 pygame.draw.rect(win, (125, 125, 125), (self.pos+self.offset, 0, 1, win.get_height()))
             if self.dir == 1:
                 pygame.draw.rect(win, (125, 125, 125), (0, self.pos+self.offset, win.get_width(), 1))
-        
+
         def update(self, mousePos, events):
             coll = self.pos + self.offset == floor(mousePos[self.dir])
             for ev in events:
@@ -47,13 +47,13 @@ def main():
             self.lines = [Line(self, 0, 0), Line(self, 1, 0), Line(self, 0, 0, 1), Line(self, 1, 0, 1)]
             self.defLinePs = defaultLinePoss
             super().__init__(pos, pygame.Surface((0, 0)), size)
-        
+
         def modifySur(self, sur):
             if sur.get_size() == (0, 0):
                 return sur
-            
+
             endsur = pygame.Surface((sur.get_width()+2, sur.get_height()+2), pygame.SRCALPHA)
-            
+
             endsur.blit(sur, (1, 1))
             endsur.fill((255, 255, 255, 100), special_flags=pygame.BLEND_RGBA_MULT)
 
@@ -62,9 +62,9 @@ def main():
 
             for ln in self.lines:
                 ln.draw(endsur)
-            
+
             return endsur
-        
+
         def update(self, mousePos, events):
             part = getattr(self.theme, self.themePart)
             if part is None:
@@ -104,7 +104,7 @@ def main():
         def __init__(self, pos: GO.P___, themePart):
             self.themePart = themePart
             super().__init__(pos)
-        
+
         def _init_objects(self):
             self.layers[0].add('main')
             def updateThemeInps(chosen):
@@ -200,7 +200,7 @@ def main():
 
             if p is None:
                 unset()
-        
+
         def _update(self, mousePos, events):
             p = getattr(GUI.GLOBALTHEME.THEME, self.themePart)
             if p is not None:
@@ -214,7 +214,7 @@ def main():
     class BaseThemeTest(Screen, RunInstantly):
         NAME = None
         THEMENAME = None
-        
+
         def _LoadUI(self):
             self.layers[0].add_many([
                 'Main',
@@ -231,10 +231,10 @@ def main():
                 GUI.Text(RTOP, self.NAME+' theme properties', font=GO.FTITLE),
                 ThemeProperties(RTOP, self.THEMENAME),
             ])
-        
+
         def _Last(self, aborted):
             return super()._Last(aborted)
-        
+
         def load_main(self):
             return None
 
@@ -246,7 +246,7 @@ def main():
         THEMENAME = 'BUTTON' # TODO: Add theme for text (fonts)
         def load_main(self):
             return GUI.Text(GO.PCCENTER, 'Hello!')
-        
+
         def load_props(self, POS):
             return [
                 GUI.Text(POS, 'Text'),
@@ -263,16 +263,16 @@ def main():
                 GUI.Text(POS, 'Allowed width'),
                 GUI.NumInputBox(POS, 300, GO.RHEIGHT, start=0, minim=0, placeholdOnNum=None),
             ]
-        
+
         def _Tick(self):
             props = self['Left'][1:]
             self.main.col = props[3].get()
             lr = [GO.SWLEFT, GO.SWMID, GO.SWRIGHT][props[7].get(True)]
             ud = [GO.SWTOP, GO.SWMID, GO.SWBOT][props[9].get(True)]
-            self.main.set(props[1].get(), 
-                          renderdash=props[5].get(), 
-                          leftrightweight=lr, 
-                          updownweight=ud, 
+            self.main.set(props[1].get(),
+                          renderdash=props[5].get(),
+                          leftrightweight=lr,
+                          updownweight=ud,
                           allowed_width=(props[11].get() or None)
             )
 
@@ -281,7 +281,7 @@ def main():
         THEMENAME = 'BUTTON'
         def load_main(self):
             return GUI.Button(GO.PCCENTER, GO.CRED, 'Hello!')
-        
+
         def load_props(self, POS):
             return [
                 *super().load_props(POS),
@@ -292,7 +292,7 @@ def main():
                 GUI.Text(POS, 'Spacing'),
                 GUI.NumInputBox(POS, 100, GO.RHEIGHT, start=2, minim=0, placeholdOnNum=None),
             ]
-        
+
         def _Tick(self):
             props = self['Left'][1:]
             self.main.cols = {'BG': props[-5].get(), 'TXT': props[3].get()}

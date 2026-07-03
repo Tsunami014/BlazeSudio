@@ -1,4 +1,4 @@
-"""Graphics [graphics]"""
+"""Old Graphics [oldgraphics]"""
 def main():
     import BlazeSudio.graphics.options as GO
     from BlazeSudio.graphics import Screen, Loading, Progressbar, GUI
@@ -12,7 +12,7 @@ def main():
         slf['i'] = 0
         for slf['i'] in range(10):
             sleep(1)
-    
+
     @Progressbar.decor(10)
     def test_loading2(slf):
         yield '0'
@@ -20,12 +20,12 @@ def main():
         for slf['i'] in range(10):
             sleep(1)
             yield slf['i']+1
-    
+
     class Test(Screen):
         def __init__(self, txt):
             super().__init__(GO.CWHITE)
             self.txt = txt
-        
+
         def _LoadUI(self): # Load the graphics in!
             CTOP = GO.PNEW((0.5, 0), (1, 0), (True, False)) # Bcos usually the Center Top makes the elements stack down, so I make a new thing that stacks sideways
             LBOT = GO.PNEW((0, 1), (0, -1)) # Going up instead of right
@@ -185,7 +185,7 @@ def main():
                 if self.idx == 0:
                     obj.set("Happy coding!")
                     self.idx = 1
-                else: 
+                else:
                     obj.remove()
             elif obj.type == GO.TINPUTBOX:
                 self.txt.set(obj.get().strip())
@@ -209,12 +209,12 @@ def main():
             # This also gets passed 'aborted': Whether you aborted or exited the screen
             S = self['speshs'][2]
             return { # Whatever you return here will be returned by the function
-                'Aborted?': aborted, 
+                'Aborted?': aborted,
                 'endElms': self['endElms']+[
                     # These are the input and the switch
                     S['Alls'][3],
                     S['Alls'][-1],
                 ]}
-    
+
     print(Test('Right click or press anything or press ctrl+s!')())
     pygame.quit() # this here for very fast quitting
