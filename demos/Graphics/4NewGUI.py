@@ -26,13 +26,20 @@ def main():
         Lays.Stack[
             Lays.VBox[None,
                 mtxt,
-                Input.InputBox(placeholder="Type then press enter!", bordercol=Col.Indigo, onenter=settxt).AlignC(),
+                Lays.HBox[None,None,
+                    Input.InputBox(
+                        placeholder="Type then press enter!",
+                        bordercol=Col.Indigo, onenter=settxt),
+                    None,
+                    Input.InputBox(
+                        placeholder="Type a number!",
+                        oninput=Input.Verifiers.isUFloat),
+                None,None],
                 Lays.HBox[None,
                     OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
                     Input.Button(
                         Elms.Text("This is a test!"),
-                        onclick=onclk
-                    ),
+                        onclick=onclk),
                     txt,
                     OpElm(Draw.Rect((0,0), (100,100),0,(125,125,125,255))),
                 None],

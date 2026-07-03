@@ -5,9 +5,6 @@ from BlazeSudio.graphicsCore import Mouse, Draw, Trans, Events, Ix
 from typing import Callable, Iterable
 import time
 
-__all__ = [
-    "Input"
-]
 
 class ButtonBase(UIElement, ElmWrapper):
     __slots__ = ['inner', 'col', 'pad', 'round', 'onclick']
@@ -134,7 +131,7 @@ class Button(ButtonBase):
 
 
 class Input(Text):
-    __slots__ = ['placehold', 'placeholdcol', 'active', 'cursor', 'onenter']
+    __slots__ = ['placehold', 'placeholdcol', 'active', 'cursor', 'onenter', 'oninput']
     class O(Text.O):
         _NXT = Text.O._NXT
         NoBlink = (_NXT := _NXT<<1)
@@ -151,6 +148,7 @@ class Input(Text):
                  placeholdcol: Col.colourType = Col.Grey,
                  fontOpts: Iterable[str] = None,
                  onenter: Callable = None,
+                 oninput: Callable = None,
                  *, opts: O = O.Default):
         """
         Text that you can edit! NOTE: This is not in a box, so it is not as intuative as InputBox for users. Consider using that instead.
@@ -163,6 +161,7 @@ class Input(Text):
             placeholdcol: The colour of the placeholder text
             fontOpts: A list of font names or files to try and load, otherwise use default
             onenter: A function to call when enter is pressed ONLY if the input is NOT multiline. The first argument is the text in this input.
+            oninput: A function that gets called every key press and gets passed the new contents. If returns a string uses that instead and if returns False will prevent the input.
 
         Keyword args:
             opts: The options to apply to the text
@@ -172,6 +171,7 @@ class Input(Text):
         self.placeholdcol = placeholdcol
         self.active = False
         self.onenter = onenter
+        self.oninput = oninput
         super().__init__(txt, sze, col, fontOpts, opts=opts)
     def clearFocus(self):
         self.active = False
@@ -200,7 +200,7 @@ class Input(Text):
     @basetxt.setter
     def basetxt(self, new):
         Text.txt.__set__(self, new)
-        self.cursor = max(0, min(self.cursor, len(new)))
+        self.cursor = min(self.cursor, len(new))
     @property
     def txt(self):
         """The text as it's displayed (including cursor and placeholder text), to get text content of box use 'basetxt'"""
@@ -260,37 +260,39 @@ class Input(Text):
     def onevent(self, ev: Events.Event) -> bool:
         if not self.active:
             return False
+        newtxt = None
+        newcurs = None
         if kev := Events.KeyEvent(ev, Events.EvTyp.KeyDown):
             if kev.key == "Escape":
                 olda = self.active
                 self.active = False
                 return olda
             if kev.key == "Enter" or kev.key == "Return":
-                if not self.opts & self.O.Multiline:
+                if self.onenter is not None and not self.opts & self.O.Multiline:
                     self.onenter(self.basetxt)
                     return True
-                self.basetxt = self.basetxt[:self.cursor] + "\n" + self.basetxt[self.cursor:]
-                self.cursor += 1
-                return True
-            if kev.key == "Backspace":
+                newtxt = self.basetxt[:self.cursor] + "\n" + self.basetxt[self.cursor:]
+                newcurs = self.cursor+1
+            elif kev.key == "Backspace":
                 ctrl = kev.modifs(ctrl=True)
                 init = True
-                while self.cursor > 0 and (init or (ctrl and self.basetxt[self.cursor-1] not in (' ', '\n', '\t'))):
-                    if self.cursor < len(self.basetxt)-1:
-                        self.basetxt = self.basetxt[:self.cursor-1] + self.basetxt[self.cursor:]
-                        self.cursor -= 1
+                newtxt = self.basetxt
+                newcurs = self.cursor
+                while newcurs > 0 and (init or (ctrl and newtxt[newcurs-1] not in (' ', '\n', '\t'))):
+                    if newcurs < len(newtxt)-1:
+                        newtxt = newtxt[:newcurs-1] + newtxt[newcurs:]
+                        newcurs -= 1
                     else:
-                        self.basetxt = self.basetxt[:-1]
-                        # By setting the text it auto caps the cursor
+                        newtxt = newtxt[:-1]
                     init = False
-                return True
             elif kev.key == "Delete":
                 ctrl = kev.modifs(ctrl=True)
                 init = True
-                while self.cursor < len(self.basetxt) and (init or (ctrl and self.basetxt[self.cursor] not in (' ', '\n', '\t'))):
-                    self.basetxt = self.basetxt[:self.cursor] + self.basetxt[self.cursor+1:]
+                newtxt = self.basetxt
+                newcurs = self.cursor
+                while newcurs < len(newtxt) and (init or (ctrl and newtxt[newcurs] not in (' ', '\n', '\t'))):
+                    newtxt = newtxt[:newcurs] + newtxt[newcurs+1:]
                     init = False
-                return True
             elif kev.key == "Left":
                 ctrl = kev.modifs(ctrl=True)
                 init = True
@@ -326,8 +328,25 @@ class Input(Text):
                 return True
         elif tev := Events.TypingEvent(ev, Events.EvTyp.TypeEnd):
             txt = tev.text.replace('\n', '')
-            self.basetxt = self.basetxt[:self.cursor] + txt + self.basetxt[self.cursor:]
-            self.cursor += len(txt)
+            newtxt = self.basetxt[:self.cursor] + txt + self.basetxt[self.cursor:]
+            newcurs = self.cursor+len(txt)
+
+        if newtxt is not None:
+            if self.oninput is not None:
+                outp = self.oninput(newtxt)
+                if outp is None or outp is True: pass
+                elif outp is False:
+                    return False
+                elif isinstance(outp, str):
+                    newtxt = outp
+                else:
+                    raise TypeError(
+                        f"Oninput returned bad type: {type(outp)} (should be bool, None or str)"
+                    )
+            if newcurs is not None:
+                self.cursor = newcurs
+            # By setting the text it auto caps the cursor
+            self.txt = newtxt
             return True
         return False
 
@@ -365,6 +384,28 @@ class Input(Text):
 
                     self.cursor = line_start + best_i
 
+class Verifiers:
+    """Some common functions to verify string types"""
+    def __new__(cls):
+        raise NotImplementedError("This class cannot be instantiated!")
+
+    @staticmethod
+    def isInt(s):
+        """Is the value a positive integer? (No decimals)"""
+        return (not s) or all(i in '0123456789' for i in s)
+    @staticmethod
+    def isUInt(s):
+        """Is the value a positive or negative integer? (No decimals)"""
+        return (not s) or ((s[0] == '-' and Input.Verifiers.isInt(s[1:])) or Input.Verifiers.isInt(s))
+    @staticmethod
+    def isFloat(s):
+        """Is the value a positive floating point value?"""
+        return (not s) or (all(i in '0123456789.' for i in s) and s.count('.') <= 1 and s[0] != '.')
+    @staticmethod
+    def isUFloat(s):
+        """Is the value a positive or negative floating point value?"""
+        return (not s) or ((s[0] == '-' and Input.Verifiers.isFloat(s[1:])) or Input.Verifiers.isFloat(s))
+
 
 class InputBox(Input):
     __slots__ = ['pad', 'border', 'round', 'bordercol']
@@ -380,6 +421,7 @@ class InputBox(Input):
                  bordercol: Col.colourType = Col.Purple,
                  fontOpts: Iterable[str] = None,
                  onenter: Callable = None,
+                 oninput: Callable = None,
                  *, opts: Text.O = Text.O.Default):
         """
         Text in a box that you can edit!
@@ -396,6 +438,7 @@ class InputBox(Input):
             bordercol: The colour of the border
             fontOpts: A list of font names or files to try and load, otherwise use default
             onenter: A function to call when enter is pressed ONLY if the input is NOT multiline. The first argument is the text in this input.
+            oninput: A function that gets called every key press and gets passed the new contents. If returns a string uses that instead and if returns False will prevent the input.
 
         Keyword args:
             opts: The options to apply to the text
@@ -404,7 +447,7 @@ class InputBox(Input):
         self.border = border
         self.round = radius
         self.bordercol = bordercol
-        super().__init__(txt, sze, col, placeholder, placeholdcol, fontOpts, onenter, opts=opts)
+        super().__init__(txt, sze, col, placeholder, placeholdcol, fontOpts, onenter, oninput, opts=opts)
 
     def _opInner(self, mxsze):
         hasborder = self.border > 0
@@ -431,4 +474,7 @@ class Input:
     ButtonBase = ButtonBase
     Button = Button
     Input = Input
+    Verifiers = Verifiers
     InputBox = InputBox
+
+__all__ = [Input]
