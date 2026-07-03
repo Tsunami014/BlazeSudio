@@ -198,14 +198,6 @@ class Element(_ElementBase):
     __slots__ = ['opts']
 
 
-class UIElement(Element):
-    def _opInner(self, mxsze) -> Op:
-        return OpList()
-    def _op(self, mat, mxsze) -> Op:
-        op = self._opInner(mxsze)
-        op2 = op if not hasattr(op, "getNormalisedPos") else op @ -op.getNormalisedPos(0, 0)
-        return (op2 @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
-
 class ElmWrapper(_ElementBase):
     def clearFocus(self):
         self.inner.clearFocus()
@@ -270,14 +262,10 @@ class OpElm(Element):
                 return out, out
         return None, mxsze
 
-class StretchOpElm(Element):
-    __slots__ = []
-    def op(self, mxsze):
+class UIElement(Element):
+    def _opInner(self, mxsze) -> Op:
         return OpList()
-
-    def _op(self, mat, mxsze):
-        o = self.op(mxsze)
-        op = o if not hasattr(o, "getNormalisedPos") else o @ -o.getNormalisedPos(0, 0)
-        return (op @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)
-    def _szes(self, mxsze, _):
-        return None, mxsze
+    def _op(self, mat, mxsze) -> Op:
+        op = self._opInner(mxsze)
+        op2 = op if not hasattr(op, "getNormalisedPos") else op @ -op.getNormalisedPos(0, 0)
+        return (op2 @ Crop((0, 0), mxsze)) @ T.MatTrans(mat)

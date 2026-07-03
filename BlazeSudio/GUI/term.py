@@ -1,21 +1,23 @@
 from BlazeSudio.graphicsCore import Events, Col, Draw
 from BlazeSudio.graphicsCore.base import OpList
-from .base import UI, ElmWrapper, StretchOpElm, Base, BaseO
+from .base import UI, ElmWrapper, UIElement, Base, BaseO
 from .input import InputBox
 from .layouts import Lays
 from typing import Iterable
 
-class BG(StretchOpElm):
+class BG(UIElement):
     __slots__ = ['col', 'round']
     def __init__(self, col):
         self.col = col
         self.round = 0
         super().__init__()
-    def op(self, mxsze):
+    def _opInner(self, mxsze):
         return Draw.Rect(1, 1, mxsze[0]-2, mxsze[1]-2, 0, self.col, roundness=self.round-2)
+    def _szes(self, mxsze, _):
+        return None, mxsze
 
 class Term(ElmWrapper, Base):
-    __slots__ = ['inner', 'opts', 'box', 'bg', 'leader', 'cmds']
+    __slots__ = ['inner', 'opts', 'box', '_bg', 'leader', 'cmds']
     def __init__(self,
                  leader: str = "/",
                  sze: int = 48,
@@ -43,11 +45,11 @@ class Term(ElmWrapper, Base):
         """
         self.leader = leader
         self.cmds = {}
-        self.bg = BG(bgcol)
+        self._bg = BG(bgcol)
         self.box = InputBox(
             sze=sze, pad=pad, border=border, radius=radius, bordercol=bordercol, fontOpts=fontOpts,
             onenter=self.run, opts=InputBox.O.Default|InputBox.O.Terminal)
-        self.inner = Lays.VBox[None, Lays.Stack[self.bg, self.box].PositionM()].add_stretch(10)
+        self.inner = Lays.VBox[None, Lays.Stack[self._bg, self.box].PositionM()].add_stretch(10)
         ElmWrapper.__init__(self, opts=opts)
 
     def oncmd(self, cmd):
@@ -63,10 +65,10 @@ class Term(ElmWrapper, Base):
 
     @property
     def bgcol(self) -> Col.colourType:
-        return self.bg.col
+        return self._bg.col
     @bgcol.setter
     def bgcol(self, new):
-        self.bg.col = new
+        self._bg.col = new
 
     @property
     def active(self):
@@ -96,7 +98,7 @@ class Term(ElmWrapper, Base):
     def _op(self, mat, mxsze):
         if not self.box.active:
             return OpList()
-        self.bg.round = self.box.round
+        self._bg.round = self.box.round
         return self.inner._op(mat, mxsze)
     def _szes(self, mxsze, bound):
         if not self.box.active:
