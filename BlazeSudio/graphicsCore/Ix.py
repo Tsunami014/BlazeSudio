@@ -5,18 +5,14 @@ To update the interaction state, `update` or `updateLoop` or `handleBasic` must 
 """
 from . import _specialkeys
 from .core import Core
-from .Events import EvTyp, Event, KeyEvent, EVENT_LIST, EVENT_NAMES, _translateEv
+from .Events import EvTyp, Event, _translateEv, __all__ as _allevs
+from .Events import *
 from typing import Iterable
 import sdl2
 import sdl2.ext
 
-for cls in EVENT_LIST:
-    globals()[cls.__name__] = cls
-
 __all__ = [
-    'EvTyp',
-    'Event',
-    *EVENT_NAMES,
+    *_allevs,
     'Keys',
     'update',
 ]
@@ -189,7 +185,7 @@ def flushNoUpdate():
     """
     Flush the events without updating the user interface class.
     This means all the user interface stuff will be left over from last time and will cause issues if not handled correctly
-    
+
     Only useful for times where the user does nothing e.g. loading screens and you KNOW that nothing will poll for user input
     But even then, using this function is sketchy, and should be avoided.
     """
@@ -201,6 +197,8 @@ def handleBasic() -> bool:
 
     This can be used like `while Ix.handleBasic(): ...`
 
+    DO NOT use flush or update functions with this as this already handles that! Instead use `loopEvs` or `Ix.Keys`
+
     Returns:
         bool: Whether the application should quit (False) or continue running (True)
     """
@@ -210,4 +208,3 @@ def handleBasic() -> bool:
             #((kev := KeyEvent(i, EvTyp.KeyDown)) and kev.keycode == sdl2.SDLK_ESCAPE)
         for i in Keys._keyEvs
     )
-

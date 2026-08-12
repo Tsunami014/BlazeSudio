@@ -34,7 +34,9 @@ class _CoreCls:
 
     def Quit(self):
         """
-        Quits the application, handling all quit code accordingly
+        Quits the application, handling all quit code accordingly.
+
+        This is useful to include at the end of your program as it closes the window much faster than if you don't include it.
         """
         sdl2.SDL_DestroyRenderer(self._renderer)
         sdl2.SDL_DestroyWindow(self._mainWin)
@@ -99,6 +101,11 @@ class _CoreCls:
     @size.setter
     def size(self, newSze):
         self.resize(newSze)
+
+    @property
+    def width(self) -> int: return self._sze[0]
+    @property
+    def height(self) -> int: return self._sze[1]
 
     @property
     def resizable(self) -> bool:

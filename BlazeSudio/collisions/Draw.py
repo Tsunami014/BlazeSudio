@@ -1,49 +1,29 @@
 from .core import checkShpType, ShpTyps, ShpGroups, Shape
-import pygame
-import math
+from BlazeSudio.graphicsCore import base, Draw
 
-def drawShape(surface, shape: Shape, colour: tuple[int, int, int], width: int = 0):
+def drawShape(shape: Shape, colour: tuple[int, int, int], width: int = 0) -> base.NormalisedOp:
     """
-    Draws a BlazeSudio shape to a Pygame surface.
+    Returns a draw Op for a shape
 
     Args:
-        surface (pygame.Surface): The surface to draw the shape on.
-        shape (Shape): The shape to draw.
-        colour (tuple[int, int, int]): The colour to draw the shape in.
+        shape (Shape): The shape to generate the draw op for.
+        colour (tuple[int, int, int]): The colour to draw the shape with.
         width (int, optional): The width of the lines to draw. Defaults to 0.
     """
     if checkShpType(shape, ShpTyps.Point):
-        pygame.draw.circle(surface, colour, (int(shape.x), int(shape.y)), width)
+        return Draw.Circle(shape.x, shape.y, width, 0, colour)
     elif checkShpType(shape, ShpTyps.Line):
-        if tuple(shape.p1) == tuple(shape.p2):
-            pygame.draw.circle(surface, colour, (int(shape.p1[0]), int(shape.p1[1])), int(width/2))
-        pygame.draw.line(surface, colour, (int(shape.p1[0]), int(shape.p1[1])), 
-                                           (int(shape.p2[0]), int(shape.p2[1])), width)
+        return Draw.Line(shape.p1, shape.p2, width, colour)
     elif checkShpType(shape, ShpTyps.Arc):
-        pygame.draw.arc(surface, colour, 
-                         (int(shape.x-shape.r + width/2), int(shape.y-shape.r - width/2), int(shape.r*2 - width), int(shape.r*2 - width)), 
-                         math.radians(-shape.endAng - width/2), math.radians(-shape.startAng + width/2), width)
+        return base.Op() # TODO - shape.x, shape.y, shape.r, shape.startAng, shape.endAng
     elif checkShpType(shape, ShpTyps.Circle):
-        pygame.draw.circle(surface, colour, (int(shape.x), int(shape.y)), int(shape.r), width)
+        return Draw.Circle(shape.x, shape.y, shape.r, width, colour)
     elif checkShpType(shape, ShpGroups.CLOSED):
-        ps = shape.toPoints()
-        psset = {tuple(i) for i in ps}
-        if len(psset) == 0:
-            return
-        elif len(psset) == 1:
-            fst = psset.pop()
-            pygame.draw.circle(surface, colour, (int(fst[0]), int(fst[1])), int(width/2))
-        elif len(psset) == 2:
-            fst = psset.pop()
-            snd = psset.pop()
-            pygame.draw.line(surface, colour, 
-                              (int(fst[0]), int(fst[1])), 
-                              (int(snd[0]), int(snd[1])), int(width/4*3))
-        pygame.draw.polygon(surface, colour, ps, width)
+        return Draw.Polygon(shape.toPoints(), width, colour)
     elif checkShpType(shape, ShpGroups.GROUP):
         for i in shape.shapes:
-            drawShape(surface, i, colour, width)
+            drawShape(i, colour, width)
     elif checkShpType(shape, ShpTyps.NoShape):
         pass
     else:
-        raise ValueError(f'Cannot draw BlazeSudio shape of type {type(shape)}')
+        raise ValueError(f'Cannot draw shape of type {type(shape)}')

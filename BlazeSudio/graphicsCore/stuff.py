@@ -231,6 +231,18 @@ class Col:
     Grey = _rgb(121, 123, 132)
     Black = _rgb(35, 26, 28)
 
+    @classmethod
+    def Rainbow(cls):
+        while True:
+            yield cls.Red
+            yield cls.Orange
+            yield cls.Yellow
+            yield cls.Green
+            yield cls.Blue
+            yield cls.Indigo
+            yield cls.Purple
+            yield cls.Grey
+
     Background = _rgb(250, 252, 252)
     Primary = _rgb(136, 107, 89)
     Secondary = _rgb(129, 95, 100)

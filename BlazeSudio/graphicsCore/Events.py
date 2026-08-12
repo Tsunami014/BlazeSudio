@@ -240,16 +240,16 @@ class KeyEvent(Event):
         return self.state and not self.repeat
 
     scancode: int
-    """Hardware scancode of the key"""
+    """Hardware scancode of the key (literal value, use `scode` instead)"""
     keycode: int
-    """Keycode of the key (abstracted from scancode)"""
+    """Keycode of the key (abstracted from scancode) (also literal value, use `key` instead)"""
     @property
     def scode(self) -> str:
-        """The string name of the scancode"""
+        """The string name of the scancode (gets the physical key, e.g. 'A' or 'Space' (does not care for modifiers))"""
         return sdl2.SDL_GetScancodeName(self.scancode).decode()
     @property
     def key(self) -> str:
-        """The string name of the key"""
+        """The string name of the key (gets the literal key pressed including modifiers, e.g. 'a', 'Space' or '@')"""
         return sdl2.SDL_GetKeyName(self.keycode).decode()
 
     _modifiers: int
@@ -344,8 +344,16 @@ class MouseEvent(Event):
 
     pos: tuple[int]
     """Mouse position (relative to window)"""
+    @property
+    def x(self) -> int: return self.pos[0]
+    @property
+    def y(self) -> int: return self.pos[1]
     rel: tuple[int] = (0, 0)
     """Relative motion (or scroll direction)"""
+    @property
+    def dx(self) -> int: return self.rel[0]
+    @property
+    def dy(self) -> int: return self.rel[1]
 
     button: int = 0
     """Mouse button (1=left, 2=middle, 3=right, etc.)"""

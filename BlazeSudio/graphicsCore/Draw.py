@@ -56,10 +56,15 @@ class Polygon(NormalisedOp):
         assert thickness >= 0, "Thickness must be >=0"
         self.thickness = thickness
         self.col = np.array(col, np.uint8)
-        assert self.col.shape == (4,), "Colour is of incorrect shape!"
+        if self.col.shape == (3,):
+            self.col = np.append(self.col, np.uint8(255))
+        elif self.col.shape != (4,):
+            raise ValueError(
+                "Colour value has incorrect shape!"
+            )
         self.round = round
         super().__init__(normalise_x=normalise_x, normalise_y=normalise_y)
-    
+
     def apply(self, mat: np.ndarray, arr: np.ndarray, crop, defSmth) -> np.ndarray:
         ps = self.ps
         if len(ps) < 2:
@@ -179,7 +184,12 @@ class Rect(Polygon):
         assert self.thickness >= 0, "Thickness must be >=0"
         self.roundness = roundness
         self.col = np.array(col, np.uint8)
-        assert self.col.shape == (4,), "Colour is of incorrect shape!"
+        if self.col.shape == (3,):
+            self.col = np.append(self.col, np.uint8(255))
+        elif self.col.shape != (4,):
+            raise ValueError(
+                "Colour value has incorrect shape!"
+            )
         self.round = round
         NormalisedOp.__init__(self, **kwargs)
 
@@ -263,9 +273,14 @@ class Elipse(NormalisedOp):
                 )
         assert self.thickness >= 0, "Thickness must be >=0"
         self.col = np.array(col, np.uint8)
-        assert self.col.shape == (4,), "Colour is of incorrect shape!"
+        if self.col.shape == (3,):
+            self.col = np.append(self.col, np.uint8(255))
+        elif self.col.shape != (4,):
+            raise ValueError(
+                "Colour value has incorrect shape!"
+            )
         super().__init__(**kwargs)
-    
+
     def apply(self, mat: np.ndarray, arr: np.ndarray, crop, defSmth) -> np.ndarray:
         if mat[2,2] != 1:
             raise NotImplementedError(
@@ -335,6 +350,10 @@ class Circle(Elipse):
         assert self.thickness >= 0, "Thickness must be >=0"
         self.xradius, self.yradius = radius, radius
         self.col = np.array(col, np.uint8)
-        assert self.col.shape == (4,), "Colour is of incorrect shape!"
+        if self.col.shape == (3,):
+            self.col = np.append(self.col, np.uint8(255))
+        elif self.col.shape != (4,):
+            raise ValueError(
+                "Colour value has incorrect shape!"
+            )
         NormalisedOp.__init__(self, **kwargs)
-
