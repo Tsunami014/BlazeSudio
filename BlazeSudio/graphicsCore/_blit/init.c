@@ -19503,7 +19503,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
  * 
  *     cdef double dx = transx + ow * scalex             # <<<<<<<<<<<<<<
  *     cdef double dy = transy + oh * scaley
- *     xlo = max(cLeft,  <long>min(transx, dx))
+ *     xlo = max(cLeft, <long>min(transx, dx))
 */
   __pyx_v_dx = (__pyx_v_transx + (__pyx_v_ow * __pyx_v_scalex));
 
@@ -19511,7 +19511,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
  * 
  *     cdef double dx = transx + ow * scalex
  *     cdef double dy = transy + oh * scaley             # <<<<<<<<<<<<<<
- *     xlo = max(cLeft,  <long>min(transx, dx))
+ *     xlo = max(cLeft, <long>min(transx, dx))
  *     xhi = min(cRight, <long>max(transx, dx) + 1)
 */
   __pyx_v_dy = (__pyx_v_transy + (__pyx_v_oh * __pyx_v_scaley));
@@ -19519,9 +19519,9 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
   /* "BlazeSudio/graphicsCore/_blit/init.pyx":73
  *     cdef double dx = transx + ow * scalex
  *     cdef double dy = transy + oh * scaley
- *     xlo = max(cLeft,  <long>min(transx, dx))             # <<<<<<<<<<<<<<
+ *     xlo = max(cLeft, <long>min(transx, dx))             # <<<<<<<<<<<<<<
  *     xhi = min(cRight, <long>max(transx, dx) + 1)
- *     ylo = max(cTop,   <long>min(transy, dy))
+ *     ylo = max(cTop, <long>min(transy, dy))
 */
   __pyx_t_16 = __pyx_v_dx;
   __pyx_t_6 = __pyx_v_transx;
@@ -19543,10 +19543,10 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
 
   /* "BlazeSudio/graphicsCore/_blit/init.pyx":74
  *     cdef double dy = transy + oh * scaley
- *     xlo = max(cLeft,  <long>min(transx, dx))
+ *     xlo = max(cLeft, <long>min(transx, dx))
  *     xhi = min(cRight, <long>max(transx, dx) + 1)             # <<<<<<<<<<<<<<
- *     ylo = max(cTop,   <long>min(transy, dy))
- *     yhi = min(cBot,   <long>max(transy, dy) + 1)
+ *     ylo = max(cTop, <long>min(transy, dy))
+ *     yhi = min(cBot, <long>max(transy, dy) + 1)
 */
   __pyx_t_17 = __pyx_v_dx;
   __pyx_t_3 = __pyx_v_transx;
@@ -19567,10 +19567,10 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
   __pyx_v_xhi = __pyx_t_4;
 
   /* "BlazeSudio/graphicsCore/_blit/init.pyx":75
- *     xlo = max(cLeft,  <long>min(transx, dx))
+ *     xlo = max(cLeft, <long>min(transx, dx))
  *     xhi = min(cRight, <long>max(transx, dx) + 1)
- *     ylo = max(cTop,   <long>min(transy, dy))             # <<<<<<<<<<<<<<
- *     yhi = min(cBot,   <long>max(transy, dy) + 1)
+ *     ylo = max(cTop, <long>min(transy, dy))             # <<<<<<<<<<<<<<
+ *     yhi = min(cBot, <long>max(transy, dy) + 1)
  * 
 */
   __pyx_t_16 = __pyx_v_dy;
@@ -19593,8 +19593,8 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
 
   /* "BlazeSudio/graphicsCore/_blit/init.pyx":76
  *     xhi = min(cRight, <long>max(transx, dx) + 1)
- *     ylo = max(cTop,   <long>min(transy, dy))
- *     yhi = min(cBot,   <long>max(transy, dy) + 1)             # <<<<<<<<<<<<<<
+ *     ylo = max(cTop, <long>min(transy, dy))
+ *     yhi = min(cBot, <long>max(transy, dy) + 1)             # <<<<<<<<<<<<<<
  * 
  *     cdef double inv_scalex = 1.0 / scalex
 */
@@ -19617,7 +19617,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_ezbli
   __pyx_v_yhi = __pyx_t_3;
 
   /* "BlazeSudio/graphicsCore/_blit/init.pyx":78
- *     yhi = min(cBot,   <long>max(transy, dy) + 1)
+ *     yhi = min(cBot, <long>max(transy, dy) + 1)
  * 
  *     cdef double inv_scalex = 1.0 / scalex             # <<<<<<<<<<<<<<
  *     cdef double inv_scaley = 1.0 / scaley
@@ -19965,7 +19965,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
  *     if persp:
  *         for y in prange(cTop, cBot, nogil=True, schedule='static',             # <<<<<<<<<<<<<<
  *                         use_threads_if=(cBot - cTop) > THRESH):
- *             oy_first = m10 * cLeft     + m11 * y + m12
+ *             oy_first = m10 * cLeft + m11 * y + m12
 */
     {
         __Pyx_UnknownThreadState _save;
@@ -19979,8 +19979,8 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
  *     if persp:
  *         for y in prange(cTop, cBot, nogil=True, schedule='static',
  *                         use_threads_if=(cBot - cTop) > THRESH):             # <<<<<<<<<<<<<<
- *             oy_first = m10 * cLeft     + m11 * y + m12
- *             oy_last  = m10 * (cRight-1) + m11 * y + m12
+ *             oy_first = m10 * cLeft + m11 * y + m12
+ *             oy_last = m10 * (cRight-1) + m11 * y + m12
 */
           {
               #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
@@ -20006,24 +20006,24 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
                               /* "BlazeSudio/graphicsCore/_blit/init.pyx":115
  *         for y in prange(cTop, cBot, nogil=True, schedule='static',
  *                         use_threads_if=(cBot - cTop) > THRESH):
- *             oy_first = m10 * cLeft     + m11 * y + m12             # <<<<<<<<<<<<<<
- *             oy_last  = m10 * (cRight-1) + m11 * y + m12
+ *             oy_first = m10 * cLeft + m11 * y + m12             # <<<<<<<<<<<<<<
+ *             oy_last = m10 * (cRight-1) + m11 * y + m12
  *             if (oy_first < 0 and oy_last < 0) or (oy_first >= oh and oy_last >= oh):
 */
                               __pyx_v_oy_first = (((__pyx_v_m10 * __pyx_v_cLeft) + (__pyx_v_m11 * __pyx_v_y)) + __pyx_v_m12);
 
                               /* "BlazeSudio/graphicsCore/_blit/init.pyx":116
  *                         use_threads_if=(cBot - cTop) > THRESH):
- *             oy_first = m10 * cLeft     + m11 * y + m12
- *             oy_last  = m10 * (cRight-1) + m11 * y + m12             # <<<<<<<<<<<<<<
+ *             oy_first = m10 * cLeft + m11 * y + m12
+ *             oy_last = m10 * (cRight-1) + m11 * y + m12             # <<<<<<<<<<<<<<
  *             if (oy_first < 0 and oy_last < 0) or (oy_first >= oh and oy_last >= oh):
  *                 continue
 */
                               __pyx_v_oy_last = (((__pyx_v_m10 * (__pyx_v_cRight - 1)) + (__pyx_v_m11 * __pyx_v_y)) + __pyx_v_m12);
 
                               /* "BlazeSudio/graphicsCore/_blit/init.pyx":117
- *             oy_first = m10 * cLeft     + m11 * y + m12
- *             oy_last  = m10 * (cRight-1) + m11 * y + m12
+ *             oy_first = m10 * cLeft + m11 * y + m12
+ *             oy_last = m10 * (cRight-1) + m11 * y + m12
  *             if (oy_first < 0 and oy_last < 0) or (oy_first >= oh and oy_last >= oh):             # <<<<<<<<<<<<<<
  *                 continue
  * 
@@ -20052,7 +20052,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
                               if (__pyx_t_7) {
 
                                 /* "BlazeSudio/graphicsCore/_blit/init.pyx":118
- *             oy_last  = m10 * (cRight-1) + m11 * y + m12
+ *             oy_last = m10 * (cRight-1) + m11 * y + m12
  *             if (oy_first < 0 and oy_last < 0) or (oy_first >= oh and oy_last >= oh):
  *                 continue             # <<<<<<<<<<<<<<
  * 
@@ -20061,8 +20061,8 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
                                 goto __pyx_L7_continue;
 
                                 /* "BlazeSudio/graphicsCore/_blit/init.pyx":117
- *             oy_first = m10 * cLeft     + m11 * y + m12
- *             oy_last  = m10 * (cRight-1) + m11 * y + m12
+ *             oy_first = m10 * cLeft + m11 * y + m12
+ *             oy_last = m10 * (cRight-1) + m11 * y + m12
  *             if (oy_first < 0 and oy_last < 0) or (oy_first >= oh and oy_last >= oh):             # <<<<<<<<<<<<<<
  *                 continue
  * 
@@ -20251,7 +20251,7 @@ static CYTHON_INLINE void __pyx_f_10BlazeSudio_12graphicsCore_5_blit_4init_regbl
  *     if persp:
  *         for y in prange(cTop, cBot, nogil=True, schedule='static',             # <<<<<<<<<<<<<<
  *                         use_threads_if=(cBot - cTop) > THRESH):
- *             oy_first = m10 * cLeft     + m11 * y + m12
+ *             oy_first = m10 * cLeft + m11 * y + m12
 */
         /*finally:*/ {
           /*normal exit:*/{
