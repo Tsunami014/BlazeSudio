@@ -88,10 +88,6 @@ cdef void fillPolygon(
                 t = (y - yi) / (yj - yi)
                 xint_d = xi + t * (xj - xi)
                 xint = <long>xint_d
-                if xint < cLeft:
-                    xint = cLeft
-                elif xint > cRight:
-                    xint = cRight
                 inters[k] = xint
                 k += 1
 
@@ -108,8 +104,12 @@ cdef void fillPolygon(
         for i in range(0, k-1, 2):#, nogil=True):
             xi = inters[i]
             xj = inters[i + 1]
-            if xi < cLeft: xi = cLeft
-            if xj > cRight: xj = cRight
+            if xj < cLeft or xi >= cRight:
+                continue
+            if xi < cLeft:
+                xi = cLeft
+            if xj > cRight - 1:
+                xj = cRight - 1
             for x in range(<long>xi, <long>xj + 1):
                 blend(&arr[y, x, 0], rcol, gcol, bcol,
                       racol, gacol, bacol, acol, inva)
@@ -200,10 +200,10 @@ cpdef drawLine(
         err = dx // 2
         steps = dx + 1
         for _ in range(steps):
-            if x >= cLeft and x <= cRight:
+            if x >= cLeft and x < cRight:
                 ys = max(y - half, cTop)
                 ye = min(y + half + 1, cBot)
-                xs = min(max(x, cLeft), cRight)
+                xs = x
 
                 if ys < ye:
                     for i in range(ys, ye):
@@ -222,10 +222,10 @@ cpdef drawLine(
         err = dy // 2
         steps = dy + 1
         for _ in range(steps):
-            if y >= cTop and y <= cBot:
+            if y >= cTop and y < cBot:
                 xs = max(x - half, cLeft)
                 xe = min(x + half + 1, cRight)
-                ys = min(max(y, cTop), cBot)
+                ys = y
 
                 if xs < xe:
                     for i in range(xs, xe):
@@ -341,13 +341,13 @@ cpdef drawRect(
             clip(y0 + r, cTop, cBot), clip(y1 - r, cTop, cBot),
             clip(x0, cLeft, cRight), clip(x1, cLeft, cRight),
             rcol, racol, gcol, gacol, bcol, bacol, acol, inva)
-            
+
         # Top strip (between corners)
         _fill(arr,
             clip(y0, cTop, cBot), clip(y0 + r, cTop, cBot),
             clip(x0 + r, cLeft, cRight), clip(x1 - r, cLeft, cRight),
             rcol, racol, gcol, gacol, bcol, bacol, acol, inva)
-            
+
         # Bottom strip (between corners)
         _fill(arr,
             clip(y1 - r, cTop, cBot), clip(y1, cTop, cBot),
@@ -544,4 +544,3 @@ cpdef drawElipse(
                     if v_inner > 1.0:
                         blend(&arr[yy, xx, 0], rcol, gcol, bcol,
                               racol, gacol, bacol, acol, inva)
-
