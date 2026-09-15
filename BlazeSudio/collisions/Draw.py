@@ -1,6 +1,8 @@
 from .core import checkShpType, ShpTyps, ShpGroups, Shape
 from BlazeSudio.graphicsCore import base, Draw
 
+__all__ = ['drawShape']
+
 def drawShape(shape: Shape, colour: tuple[int, int, int], width: int = 0) -> base.NormalisedOp:
     """
     Returns a draw Op for a shape

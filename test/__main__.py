@@ -1,29 +1,28 @@
-from BlazeSudio.test import Check, AssertEqual, CompareTimes
+from base import Check, AssertEqual, CompareTimes
 
 def testCollisions():
-    from BlazeSudio.debug import collisions # Use this more because it is the exact latest version, and is debuggable.
-    # from BlazeSudio import collisions # Use this **instead** if you want to use the compiled version
+    from BlazeSudio import collisions
 
     # Base rotate functions
     # If these fail there is a big issue
-    AssertEqual('Basic Rotate 1: `rotate` works', ['x', 'y'], 
+    AssertEqual('Basic Rotate 1: `rotate` works', ['x', 'y'],
                 collisions.rotate([0, 0], [123, 456], 127.001), collisions.rotateBy0([123, 456], 127.001))
-    AssertEqual('Basic Rotate 2: `rotate` around (0,0) vs `rotateBy0`', ['x', 'y'], 
+    AssertEqual('Basic Rotate 2: `rotate` around (0,0) vs `rotateBy0`', ['x', 'y'],
                 collisions.rotate([1, 0], [1, -1], 90), (2, 0))
 
     # Test points
     def testPoint(testName, inp, invel, shapeCollisions, expected1, expected2):
         outp, outvel = collisions.Point(*inp).handleCollisionsVel(invel, collisions.Shapes(*shapeCollisions))
-        Check(testName, 
-            ['x', 'y', 'accelx', 'accely'], 
-            [*inp, *invel], 
-            [*outp, *outvel], 
-            [*expected1, *expected2], 
+        Check(testName,
+            ['x', 'y', 'accelx', 'accely'],
+            [*inp, *invel],
+            [*outp, *outvel],
+            [*expected1, *expected2],
             lambda li: f'({li[0]}, {li[1]}), [{li[2]}, {li[3]}]'
         )
-    
+
     testPoint('Point 1: Perfect rebound',
-            (2, 0), [0, 2], [collisions.Rect(0, 1, 4, 4, 1)], 
+            (2, 0), [0, 2], [collisions.Rect(0, 1, 4, 4, 1)],
             (2, 0), # It rebounded perfectly and now is exactly where it started
             (0, -2)) # It is now going the opposite direction
     # . = current pos, N = new pos
@@ -55,20 +54,20 @@ def testCollisions():
     # Test lines
     def testLine(testName, line, accel, shapes, expectedp1, expectedp2, expectedaccel, expectedtype):
         outLine, outvel, v = collisions.Line(*line).handleCollisionsVel(accel, collisions.Shapes(*shapes), verbose=True)
-        Check(testName, 
-              ['p1x', 'p1y', 'p2x', 'p2y', 'accelx', 'accely', 'type'], 
-              [*line[0], *line[1], *accel, 'N/A'], 
-              [*outLine[0], *outLine[1], *outvel, v[0]], 
-              [*expectedp1, *expectedp2, *expectedaccel, expectedtype], 
+        Check(testName,
+              ['p1x', 'p1y', 'p2x', 'p2y', 'accelx', 'accely', 'type'],
+              [*line[0], *line[1], *accel, 'N/A'],
+              [*outLine[0], *outLine[1], *outvel, v[0]],
+              [*expectedp1, *expectedp2, *expectedaccel, expectedtype],
               lambda li: f'({li[0]}, {li[1]}), ({li[2]}, {li[3]}), ({li[4]}, {li[5]}), {li[6]}'
         )
-    
+
     # Types of collisions:
     # 0: Point off point collision
     # 1: Point off line collision
     # 2: Line off point collision
     # 3: Line off line collision
-    
+
     testLine('Line 1: Basic point off line',
              ((1, 0), (2, -1)), [0, 3], collisions.Shapes(collisions.Rect(0, 1, 4, 4, 1)),
              (1, -1), (2, -2), (0, -3), 1)
@@ -141,20 +140,20 @@ def testCollisions():
              (1, 1), (2.5, 1), (-1, -1), 3)
     #─-
     # O
-    
+
     # Test circles
     def testCircles(testName, inps, vel, collShps, expectedpos, expectedvel):
         outcirc, outvel = collisions.Circle(*inps).handleCollisionsVel(vel, collisions.Shapes(*collShps))
-        Check(testName, 
-            ['x', 'y', 'radius', 'accelx', 'accely'], 
-            [*inps, *vel], 
-            [*outcirc, *outvel], 
-            [*expectedpos, inps[2], *expectedvel], 
+        Check(testName,
+            ['x', 'y', 'radius', 'accelx', 'accely'],
+            [*inps, *vel],
+            [*outcirc, *outvel],
+            [*expectedpos, inps[2], *expectedvel],
             lambda li: f'({li[0]}, {li[1]}, {li[2]}), [{li[3]}, {li[4]}]'
         )
-    
+
     testCircles('Circle 1: Rebound top',
-                (2, 0, 1), [0, 2], [collisions.Rect(0, 0, 4, 4, 1)], 
+                (2, 0, 1), [0, 2], [collisions.Rect(0, 0, 4, 4, 1)],
                 (2, 0),
                 (0, -3)) # It is now going the opposite direction
     # o = current pos, N = new pos
@@ -187,8 +186,8 @@ def testCollisions():
     shp1 = collisions.RotatedRect(0, 0, 1, 1, 45)
     shp2 = collisions.Polygon((0.5, 0), (1, 0.5), (0.5, 1), (0, 0.5))
     CompareTimes('Timing 1: rotated rect vs polygon',
-                 'Rotated rect handle collisions', shp1.handleCollisionsVel, 
-                 'Polygon handle collisions', shp2.handleCollisionsVel, 
+                 'Rotated rect handle collisions', shp1.handleCollisionsVel,
+                 'Polygon handle collisions', shp2.handleCollisionsVel,
                  [1, 1], collisions.Shapes(collisions.Rect(-99, 0, 10, 19))
     )
 
@@ -199,4 +198,7 @@ def testAll():
     print('\nIT ALL WORKS YAY')
 
 if __name__ == '__main__':
+    import sys
+    import os
+    sys.path.append(os.path.abspath(__file__+"/../.."))
     testAll()

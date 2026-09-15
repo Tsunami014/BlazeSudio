@@ -6,16 +6,16 @@ It is helpful to make your own functions that call `Check` with the correct argu
 e.g.
 ```python
 def testPoint(testName, outs, expected1, expected2, ins):
-    Check(testName, 
-        ['x', 'y', 'accelx', 'accely'], 
-        ins, 
-        [outs[0][0], outs[0][1], outs[1][0], outs[1][1]], 
-        [*expected1, *expected2], 
+    Check(testName,
+        ['x', 'y', 'accelx', 'accely'],
+        ins,
+        [outs[0][0], outs[0][1], outs[1][0], outs[1][1]],
+        [*expected1, *expected2],
         lambda li: f'({li[0]}, {li[1]}), [{li[2]}, {li[3]}]'
     )
 
 testPoint('Perfect rebound',
-        collisions.Point(2, 0).handleCollisionsVel([0, 2], collisions.Shapes(collisions.Rect(0, 1, 4, 4, 1))), 
+        collisions.Point(2, 0).handleCollisionsVel([0, 2], collisions.Shapes(collisions.Rect(0, 1, 4, 4, 1))),
         (2, 0), # It rebounded perfectly and now is exactly where it started
         (0, -2), # It is now going the opposite direction
         (2, 0, 0, 2))
@@ -27,14 +27,14 @@ from typing import Any, Callable
 import time
 
 __all__ = [
-    'Check', 
-    'CheckFunc', 
+    'Check',
+    'CheckFunc',
     'CompareTimes',
 
-    'DebugTable', 
-    'Timeit', 
+    'DebugTable',
+    'Timeit',
 
-    'RoundAny', 
+    'RoundAny',
 ]
 
 SupportedFormats = int|float
@@ -42,7 +42,7 @@ SupportedTypes = SupportedFormats|tuple[SupportedFormats]|list[SupportedFormats]
 
 DEFAULT_FORMATTER = lambda li: ' '.join(li)
 
-def DebugTable(names: list[str], 
+def DebugTable(names: list[str],
                formatter: Callable[[list[Any]], str] = DEFAULT_FORMATTER,
                highlights: list[int] = None,
                **rows: dict[str, tuple[SupportedTypes]]
@@ -77,7 +77,7 @@ def DebugTable(names: list[str],
     def adjust(t, ln):
         return t + ' ' * (ln - len(t))
         # return ' ' * ((ln - len(t)) // 2) + t + ' ' * ((ln - len(t) + 1) // 2)
-    
+
     ls = [names] + list(rows.values())
     max_lens = [max(len(j[i]) for j in ls) for i in range(fstValLen)]
     spacing = max(len(i) for i in rows.keys())
@@ -86,7 +86,7 @@ def DebugTable(names: list[str],
     for nme, vals in rows.items():
         nvals = [adjust(vals[i], max_lens[i]) for i in range(len(vals))]
         print(nme+': '+' '*(spacing-len(nme)) + formatter(nvals))
-    
+
     if highlights is not None:
         fmt = formatter(tuple(
             ('^' if i in highlights else ' ')*max_lens[i] for i in range(fstValLen)
@@ -106,11 +106,11 @@ def RoundAny(t: SupportedTypes) -> SupportedTypes:
         return type(t)(RoundAny(x) for x in t)
     return round(t, 2)
 
-def Check(testName: str, 
-          names: list[str], 
-          ins: list[SupportedTypes], 
-          outs: list[SupportedTypes], 
-          expecteds: list[SupportedTypes], 
+def Check(testName: str,
+          names: list[str],
+          ins: list[SupportedTypes],
+          outs: list[SupportedTypes],
+          expecteds: list[SupportedTypes],
           formatter: Callable[[list[SupportedTypes]], str] = DEFAULT_FORMATTER
           ) -> None:
     """
@@ -123,14 +123,14 @@ def Check(testName: str,
         outs (list[SupportedTypes]): The outputs from the func.
         expecteds (list[SupportedTypes]): The expected outputs from the func.
         formatter (Callable[[list[SupportedTypes]], str], optional): The function that formats the rows. Defaults to `lambda li: ' '.join(li)`.
-    
+
     Raises:
         ValueError: If the lengths of the arguments (except formatter and testName) are not the same.
         AssertionError: If the inputs do not match the expected outputs (to 2 d.p).
     """
     if len(ins) != len(outs) or len(outs) != len(expecteds) or len(expecteds) != len(names):
         raise ValueError('All inputs must be the same length.')
-    
+
     errors = []
     errortxts = []
     for i in range(len(ins)):
@@ -151,8 +151,8 @@ def Check(testName: str,
             ' &\n'.join(errortxts)
         )
 
-def AssertEqual(testName: str, 
-                names: list[str], 
+def AssertEqual(testName: str,
+                names: list[str],
                 outs1: list[SupportedTypes],
                 outs2: list[SupportedTypes],
                 formatter: Callable[[list[SupportedTypes]], str] = DEFAULT_FORMATTER
@@ -165,7 +165,7 @@ def AssertEqual(testName: str,
         names (list[str]): The names of the inputs.
         outs1 (list[SupportedTypes]): The first set of outputs.
         outs2 (list[SupportedTypes]): The second set of outputs.
-        formatter (Callable[[list[SupportedTypes]], str], optional): The function that formats the rows. Defaults to `lambda li: ' '.join(li)`. 
+        formatter (Callable[[list[SupportedTypes]], str], optional): The function that formats the rows. Defaults to `lambda li: ' '.join(li)`.
 
     Raises:
         ValueError: If the lengths of the arguments (except formatter and testName) are not the same.
@@ -173,7 +173,7 @@ def AssertEqual(testName: str,
     """
     if len(outs1) != len(outs2) or len(outs2) != len(names):
         raise ValueError('All inputs must be the same length.')
-    
+
     errors = []
     errortxts = []
     for i in range(len(outs1)):

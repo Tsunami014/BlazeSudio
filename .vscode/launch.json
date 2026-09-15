@@ -24,22 +24,9 @@
             "name": "Run Tests",
             "type": "debugpy",
             "request": "launch",
-            "program": "BlazeSudio/test/tests.py",
+            "program": "test",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${cwd}"
-            },
             "justMyCode": false
-        },
-        {
-            "name": "Compile all",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "BlazeSudio/speed/setup.py",
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}",
-            "justMyCode": true
         },
         {
             "name": "Current File",
@@ -47,9 +34,6 @@
             "request": "launch",
             "program": "${file}",
             "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${cwd}"
-            },
             "console": "integratedTerminal",
             "justMyCode": false
         }
