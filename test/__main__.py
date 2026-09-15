@@ -1,4 +1,4 @@
-from base import Check, AssertEqual, CompareTimes
+from base import Finish, Check, AssertEqual, CompareTimes
 
 def testCollisions():
     from BlazeSudio import collisions
@@ -195,7 +195,7 @@ def testCollisions():
 def testAll():
     print('COLLISIONS TESTS')
     testCollisions()
-    print('\nIT ALL WORKS YAY')
+    Finish()
 
 if __name__ == '__main__':
     import sys

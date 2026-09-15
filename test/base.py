@@ -1,34 +1,10 @@
-"""
-Many useful functions for testing and debugging. `Check` is the main function you should use because it will do everything for you.
-
-It is helpful to make your own functions that call `Check` with the correct arguments, so you can easily test your code.
-
-e.g.
-```python
-def testPoint(testName, outs, expected1, expected2, ins):
-    Check(testName,
-        ['x', 'y', 'accelx', 'accely'],
-        ins,
-        [outs[0][0], outs[0][1], outs[1][0], outs[1][1]],
-        [*expected1, *expected2],
-        lambda li: f'({li[0]}, {li[1]}), [{li[2]}, {li[3]}]'
-    )
-
-testPoint('Perfect rebound',
-        collisions.Point(2, 0).handleCollisionsVel([0, 2], collisions.Shapes(collisions.Rect(0, 1, 4, 4, 1))),
-        (2, 0), # It rebounded perfectly and now is exactly where it started
-        (0, -2), # It is now going the opposite direction
-        (2, 0, 0, 2))
-```
-
-For more examples, see `BlazeSudio/test/tests.py`.
-"""
 from typing import Any, Callable
 import time
 
 __all__ = [
+    'Finish',
+
     'Check',
-    'CheckFunc',
     'CompareTimes',
 
     'DebugTable',
@@ -42,22 +18,39 @@ SupportedTypes = SupportedFormats|tuple[SupportedFormats]|list[SupportedFormats]
 
 DEFAULT_FORMATTER = lambda li: ' '.join(li)
 
+OUTS = []
+
+def Finish():
+    global OUTS
+    print()
+    errs = 0
+    for nam, err, end, conts in OUTS:
+        if err: errs += 1
+        print(f'\033[9{1 if err else 3}m-- {nam} --\033[0m')
+        print(conts)
+        print(f'\033[94m{end}\033[0m')
+        print()
+    if errs == 0:
+        print("\033[92mIT'S ALL WORKING YAY!\033[0m")
+    else:
+        raise AssertionError(
+            f'NOO! Found {errs} problems!'
+        )
+    OUTS = []
+
 def DebugTable(names: list[str],
                formatter: Callable[[list[Any]], str] = DEFAULT_FORMATTER,
                highlights: list[int] = None,
                **rows: dict[str, tuple[SupportedTypes]]
-          ) -> None:
+          ) -> str:
     """
-    Print a debug table with the given inputs and outputs.
+    Returns a debug table with the given inputs and outputs.
 
     Args:
         names (list[str]): The names of the inputs.
         formatter (Callable[[tuple[SupportedTypes]], str], optional): A function that takes a list of inputs and returns a string. (e.g. `lambda li: f'({li[0]}, {li[1]})'`). Defaults to `lambda li: ' '.join(li)`.
         highlights (list[int], optional): Which list elements to highlight. Defaults to None.
         **rows (dict[str, tuple[SupportedTypes]]): A dictionary of `str: tuple[SupportedTypes]` values. These will be the rows in the table, and each value will be converted to strings.
-
-    Raises:
-        ValueError: If the `rows` argument is of incorrect format.
     """
     if not all(isinstance(i, str) for i in rows.keys()):
         raise ValueError(
@@ -82,10 +75,12 @@ def DebugTable(names: list[str],
     max_lens = [max(len(j[i]) for j in ls) for i in range(fstValLen)]
     spacing = max(len(i) for i in rows.keys())
 
-    print(' '*(spacing+2) + formatter(names))
+    out = []
+
+    out.append(' '*(spacing+2) + formatter(names))
     for nme, vals in rows.items():
         nvals = [adjust(vals[i], max_lens[i]) for i in range(len(vals))]
-        print(nme+': '+' '*(spacing-len(nme)) + formatter(nvals))
+        out.append(nme+': '+' '*(spacing-len(nme)) + formatter(nvals))
 
     if highlights is not None:
         fmt = formatter(tuple(
@@ -94,9 +89,10 @@ def DebugTable(names: list[str],
         for let in set(fmt):
             if let not in ' ^':
                 fmt = fmt.replace(let, ' ')
-        print(' ' * (spacing+2) + fmt)
+        out.append(' ' * (spacing+2) + fmt)
     else:
-        print()
+        out.append()
+    return '\n'.join(out)
 
 def RoundAny(t: SupportedTypes) -> SupportedTypes:
     """
@@ -137,19 +133,18 @@ def Check(testName: str,
         if RoundAny(outs[i]) != expecteds[i]:
             errors.append(i)
             errortxts.append(f'In {names[i]}: expected {expecteds[i]}, got {outs[i]}')
-    if errors != []:
-        print(f'TEST {testName} FAILED:')
-        DebugTable(
+    if errors:
+        print("\033[91m[-] \033[0m "+testName)
+        OUTS.append((testName, True, ' &\n'.join(errortxts), DebugTable(
             names,
             formatter,
             errors,
-            ins=ins,
-            outs=outs,
+            ins=[RoundAny(i) for i in ins],
+            outs=[RoundAny(o) for o in outs],
             expecteds=expecteds
-        )
-        raise AssertionError(
-            ' &\n'.join(errortxts)
-        )
+        )))
+    else:
+        print("\033[92m[+] \033[0m "+testName)
 
 def AssertEqual(testName: str,
                 names: list[str],
@@ -180,32 +175,32 @@ def AssertEqual(testName: str,
         if RoundAny(outs1[i]) != RoundAny(outs2[i]):
             errors.append(i)
             errortxts.append(f'In {names[i]}: expected {outs2[i]}, got {outs1[i]}')
-    if errors != []:
-        print(f'TEST {testName} FAILED:')
-        DebugTable(
+    if errors:
+        print("\033[91m[-] \033[0m "+testName)
+        OUTS.append((testName, True, ' &\n'.join(errortxts), DebugTable(
             names,
             formatter,
             errors,
-            out1=outs1,
-            out2=outs2
-        )
-        raise AssertionError(
-            ' &\n'.join(errortxts)
-        )
+            out1=[RoundAny(o) for o in outs1],
+            out2=[RoundAny(o) for o in outs2],
+        )))
+    else:
+        print("\033[92m[+] \033[0m "+testName)
 
 # TODO: Average times
-def Timeit(func: Callable, *args, **kwargs):
+def Timeit(testName: str, func: Callable, *args, **kwargs):
     """
     Time how long it takes to run a function.
 
     Args:
+        testName (str): The name of the test running.
         func (Callable): The function to call.
         *args: The arguments to pass to the function.
         **kwargs: The keyword arguments to pass to the function.
     """
     start = time.time()
     func(*args, **kwargs)
-    print(f'Time taken: {(time.time() - start)*1000} ms.')
+    print(f'\033[92m[~] \033[0m {testName} took {(time.time() - start)*1000} ms')
 
 def CompareTimes(testName: str, name1: str, func1: Callable, name2: str, func2: Callable, *args, **kwargs):
     """
@@ -229,12 +224,15 @@ def CompareTimes(testName: str, name1: str, func1: Callable, name2: str, func2: 
     f1Time *= 1000
     f2Time *= 1000
 
-    print('TEST', testName)
-    print(f'Time taken for {name1.lower()}: {f1Time} ms, time taken for {name2.lower()}: {f2Time} ms.')
-    print(f'Difference: {abs(f1Time - f2Time)} ms.')
+    print("\033[92m[~] \033[0m "+testName)
+    out = ""
     if f1Time == 0 or f2Time == 0:
-        return
-    if f1Time > f2Time:
-        print(f'{name1[0].upper()+name1[1:].lower()} is {f2Time/f1Time} times faster (~{round(f2Time/f1Time*100, 3)}%) than {name2.lower()}.')
+        pass
+    elif f1Time > f2Time:
+        out = f'{name1[0].upper()+name1[1:].lower()} is {round(f2Time/f1Time, 4)} times faster (~{round(f2Time/f1Time*100, 3)}%) than {name2.lower()}.'
     else:
-        print(f'{name2[0].upper()+name2[1:].lower()} is {f1Time/f2Time} times faster (~{round(f1Time/f2Time*100, 3)}%) than {name1.lower()}.')
+        out = f'{name2[0].upper()+name2[1:].lower()} is {round(f1Time/f2Time, 4)} times faster (~{round(f1Time/f2Time*100, 3)}%) than {name1.lower()}.'
+    OUTS.append((testName, False, out,
+        f'- Time taken for {name1.lower()}: {f1Time} ms\n- Time taken for {name2.lower()}: {f2Time} ms\n'+\
+            f'= Difference: {abs(f1Time - f2Time)} ms',
+    ))
