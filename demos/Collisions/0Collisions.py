@@ -28,7 +28,8 @@ def main():
         'BoundingBox': collisions.Combine.boundingBox,
         'CombineRects': collisions.Combine.combineRects,
         'PointsToShape': collisions.Combine.pointsToShape,
-        'PointsToPoly': collisions.shapely.pointsToPoly
+        'ConvexHull': collisions.Combine.convexHull,
+        'PointsToPoly': collisions.shapely.pointsToPoly,
     }
     highlightTyps = [
         (collisions.Line, collisions.ClosedShape),
@@ -36,6 +37,7 @@ def main():
         (collisions.Shape),
         (collisions.Rect),
         (collisions.Point),
+        (collisions.Point, collisions.Line, collisions.Rect, collisions.RotatedRect, collisions.Polygon),
         (collisions.Point)
     ]
     combineCache = [None, None]
@@ -48,6 +50,8 @@ def main():
             return combineCache[1]
         else:
             combined = combineFs[list(combineFs.keys())[combineTyp]](*toCombineObjs)
+            if isinstance(combined, collisions.Shape):
+                combined = [combined]
             ret = (combined, toCombineObjs)
             combineCache = [cacheCheck, ret]
             return ret
@@ -56,8 +60,6 @@ def main():
         out = collisions.drawShape(obj, col, 8)
         if t == 8: # As well as drawing the point, outline the shapes to be combined
             combined, objsToCombine = findCombinedOutput()
-            if isinstance(combined, collisions.Shape):
-                combined = [combined]
             for o in objsToCombine:
                 out += drawObj(o, types.index(type(o)), (255, 110, 60))
             for o in combined:
@@ -67,7 +69,7 @@ def main():
             # Outline shapes to be deleted
             for o in objs:
                 if curObj.collides(o):
-                    out +=  drawObj(o, types.index(type(o)), (255, 110, 60))
+                    out += drawObj(o, types.index(type(o)), (255, 110, 60))
         return out
 
     def moveCurObj(curObj):
@@ -183,8 +185,8 @@ def main():
                             while run2 and Ix.handleBasic():
                                 if prevWid != Core.width:
                                     prevWid = Core.width
-                                    Core(FONT.render("""How to use:
-Click on one of the options at the top to change your tool. Pressing space adds it to the board (or applies some function to existing objects).\
+                                    Core(Op.Fill(Col.White) + FONT.render("""How to use:
+Click on one of the options at the top to change your tool. Pressing space adds it to the board (or applies some function to existing objects).
 The up, down, left and right arrow keys as well as comma and full stop do stuff with some of them too. When not holding alt to be in play mode, wsad does the same as the arrow keys but is more precise.
 Holding '[' and ']' changes the bounciness of the object, and '-' and '=' are to fine-tune.
 Holding shift in this mode shows the normals, and holding control shows the closest points to the object!
@@ -308,11 +310,10 @@ Press any key/mouse to close this window""", Col.Black, prevWid))
             for p in curObj.toPoints():
                 ops += Op.Draw.Circle(p, 4, 0, Col.White)
             if typ < 7:
-                #win.blit(font.render(f'Bounciness: {curObj.bounciness}', 1, (255, 255, 255)), (0, header_sze+2))
+                ops += FONT.render(f'Bounciness: {curObj.bounciness}', Col.White) @ (0, header_sze+2)
                 pass
         if typ == 8:
-            #win.blit(font.render(list(combineFs.keys())[combineTyp], 1, (255, 255, 255)), (0, header_sze+2))
-            pass
+            ops += FONT.render(list(combineFs.keys())[combineTyp], Col.White) @ (0, header_sze+2)
         Core(ops)
         Core.rend()
         clock.tick(60)

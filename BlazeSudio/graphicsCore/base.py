@@ -22,6 +22,7 @@ __all__ = [
         'MatTrans',
         'Layer',
     'Op',
+        'NoOp',
         'NormalisedOp',
         'OpList',
         'TransOp'
@@ -276,6 +277,14 @@ class Op(ABC, _basey.Base):
         yield self
     def flatten(self):
         return list(self.flat())
+
+class NoOp(Op):
+    __slots__ = []
+    def __init__(self):
+        self.flags = OpFlags.NoFlags
+
+    def apply(self, mat, arr, crop, defSmth):
+        pass
 
 class NormalisedBase:
     def rect(self):

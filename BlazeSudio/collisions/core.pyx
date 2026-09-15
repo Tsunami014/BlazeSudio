@@ -838,7 +838,8 @@ class Point(Shape):
             )
 
     def __iter__(self):
-        return iter([self.x, self.y])
+        yield self.x
+        yield self.y
     
     def __str__(self):
         return f'<Point @ ({self.x}, {self.y})>'

@@ -175,7 +175,7 @@ def pointsToShape(*points: Iterable[pointLike], bounciness: float = BASEBOUNCINE
     elif len(points) == 1:
         return Point(*points[0], bounciness)
     if len(points) == 2:
-        return Line(*points, bounciness)
+        return Line(tuple(points[0]), tuple(points[1]), bounciness)
 
     if len(points) == 4:
         x_vals = {p[0] for p in points}
@@ -186,5 +186,37 @@ def pointsToShape(*points: Iterable[pointLike], bounciness: float = BASEBOUNCINE
             x_min, y_min = min(x_vals), min(y_vals)
             return Rect(x_min, y_min, max(x_vals)-x_min, max(y_vals)-y_min)
     
-    return Polygon(*points, bounciness=bounciness)
+    return Polygon(*(tuple(i) for i in points), bounciness=bounciness)
 
+def convexHull(*shapes: Iterable[Shape], bounciness: float = BASEBOUNCINESS) -> Shape:
+    """
+    Outputs a shape that entirely covers the outside of all the points, without any caves (a convex hull)
+    """
+    points = sorted({tuple(j) for s in shapes for j in s.toPoints()})
+    if len(points) == 0:
+        return NoShape()
+    if len(points) == 1:
+        return Point(*points[0], bounciness)
+    if len(points) == 2:
+        return Point(*points, bounciness)
+
+    def cross(o, a, b):
+        # Cross product of vectors OA and OB. Positive => counter-clockwise turn.
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
+    # Build lower hull
+    lower = []
+    for p in points:
+        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:
+            lower.pop()
+        lower.append(p)
+
+    # Build upper hull
+    upper = []
+    for p in reversed(points):
+        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:
+            upper.pop()
+        upper.append(p)
+
+    # Concatenate, removing the last point of each half (it's repeated at the start of the other)
+    return Polygon(*lower[:-1], *upper[:-1], bounciness=bounciness)
