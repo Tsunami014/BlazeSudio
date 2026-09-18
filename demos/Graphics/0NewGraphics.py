@@ -1,6 +1,7 @@
 """New Graphics [graphics]"""
 def main():
     print("Press numbers 0-6 to change demo")
+    print("Run this demo via the terminal with the argument 'rot' to compare to Pygame (must be also installed) - `demos.py index rot`")
     NAMES = {
         0: "Blank",
         1: "Shapes",
@@ -151,7 +152,8 @@ def main():
 
     Core.Quit()
 
-    #quit() # Uncomment to ignore pygame
+    if not rot:
+        quit()
     print("\n")
 
     import pygame

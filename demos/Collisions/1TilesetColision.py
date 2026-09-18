@@ -4,7 +4,7 @@ def main():
     from BlazeSudio.utils import genCollisions as gen
     from functools import partial
     import pygame
-    
+
     tset = pygame.image.load('sampleTileset.png')
 
     class Main(Screen):
@@ -13,7 +13,7 @@ def main():
                 return
             self.poly = None
             self.tile = tset.subsurface((idx*32, 0, 32, 32))
-        
+
         @Loading.decor
         def calcPoly(slf, self):
             chosen = self.opts.index(self.chooser.get())
@@ -27,13 +27,13 @@ def main():
                 self.poly = gen.corners(self.tile)
             elif chosen == 4:
                 self.poly = gen.approximate_polygon(self.tile)
-        
+
         def __init__(self):
             self.getTile(0)
             self.opts = [
-                'No collisions', 
+                'No collisions',
                 'Cover entire shape',
-                'Bounding box', 
+                'Bounding box',
                 'Corners',
                 'Trace shape'
             ]
@@ -43,7 +43,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.calcPoly(self)
-        
+
         def _LoadUI(self):
             self.layers[0].add('Main')
 
@@ -60,7 +60,7 @@ def main():
                 self.chooser,
                 goBtn
             ])
-        
+
         def _Tick(self):
             scale = self.scale.get()
 
@@ -68,10 +68,10 @@ def main():
                 center_x = (self.size[0] - 32 * scale) / 2
                 center_y = (self.size[1] - 32 * scale) / 2
                 return (x * scale + center_x, y * scale + center_y)
-            
+
             self.WIN.blit(pygame.transform.scale(self.tile, (32*scale, 32*scale)), outPos(0, 0))
 
             if self.poly is not None:
                 pygame.draw.polygon(self.WIN, (125, 125, 125), [outPos(*p) for p in self.poly], 4)
-    
+
     Main()()

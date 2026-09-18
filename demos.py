@@ -103,12 +103,13 @@ if __name__ == '__main__':
         else:
             print('\n'+nam)
         for args in commands:
+            txt = f'{idx}: {args[1]}'
             if has_tk:
-                Tk.Button(root, text=args[1],
+                Tk.Button(root, text=txt,
                     command=(lambda ars=args, i=idx: root.destroy() or run(ars, i))
                 ).pack()
             else:
-                print(f'{idx}: {args[1]}')
+                print(txt)
             idx += 1
 
     if has_tk:
