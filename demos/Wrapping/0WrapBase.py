@@ -30,10 +30,9 @@ def main():
                     [(i[0],0) for i in SHAPE],
                     [i[1] for i in SHAPE],
                     return_radius=True)
-                mid = time.time()
                 POLYS = (js, *FindBounds(rad, js, 100))
                 now = time.time()
-                extratxt = f"Success! Took {round(mid-b4,2)}+{round(now-mid,2)} = {round(now-b4, 2)} secs."
+                extratxt = f"Success! Took {round(now-b4, 2)} secs."
             except Exception as e:
                 extratxt = f"{type(e)}: {e}"
         if not newMM:
