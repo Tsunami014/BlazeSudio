@@ -35,6 +35,9 @@
             "request": "launch",
             "program": "${file}",
             "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}"
+            },
             "console": "integratedTerminal",
             "justMyCode": false
         }

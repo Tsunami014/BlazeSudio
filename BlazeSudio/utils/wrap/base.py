@@ -3,7 +3,6 @@ import numpy as np
 
 from ._core import (
     theta,
-    d_theta,
     _polygon_fill,
     _skeletonize,
     _skeleton_to_paths,
@@ -24,7 +23,12 @@ class OverConstrainedError(ValueError):
     """
 
 
-def FindRadius(jointDists, epsilon=0.0000002, max_iters=1000, returnIterations=False) -> (float | tuple[float, int]):
+def FindRadius(
+        jointDists: list[int],
+        epsilon=0.0000002,
+        max_iters=1000,
+        returnIterations=False
+        ) -> (float | tuple[float, int]):
     min_theta = 1.0 - epsilon
     max_theta = 1.0 + epsilon
 
@@ -77,7 +81,10 @@ def FindRadius(jointDists, epsilon=0.0000002, max_iters=1000, returnIterations=F
 
 
 # Thanks SO MUCH to https://math.stackexchange.com/questions/1930607/maximum-area-enclosure-given-side-lengths
-def WrapJoints(joints: list[tuple[int, int]], setAngs: list[int], *, return_radius: bool = False
+def WrapJoints(
+        joints: list[tuple[int, int|None]],
+        setAngs: list[int],
+        *, return_radius: bool = False
         ) -> (list[tuple[int, int]] | tuple[list[tuple[int, int]], float]):
     # TODO: Multiple constraints in a row
     # TODO: Paralell constraints
@@ -138,8 +145,10 @@ def WrapJoints(joints: list[tuple[int, int]], setAngs: list[int], *, return_radi
     return out
 
 
-def FindBounds(radius: float, joints: list[tuple[int, int]], hei,
-        *, large=True, small=True, arc_segments=16):
+def FindBounds(
+        radius: float,
+        joints: list[tuple[int, int]],
+        hei, *, large=True, small=True, arc_segments=16):
     if large:
         lgeObj = _polygon_buffer(list(joints), hei, arc_segments)
     else:

@@ -98,6 +98,13 @@ class _ImageBase(NormalisedOp):
             mat, crop, defSmth = args
             _blit.blit(mat @ self._p.mat, self.arr, arr, crop)
 
+    @property
+    def width(self):
+        return self.arr.shape[1]
+    @property
+    def height(self):
+        return self.arr.shape[0]
+
     def rect(self):
         return (*self._p, *self._sze)
     def _translate(self, *args):

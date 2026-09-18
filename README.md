@@ -65,9 +65,9 @@ pip install "Blaze-Sudio @ git+https://github.com/Tsunami014/Blaze-Sudio.git"
 
 
 ## Fun facts
-- This project was started before AI existed (back in ye olde 2023/2024, origins are debatable), and many of the original contents including the whole physics engine was coded entirely by me without the help from AI.
+- This project was started before AI existed (back in ye olde 2023/2024, origins are debatable), and many of the original contents including, but not limited to, the whole physics engine and original image wrapper was coded entirely by me without the help from AI.
 - Because this project is so old, I changed coding styles a LOT during development.
-- The physics engine does not use any external library, but Shapely is there in case there are things you want to do that I have not provided
+- I tried to use as little external libraries as possible, mostly because I didn't want this to end up like some projects where it has to install a million different things. Also fits with the theme of 'making stuff all myself from scratch'.
 - This project will be renamed at some point before v4.0.0 releases to Apricot
 - Here is the star history chart:
 [![Star History Chart](https://api.star-history.com/svg?repos=Tsunami014/Blaze-Sudio&type=Timeline)](https://star-history.com/#Tsunami014/Blaze-Sudio&Timeline)
