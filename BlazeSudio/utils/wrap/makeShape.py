@@ -1,6 +1,5 @@
 import math
 import numpy as np
-import BlazeSudio.collisions as colls
 
 __all__ = [
     'FindRadius',
@@ -193,6 +192,94 @@ def _skeleton_to_paths(skeleton):
     return [[(float(r), float(c)) for r, c in path] for path in paths]
 
 
+def _normalize(vx, vy):
+    length = math.hypot(vx, vy)
+    if length == 0:
+        return 0.0, 0.0
+    return vx / length, vy / length
+
+
+def _line_intersect(p1, p2, p3, p4):
+    """Intersection point of infinite lines through (p1,p2) and (p3,p4), or None if parallel."""
+    x1, y1 = p1
+    x2, y2 = p2
+    x3, y3 = p3
+    x4, y4 = p4
+    denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+    if abs(denom) < 1e-12:
+        return None
+    px = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom
+    py = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom
+    return (px, py)
+
+
+def _polygon_buffer(points, distance, arc_segments=8):
+    points = list(points)
+
+    while len(points) > 1 and math.hypot(
+        points[0][0] - points[-1][0], points[0][1] - points[-1][1]
+    ) < 1e-9:
+        points.pop()
+
+    n = len(points)
+    if n < 3:
+        return points
+
+    # Ensure the polygon is wound counter-clockwise
+    area2 = 0.0
+    for i in range(n):
+        x1, y1 = points[i]
+        x2, y2 = points[(i + 1) % n]
+        area2 += x1 * y2 - x2 * y1
+    if area2 < 0:
+        points = list(reversed(points))
+
+    # Offset every edge outward by distance along its normal.
+    offset_edges = []
+    for i in range(n):
+        x1, y1 = points[i]
+        x2, y2 = points[(i + 1) % n]
+        dx, dy = _normalize(x2 - x1, y2 - y1)
+        # Outward normal for a CCW-wound polygon.
+        nx, ny = dy, -dx
+        offset_edges.append((
+            (x1 + nx * distance, y1 + ny * distance),
+            (x2 + nx * distance, y2 + ny * distance),
+        ))
+
+    result = []
+    for i in range(n):
+        prev_edge = offset_edges[(i - 1) % n]
+        curr_edge = offset_edges[i]
+
+        x1, y1 = points[(i - 1) % n]
+        x2, y2 = points[i]
+        x3, y3 = points[(i + 1) % n]
+        v1x, v1y = _normalize(x2 - x1, y2 - y1)
+        v2x, v2y = _normalize(x3 - x2, y3 - y2)
+        cross = v1x * v2y - v1y * v2x
+
+        if cross >= 0:
+            # Convex vertex: round the corner with a small arc.
+            start_pt = prev_edge[1]
+            end_pt = curr_edge[0]
+            cx, cy = x2, y2
+            start_ang = math.atan2(start_pt[1] - cy, start_pt[0] - cx)
+            end_ang = math.atan2(end_pt[1] - cy, end_pt[0] - cx)
+            if end_ang < start_ang:
+                end_ang += 2 * math.pi
+            steps = max(1, int(round(arc_segments * (end_ang - start_ang) / (2 * math.pi))) + 1)
+            for s in range(steps + 1):
+                a = start_ang + (end_ang - start_ang) * s / steps
+                result.append((cx + abs(distance) * math.cos(a), cy + abs(distance) * math.sin(a)))
+        else:
+            # Reflex vertex: miter join via line intersection.
+            ip = _line_intersect(prev_edge[0], prev_edge[1], curr_edge[0], curr_edge[1])
+            result.append(ip if ip is not None else curr_edge[0])
+
+    return result
+
+
 class OverConstrainedError(ValueError):
     """
     The expression has been overly constrained and will not output a closed circle!
@@ -313,11 +400,10 @@ def WrapJoints(joints: list[tuple[int, int]], setAngs: list[int], *, return_radi
     return out
 
 
-def FindBounds(radius: float, joints: list[tuple[int, int]], hei, large=True, small=True):
+def FindBounds(radius: float, joints: list[tuple[int, int]], hei,
+        *, large=True, small=True, arc_segments=16):
     if large:
-        collObj = colls.Polygon(*joints)
-        shapelyObj = colls.collToShapely(collObj)
-        lgeObj = colls.shapelyToColl(shapelyObj.buffer(hei))
+        lgeObj = _polygon_buffer(list(joints), hei, arc_segments)
     else:
         lgeObj = None
 
