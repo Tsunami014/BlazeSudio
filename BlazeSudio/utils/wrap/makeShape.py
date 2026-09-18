@@ -4,8 +4,7 @@ import BlazeSudio.collisions as colls
 
 __all__ = [
     'MakeShape',
-    'ShapeFormatError',
-    'OverConstrainedError'
+    'OverConstrainedError',
 ]
 
 def theta(L, r):
@@ -192,11 +191,6 @@ def _skeleton_to_paths(skeleton):
     return [[(float(r), float(c)) for r, c in path] for path in paths]
 
 
-class ShapeFormatError(ValueError):
-    """
-    The shape is not in the correct format!
-    """
-
 class OverConstrainedError(ValueError):
     """
     The expression has been overly constrained and will not output a closed circle!
@@ -332,13 +326,17 @@ class MakeShape:
         # TODO: Paralell constraints
 
         if len(self.jointDists) < 3:
-            raise ShapeFormatError("Need at least three line lengths.")
+            raise ValueError(
+                "Need at least three line lengths."
+            )
 
         max_length = max(self.jointDists)
         sum_length = sum(self.jointDists)
 
         if max_length > sum_length - max_length:
-            raise ShapeFormatError("Not a valid polygon; one of the line segments is too long.\n")
+            raise ValueError(
+                "Not a valid polygon; one of the line segments is too long."
+            )
 
         radius = self._find_radius()
 
@@ -401,8 +399,10 @@ class MakeShape:
         if small:
             xs, ys = zip(*self.joints)
             minx, miny = min(xs), min(ys)
-            image = np.zeros((int(max(xs)-minx)+1, int(max(ys)-miny)+1), dtype=np.uint8)
+            image = np.zeros((int(math.ceil(max(xs)-minx))+1, int(math.ceil(max(ys)-miny))+1), dtype=np.uint8)
             rr, cc = _polygon_fill(np.array(xs)-minx, np.array(ys)-miny)
+            rr = np.clip(rr, 0, image.shape[0]-1)
+            cc = np.clip(cc, 0, image.shape[1]-1)
             image[rr, cc] = 1
             skeleton = _skeletonize(image)
             paths = _skeleton_to_paths(skeleton)

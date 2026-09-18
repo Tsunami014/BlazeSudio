@@ -249,7 +249,7 @@ class KeyEvent(Event):
         return sdl2.SDL_GetScancodeName(self.scancode).decode()
     @property
     def key(self) -> str:
-        """The string name of the key (gets the literal key pressed including modifiers, e.g. 'a', 'Space' or '@')"""
+        """The string name of the key (gets the literal key pressed including modifiers, e.g. 'A', 'Space' or '@')"""
         return sdl2.SDL_GetKeyName(self.keycode).decode()
 
     _modifiers: int

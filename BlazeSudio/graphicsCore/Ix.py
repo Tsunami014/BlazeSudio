@@ -138,12 +138,12 @@ def _upd():
 
     Keys._kbdState = sdl2.SDL_GetKeyboardState(None)
     mods = sdl2.SDL_GetModState()
-    Keys.mShift = mods & sdl2.KMOD_SHIFT
-    Keys.mAlt = mods & sdl2.KMOD_ALT
-    Keys.mCtrl = mods & sdl2.KMOD_CTRL
-    Keys.mGui = mods & sdl2.KMOD_GUI
-    Keys.mNumLock = mods & sdl2.KMOD_NUM
-    Keys.mCapsLock = mods & sdl2.KMOD_CAPS
+    Keys.mShift = bool(mods & sdl2.KMOD_SHIFT)
+    Keys.mAlt = bool(mods & sdl2.KMOD_ALT)
+    Keys.mCtrl = bool(mods & sdl2.KMOD_CTRL)
+    Keys.mGui = bool(mods & sdl2.KMOD_GUI)
+    Keys.mNumLock = bool(mods & sdl2.KMOD_NUM)
+    Keys.mCapsLock = bool(mods & sdl2.KMOD_CAPS)
 
     buttons = sdl2.ext.mouse_button_state()
     Mouse.left = bool(buttons.left)
