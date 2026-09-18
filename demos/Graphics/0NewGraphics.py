@@ -1,5 +1,6 @@
 """New Graphics [graphics]"""
 def main():
+    print("Press numbers 0-6 to change demo")
     NAMES = {
         0: "Blank",
         1: "Shapes",

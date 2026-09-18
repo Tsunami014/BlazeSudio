@@ -5,18 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Main",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "__main__.py",
-            "console": "integratedTerminal",
-            "justMyCode": false
-        },
-        {
             "name": "Run Demos",
             "type": "debugpy",
             "request": "launch",
             "program": "demos.py",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Run Last Demo",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "demos.py",
+            "args": [ "last" ],
             "console": "integratedTerminal",
             "justMyCode": false
         },

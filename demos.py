@@ -1,3 +1,4 @@
+import tempfile
 import sys
 import os
 
@@ -34,29 +35,58 @@ def cmdList(cmds):
         out.extend(commands)
     return out
 
-def run(args):
+def last_demo_file():
+    return os.path.join(tempfile.gettempdir(), 'bsLastDemo')
+
+def get_last_demo():
+    file = last_demo_file()
+    if not os.path.exists(file):
+        return None
+    try:
+        with open(file) as f:
+            return int(f.read())
+    except Exception:
+        return None
+
+def run(args, idx):
     _, nam, pth, mod = args
+    with open(last_demo_file(), 'w+') as f:
+        f.write(str(idx))
     print('loading demo %s...'%nam)
     sys.path.append(os.path.abspath(os.path.dirname(__file__)))
     os.chdir(os.path.dirname(pth))
     mod.main()
+
 
 if __name__ == '__main__':
     cmds = get_demos()
 
     def runFn(idx):
         li = cmdList(cmds)
-        if idx < 0 or idx > len(li):
-            raise ValueError(
-                'Invalid input number!'
-            )
-        run(li[idx])
+        if idx < 0 or idx >= len(li):
+            print('Demo index out of range!')
+            return False
+        run(li[idx], idx)
+        return True
 
     import sys
-    if len(sys.argv) >= 2:
-        idx = int(sys.argv[1])
-        runFn(idx)
-        exit()
+    if len(sys.argv) == 2:
+        if sys.argv[1] == 'last':
+            lst = get_last_demo()
+            if lst is None:
+                print("No last demo found!")
+            else:
+                print("Using last demo...")
+                runFn(lst) and exit()
+        else:
+            idx = None
+            try:
+                idx = int(sys.argv[1])
+            except ValueError:
+                print("Demo index provided is not a number!")
+            if idx is not None:
+                print("Running specified demo...")
+                runFn(idx) and exit()
 
     try:
         import tkinter as Tk
@@ -75,12 +105,12 @@ if __name__ == '__main__':
         for args in commands:
             if has_tk:
                 Tk.Button(root, text=args[1],
-                    command=(lambda ars=args: root.destroy() or run(ars))
+                    command=(lambda ars=args, i=idx: root.destroy() or run(ars, i))
                 ).pack()
             else:
                 print(f'{idx}: {args[1]}')
             idx += 1
-    
+
     if has_tk:
         root.after(1, lambda: root.attributes('-topmost', True))
         def tk_abort(exc, val, tb):
@@ -102,4 +132,3 @@ if __name__ == '__main__':
             idx = None
         if idx is not None:
             runFn(idx)
-
