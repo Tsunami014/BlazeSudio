@@ -39,11 +39,11 @@ def main():
                 if (i[0]-mp[0])**2+(i[1]-mp[1])**2 <= 5**2:
                     selectedJoint = (idx, i)
                     break
-        
+
         boxes = len(conns)
         gap = 10
         boxSze = 30
-        
+
         if selectedSegment is not None:
             h = boxSze+gap*2
             w = (boxSze+gap)*boxes+gap
@@ -86,19 +86,19 @@ def main():
                                 val = list(conns.values())[i]
                                 main.setAngs[selectedSegment[1]] = val
                                 break
-        
+
         if pygame.key.get_pressed()[pygame.K_s]:
             if (not movingMode) and (selectedJoint[0] is None):
                 main.insert_straight(pygame.mouse.get_pos()[0])
-        
+
         if heldSegment is not None and (not pygame.mouse.get_pressed()[0]):
             heldSegment = None
-        
+
         win.fill((10, 10, 10))
 
         y = win.get_height()/2
         x = (win.get_width()+main.width)/2
-        
+
         if movingMode:
             selectedSegment = None
             heldSegment = None
@@ -141,7 +141,7 @@ def main():
             else:
                 pygame.draw.circle(win, (100, 100, 255), j, 5)
             idx += 1
-        
+
         if selectedSegment is not None:
             h = boxSze+gap*2
             w = (boxSze+gap)*boxes+gap
@@ -164,7 +164,7 @@ def main():
                 pygame.draw.rect(win, col, r, border_radius=4)
                 txt = f.render(list(conns.keys())[i], 1, (0, 0, 0))
                 win.blit(txt, (r.x+(r.w-txt.get_width())/2, r.y+(r.h-txt.get_height())/2))
-        
+
         if movingMode:
             polys = main.generateBounds(100, True, False, True)
 
@@ -174,7 +174,7 @@ def main():
                 pygame.draw.circle(win, (125, 125, 125), p, 3)
             for i in range(len(ps)-1):
                 pygame.draw.line(win, (125, 125, 125), ps[i], ps[i+1], 3)
-            
+
             # Inner Shapes[Line]
             for i in polys[2]:
                 pygame.draw.line(win, (125, 125, 125), i[0], i[1], 3)

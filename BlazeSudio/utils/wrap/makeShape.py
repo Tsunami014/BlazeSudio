@@ -1,9 +1,6 @@
 import math
 import numpy as np
 import BlazeSudio.collisions as colls
-from skimage.draw import polygon
-from skimage.morphology import skeletonize
-from skimage.measure import find_contours
 
 __all__ = [
     'MakeShape',
@@ -17,6 +14,183 @@ def theta(L, r):
 def d_theta(L, r):
     r2 = r * r
     return -2.0 * L / (r2 * math.sqrt(4.0 - L * L / r2))
+
+
+def _polygon_fill(r_coords, c_coords):
+    """
+    Rasterize a polygon given row (r) and column (c) vertex coordinates,
+    returning (rr, cc) arrays of filled pixel coordinates.
+
+    Equivalent in spirit to skimage.draw.polygon
+    """
+    r_coords = np.asarray(r_coords, dtype=float)
+    c_coords = np.asarray(c_coords, dtype=float)
+    n = len(r_coords)
+    if n < 3:
+        return np.array([], dtype=int), np.array([], dtype=int)
+
+    r_min = int(np.floor(r_coords.min()))
+    r_max = int(np.ceil(r_coords.max()))
+
+    rr_out = []
+    cc_out = []
+
+    for r in range(r_min, r_max + 1):
+        xs = []
+        for i in range(n):
+            r1, c1 = r_coords[i], c_coords[i]
+            r2, c2 = r_coords[(i + 1) % n], c_coords[(i + 1) % n]
+            if r1 == r2:
+                continue
+            # Only count an edge crossing the scanline once (half-open interval)
+            if (r1 <= r < r2) or (r2 <= r < r1):
+                t = (r - r1) / (r2 - r1)
+                xs.append(c1 + t * (c2 - c1))
+
+        xs.sort()
+        for i in range(0, len(xs) - 1, 2):
+            c_start = int(round(xs[i]))
+            c_end = int(round(xs[i + 1]))
+            for c in range(c_start, c_end + 1):
+                rr_out.append(r)
+                cc_out.append(c)
+
+    return np.array(rr_out, dtype=int), np.array(cc_out, dtype=int)
+
+
+def _skeletonize(image):
+    """
+    Topological skeleton of a binary image via the Zhang-Suen thinning
+    algorithm.
+
+    Functionally replaces skimage.morphology.skeletonize.
+    """
+    img = (np.asarray(image) > 0).astype(np.uint8)
+    rows, cols = img.shape
+
+    changing = True
+    while changing:
+        changing = False
+        for step in range(2):
+            padded = np.pad(img, 1, mode='constant', constant_values=0)
+            to_clear = []
+
+            for i in range(1, rows + 1):
+                for j in range(1, cols + 1):
+                    if padded[i, j] == 0:
+                        continue
+
+                    p2 = padded[i - 1, j]
+                    p3 = padded[i - 1, j + 1]
+                    p4 = padded[i, j + 1]
+                    p5 = padded[i + 1, j + 1]
+                    p6 = padded[i + 1, j]
+                    p7 = padded[i + 1, j - 1]
+                    p8 = padded[i, j - 1]
+                    p9 = padded[i - 1, j - 1]
+
+                    neighbors = [p2, p3, p4, p5, p6, p7, p8, p9]
+                    B = sum(neighbors)
+                    if B < 2 or B > 6:
+                        continue
+
+                    seq = neighbors + [neighbors[0]]
+                    A = sum(1 for k in range(8) if seq[k] == 0 and seq[k + 1] == 1)
+                    if A != 1:
+                        continue
+
+                    if step == 0:
+                        if p2 * p4 * p6 != 0:
+                            continue
+                        if p4 * p6 * p8 != 0:
+                            continue
+                    else:
+                        if p2 * p4 * p8 != 0:
+                            continue
+                        if p2 * p6 * p8 != 0:
+                            continue
+
+                    to_clear.append((i - 1, j - 1))
+
+            if to_clear:
+                changing = True
+                for (i, j) in to_clear:
+                    img[i, j] = 0
+
+    return img
+
+
+def _skeleton_to_paths(skeleton):
+    """
+    Trace a thinned (1px-wide) binary skeleton into a list of polylines,
+    each a list of (row, col) float coordinates.
+    """
+    pts = list(zip(*np.nonzero(skeleton)))
+    pt_set = set(pts)
+    if not pt_set:
+        return []
+
+    def neighbors(p):
+        r, c = p
+        out = []
+        for dr in (-1, 0, 1):
+            for dc in (-1, 0, 1):
+                if dr == 0 and dc == 0:
+                    continue
+                q = (r + dr, c + dc)
+                if q in pt_set:
+                    out.append(q)
+        return out
+
+    neighbor_cache = {p: neighbors(p) for p in pt_set}
+    degree = {p: len(neighbor_cache[p]) for p in pt_set}
+
+    visited_edges = set()
+
+    def edge_key(a, b):
+        return (a, b) if a <= b else (b, a)
+
+    def walk(start, nxt):
+        path = [start, nxt]
+        visited_edges.add(edge_key(start, nxt))
+        prev, cur = start, nxt
+        while True:
+            if degree.get(cur, 0) != 2:
+                break
+            candidates = [q for q in neighbor_cache[cur] if q != prev]
+            if not candidates:
+                break
+            following = candidates[0]
+            ek = edge_key(cur, following)
+            if ek in visited_edges:
+                break
+            visited_edges.add(ek)
+            path.append(following)
+            prev, cur = cur, following
+            if cur == start:
+                break
+        return path
+
+    paths = []
+
+    # First trace all branches starting/ending at endpoints or junctions.
+    for p in pts:
+        if degree[p] == 2:
+            continue
+        for n in neighbor_cache[p]:
+            if edge_key(p, n) in visited_edges:
+                continue
+            paths.append(walk(p, n))
+
+    # Anything left over must be an isolated closed loop of degree-2 pixels.
+    for p in pts:
+        for n in neighbor_cache[p]:
+            if edge_key(p, n) in visited_edges:
+                continue
+            paths.append(walk(p, n))
+
+    return [[(float(r), float(c)) for r, c in path] for path in paths]
+
 
 class ShapeFormatError(ValueError):
     """
@@ -34,19 +208,19 @@ class MakeShape:
         self.jointDists = [width]
         self.setAngs = [None]
         self.lastRadius = None
-    
+
     @property
     def segments(self) -> list[tuple[tuple[int], tuple[int]]]:
         return [(self.joints[i], self.joints[i+1]) for i in range(len(self.joints)-1)]
-    
+
     @property
     def collSegments(self) -> list[colls.Line]:
         return [colls.Line(self.joints[i], self.joints[i+1]) for i in range(len(self.joints)-1)]
-    
+
     @property
     def width(self):
         return sum(self.jointDists)
-    
+
     @width.setter
     def width(self, newWidth):
         d = 0
@@ -68,7 +242,7 @@ class MakeShape:
             self.joints.append(colls.rotate(self.joints[-1], (self.joints[-1][0], self.joints[-1][1]+newdist), ang))
             self.jointDists.append(newdist)
             self.setAngs.append(None)
-    
+
     def insert_straight(self, x):
         self.straighten()
         if self.joints[-1][0] < x < self.joints[0][0]:
@@ -81,7 +255,7 @@ class MakeShape:
                     self.recalculate_dists()
                     return True
         return False
-    
+
     def recalculate_dists(self):
         prevj = None
         self.jointDists = []
@@ -91,7 +265,7 @@ class MakeShape:
                 continue
             self.jointDists.append(math.sqrt((prevj[0]-j[0])**2+(prevj[1]-j[1])**2))
             prevj = j
-    
+
     def recentre(self, newx, newy):
         centre = (
             sum(i[0] for i in self.joints)/len(self.joints),
@@ -136,7 +310,7 @@ class MakeShape:
                 max_radius = radius
             else:
                 min_radius = radius
-            
+
             if max_iters is not None and iterations > max_iters:
                 if sum_theta < 1.0:
                     too = 'small'
@@ -152,7 +326,7 @@ class MakeShape:
             return radius, iterations
 
         return radius
-    
+
     def makeShape(self): # Thanks SO MUCH to https://math.stackexchange.com/questions/1930607/maximum-area-enclosure-given-side-lengths
         # TODO: Multiple constraints in a row
         # TODO: Paralell constraints
@@ -181,7 +355,7 @@ class MakeShape:
                     )
             elif got == 1:
                 got = 2
-        
+
         phi = -0.5 * theta(self.jointDists[startingi], radius)
         if got != 0:
             phi += math.radians(self.setAngs[startingi])
@@ -203,46 +377,46 @@ class MakeShape:
         self.lastRadius = None
         for i in range(len(self.joints)-1):
             self.joints[i+1] = colls.rotate(self.joints[i], (self.joints[i][0], self.joints[i][1]+self.jointDists[i]), 90)
-    
+
     def generateBounds(self, hei, large=True, main=True, small=True):
         if self.lastRadius is None:
             self.makeShape()
-        
+
         collObj = None
-        
+
         if large:
             collObj = colls.Polygon(*self.joints)
             shapelyObj = colls.collToShapely(collObj)
             lgeObj = colls.shapelyToColl(shapelyObj.buffer(hei))
         else:
             lgeObj = None
-        
+
         if main:
             if collObj is None:
                 collObj = colls.Polygon(*self.joints)
             mnObj = collObj
         else:
             mnObj = None
-        
+
         if small:
             xs, ys = zip(*self.joints)
             minx, miny = min(xs), min(ys)
             image = np.zeros((int(max(xs)-minx)+1, int(max(ys)-miny)+1), dtype=np.uint8)
-            rr, cc = polygon(np.array(xs)-minx, np.array(ys)-miny)
+            rr, cc = _polygon_fill(np.array(xs)-minx, np.array(ys)-miny)
             image[rr, cc] = 1
-            skeleton = skeletonize(image, method='lee')
-            contours = find_contours(skeleton, 0.5)
+            skeleton = _skeletonize(image)
+            paths = _skeleton_to_paths(skeleton)
             smlObj = colls.Shapes(
                 *[
-                    colls.Line((float(u[0])+minx, float(u[1])+miny), (float(v[0])+minx, float(v[1])+miny)) for contour in contours for u, v in zip(contour[:-1], contour[1:])
+                    colls.Line((float(u[0])+minx, float(u[1])+miny), (float(v[0])+minx, float(v[1])+miny)) for path in paths for u, v in zip(path[:-1], path[1:])
                 ]
             )
 
         else:
             smlObj = None
-        
+
         return lgeObj, mnObj, smlObj
-    
+
     def delete(self, idx):
         self.lastRadius = None
         self.joints.pop(idx)
@@ -250,13 +424,13 @@ class MakeShape:
             #self.jointDists[idx-1] += self.jointDists.pop(idx)
             self.jointDists.pop(idx)
             self.setAngs.pop(idx)
-    
+
     def __iter__(self):
         return ((self.joints[i], self.joints[i+1]) for i in range(len(self.joints)-1))
-    
+
     def __len__(self):
         return len(self.joints)-1
-    
+
     def copy(self):
         s = MakeShape(10)
         s.joints = self.joints.copy()
