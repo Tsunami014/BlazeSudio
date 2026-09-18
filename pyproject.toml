@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "Blaze-Sudio"
 version = "3.2.0"
-description = "This is a really cool game/physics/graphics/application engine written in pygame!"
+description = "This is a really cool game/physics/graphics/application engine with everything written from scratch and is much more efficient than existing things!"
 readme = "README.md"
 license = "MIT"
 authors = [
@@ -16,7 +16,7 @@ maintainers = [
 ]
 keywords = ["Python", "games", "engine"]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
     "Topic :: Software Development :: Build Tools",
@@ -32,7 +32,12 @@ classifiers = [
 # 6 - Mature
 # 7 - Inactive
 
-dependencies = []
+dependencies = [
+    "numpy",
+    "pillow",
+    "freetype-py",
+    "pyperclip",
+]
 
 requires-python = ">= 3.11"
 
@@ -43,37 +48,6 @@ Documentation = "https://tsunami014.gitbook.io/blaze-sudios/"
 Repository = "https://github.com/Tsunami014/Blaze-Sudio"
 Issues = "https://github.com/Tsunami014/Blaze-Sudio/issues"
 
-[project.scripts]
-BlazeSudio = "BlazeSudio:main"
-
-[project.optional-dependencies]
-graphics = [
-    "numpy",
-    "pillow",
-    "freetype-py",
-]
-
-image = [
-    "pillow",
-    "numpy",
-    "scikit-image",
-]
-
-collisions = [
-    "shapely",
-]
-
-game = [
-    "Blaze-Sudio[graphics]",
-    "Blaze-Sudio[collisions]",
-    "pyperclip",
-]
-
-all = [
-    "Blaze-Sudio[image]",
-    "Blaze-Sudio[game]",
-]
-
 [tool.setuptools.packages.find]
 exclude = [
     "BlazeSudio.speed.setup",
@@ -82,10 +56,7 @@ exclude = [
 
 [tool.setuptools.package-data]
 "BlazeSudio" = [
-    "elementGen/nodes/*.py",
     "ldtk/internal-icons.png",
-    "graphics/defaultTheme/*",
-    "graphics/GUI/textboxify/data/**",
 
     "**/*.pyi",
     "**/*.so", "**/*.pyd"

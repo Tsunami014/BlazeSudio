@@ -1,7 +1,7 @@
 This is still in development, but look forward to v4.0.0!
 
 ## Quicklinks
-| [Requirements](#requirements) | [Demos](#demos) | [Installation](#installation) |
+| [Requirements](#system-requirements) | [Demos](#demos) | [Installation](#installation) |
 |:-:|:-:|:-:|
 
 ## Contents
@@ -18,10 +18,18 @@ Blaze Sudio is a game engine for Python containing;
 - Has built-in functions for handling how shapes collide with other shapes when moving, so you don't have to worry!
 - Uses complex maths to calculate where objects hit each other when moving and calculates rebound position and velocity, so *clipping through shapes is impossible*
 
+### Various utils
+Including:
+
+#### An image wrapper
+- There is a base shape creator, which takes a bunch of points and wraps it into a closed polygon.
+- And then you can use this with images to wrap images into shapes!
+- This is made with just numpy and is compiled with cython for speed
+
 ### Many old things I need to improve/remove/add to
 Yes, this project is extremely still in development. But v4.0.0 should be fully working! Look forward to it!
 
-## Requirements
+## System requirements
 - Python 3.11+
 - Linux or Windows (although I don't test on Windows, but I'll still fix anything *reasonable* if you find a problem)
 
@@ -35,34 +43,24 @@ To run the demos;
 ```bash
 git clone --depth 5 https://github.com/Tsunami014/Blaze-Sudio.git
 cd Blaze-Sudio
-pip install .[all]
+pip install .
 python3 demos.py
 ```
 
 ## Installation
-Just run `pip install BlazeSudio[things]` with whatever requirements you need from below
-
-### Optional requirements
-Some parts of the library require external libraries, which are installed via the `[brackets]` when pip installing;
-
-- The collisions module requires `[collisions]`
-- The graphics module requires `[graphics]`
-- The game module requires `[game]`. **This also installs the graphics and collisions**
-- The `[all]` installs everything.
-
-You can also install multiple of these at a time like so: `pip install Blaze-Sudio[graphics,collisions]`.
+Just run `pip install BlazeSudio`
 
 ### Installing from sauce 🍅
 - Git clone and pip install (`--depth 5` clones only the most recent 5 commits, because the history of this project is huge)
 ```bash
 git clone --depth 5 https://github.com/Tsunami014/Blaze-Sudio.git
 cd Blaze-Sudio
-pip install .[all]
+pip install .
 ```
 
 - OR use the one liner
 ```bash
-pip install "Blaze-Sudio[all] @ git+https://github.com/Tsunami014/Blaze-Sudio.git"
+pip install "Blaze-Sudio @ git+https://github.com/Tsunami014/Blaze-Sudio.git"
 ```
 
 
