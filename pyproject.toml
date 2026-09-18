@@ -52,10 +52,6 @@ graphics = [
     "pillow",
     "freetype-py",
 ]
-oldgraphics = [
-    "pysdl2",
-    "pysdl2-dll",
-]
 
 image = [
     "pillow",
@@ -70,7 +66,6 @@ collisions = [
 game = [
     "Blaze-Sudio[graphics]",
     "Blaze-Sudio[collisions]",
-    "scikit-image",
     "pyperclip",
 ]
 
