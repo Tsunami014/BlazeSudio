@@ -2,6 +2,7 @@ from .base import Element, BaseO
 from BlazeSudio.graphicsCore.base import OpList, Vec2
 from dataclasses import dataclass
 from typing import Self, Iterable
+from numbers import Number
 
 __all__ = ["Lays"]
 
@@ -102,11 +103,11 @@ class _BaseLayout(LayBase):
     def __init__(self, *children: tuple[Element], spacing: float = 10, opts: LayBase.O = LayBase.O.Default):
         """If a child is None, that will be stretch!"""
         self._children: list[tuple[Element|None|float, bool, float]] = []
-        """[Element (or None for stretch or float for spacing), isSpacing, stretch]"""
+        """[Element (or None for stretch or float for spacing), isSpacing, stretch (if isSpacing, this does nothing)]"""
         self._dirty = False
         self._szesCache = []
         if children:
-            self.add_elms(children)
+            self.add_anys(children)
         self.spacing = spacing
         super().__init__(opts=opts)
 
@@ -115,15 +116,15 @@ class _BaseLayout(LayBase):
             if (not issp) and e is not None:
                 e.clearFocus()
 
-    def add_elm(self, oth: Element, stretch: int = 1) -> Self:
+    def add_elm(self, oth: Element|None, stretch: int = 1) -> Self:
         self._children.append((oth, False, stretch))
         self._dirty = True
         return self
-    def add_elms(self, oths: Iterable[Element], stretches: int = 1) -> Self:
+    def add_elms(self, oths: Iterable[Element|None], stretches: int = 1) -> Self:
         self._children.extend([(i, False, stretches) for i in oths])
         self._dirty = True
         return self
-    def add_spacing(self, size: float) -> Self:
+    def add_spacing(self, size: Number) -> Self:
         self._children.append((size, True, None))
         self._dirty = True
         return self
@@ -131,16 +132,20 @@ class _BaseLayout(LayBase):
         self._children.append((None, False, stretch))
         self._dirty = True
         return self
-    def insert_elm(self, idx: int, oth: Element, stretch: int = 1) -> Self:
+    def add_anys(self, oths: Iterable[Element|Number|None], stretches: int = 1) -> Self:
+        self._children.extend([(i, isinstance(i, Number), stretches) for i in oths])
+        self._dirty = True
+        return self
+    def insert_elm(self, idx: int, oth: Element|None, stretch: int = 1) -> Self:
         self._children.insert(idx, (oth, False, stretch))
         self._dirty = True
         return self
-    def insert_elms(self, idx: int, oths: Iterable[Element], stretches: int = 1) -> Self:
+    def insert_elms(self, idx: int, oths: Iterable[Element|None], stretches: int = 1) -> Self:
         for i, oth in oths:
             self._children.insert(idx+i, (oth, False, stretches))
             self._dirty = True
         return self
-    def insert_spacing(self, idx: int, size: float) -> Self:
+    def insert_spacing(self, idx: int, size: Number) -> Self:
         self._children.insert(idx, (size, True, None))
         self._dirty = True
         return self
