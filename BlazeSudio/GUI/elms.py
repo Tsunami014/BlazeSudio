@@ -1,5 +1,5 @@
 from .base import UIElement, BaseO, Col
-from BlazeSudio.graphicsCore import Font
+from BlazeSudio.graphicsCore import Draw, Font
 from typing import Iterable
 
 __all__ = [
@@ -57,5 +57,31 @@ class Text(UIElement):
         out = self.font.linesize_wid(self.txt, mxsze[0], breakOnSpace = self.opts & self.O.BreakOnWord)
         return self.font.linesize(self.txt[0]), out
 
+class _LineBase(UIElement):
+    __slots__ = ['col', 'thickness', 'round']
+    def __init__(self, col, thick, round=0):
+        """
+        A line that stretches as far as it can in a direction and a certain thickness in another
+
+        Args:
+            col: The colour of the line
+            thick: The thickness of the line
+            round: The roundness of the line
+        """
+        self.col = col
+        self.thickness = thick
+        self.round = round
+        super().__init__()
+    def _opInner(self, mxsze):
+        return Draw.Rect(0, 0, mxsze[0], mxsze[1], 0, self.col, roundness=self.round)
+
 class Elms:
     Text = Text
+    class HLine(_LineBase):
+        __slots__ = []
+        def _szes(self, mxsze, _):
+            return (None, self.thickness), (mxsze[0], self.thickness)
+    class VLine(_LineBase):
+        __slots__ = []
+        def _szes(self, mxsze, _):
+            return (self.thickness, None), (self.thickness, mxsze[1])

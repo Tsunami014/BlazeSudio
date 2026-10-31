@@ -66,13 +66,6 @@ def main():
         gap = 10
         boxSze = 30
 
-        if selectedSegment is not None:
-            h = boxSze+gap*2
-            w = (boxSze+gap)*boxes+gap
-            x, y = (selectedSegment[0][0][0]+selectedSegment[0][1][0]-w)/2, min(selectedSegment[0][0][1], selectedSegment[0][1][1])-h-gap*3
-
-            SelectedR = colls.Rect(x, y, w, h)
-
         if not movingMode:
             for event in Ix.loopEvs():
                 if kev := Ix.KeyEvent(event, Ix.EvTyp.KeyDown):
@@ -86,6 +79,12 @@ def main():
                         selectedSegment = None
                 elif (mev := Ix.MouseEvent(event, Ix.EvTyp.MouseDown)) and mev.button == 1:
                     heldSegment = selectedJoint[0]
+
+                    if selectedSegment is not None:
+                        h = boxSze+gap*2
+                        w = (boxSze+gap)*boxes+gap
+                        x, y = (selectedSegment[0][0][0]+selectedSegment[0][1][0]-w)/2, min(selectedSegment[0][0][1], selectedSegment[0][1][1])-h-gap*3
+                        SelectedR = colls.Rect(x, y, w, h)
 
                     mp = colls.Point(*mev.pos)
                     if selectedSegment is None or not SelectedR.collides(mp):

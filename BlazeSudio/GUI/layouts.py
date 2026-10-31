@@ -280,8 +280,12 @@ class _BaseLayout(LayBase):
         if len(minszes) == 0:
             minszes = [(0, 0)]
         space = self.spacing*(len(szes)-1)
-        return (sum(s[0] for s in minszes)+space, max(s[1] for s in minszes))[::self._FLIP], \
-            (sum(s[0] for s in szes)+space, max(s[4] for s in szes))[::self._FLIP]
+        return (
+            (sum(s[0] for s in minszes)+space,
+             max(s[1] or 0 for s in minszes))[::self._FLIP],
+            (sum(s[0] for s in szes)+space,
+             max(s[4] for s in szes))[::self._FLIP]
+        )
 
     def onevent(self, ev):
         li = [i[0] for i in self._children if (not i[1]) and i[0] is not None]
