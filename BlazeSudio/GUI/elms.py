@@ -80,8 +80,8 @@ class Elms:
     class HLine(_LineBase):
         __slots__ = []
         def _szes(self, mxsze, _):
-            return (None, self.thickness), (mxsze[0], self.thickness)
+            return (0, self.thickness), (mxsze[0], self.thickness)
     class VLine(_LineBase):
         __slots__ = []
         def _szes(self, mxsze, _):
-            return (self.thickness, None), (self.thickness, mxsze[1])
+            return (self.thickness, 0), (self.thickness, mxsze[1])

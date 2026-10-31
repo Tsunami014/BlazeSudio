@@ -282,7 +282,7 @@ class _BaseLayout(LayBase):
         space = self.spacing*(len(szes)-1)
         return (
             (sum(s[0] for s in minszes)+space,
-             max(s[1] or 0 for s in minszes))[::self._FLIP],
+             max(s[1] for s in minszes))[::self._FLIP],
             (sum(s[0] for s in szes)+space,
              max(s[4] for s in szes))[::self._FLIP]
         )
