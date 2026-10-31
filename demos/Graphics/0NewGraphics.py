@@ -20,11 +20,12 @@ def main():
     import sys
     rot = 'rot' in sys.argv
 
-    from BlazeSudio.graphicsCore import Core, Ix, AvgClock, Col, Op, Font
+    from BlazeSudio.graphicsCore import Core, Ix, Clock, Col, Op, Font
+    Core.vsync = False
 
     fnt = Font.SysFonts.default()
     fnt.size = 80
-    c = AvgClock(3)
+    c = Clock(3)
     cur = None
     f = 0
     perframe = None
@@ -39,7 +40,7 @@ def main():
         avgFPS = 0
         cur = new
         f = 1
-        c = AvgClock()
+        c = Clock()
 
         ops = Op.Fill(Col.Background)
         match new:

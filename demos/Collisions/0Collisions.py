@@ -2,7 +2,7 @@
 
 def main():
     from BlazeSudio import collisions
-    from BlazeSudio.graphicsCore import Core, Ix, AvgClock, Col, Op, Font
+    from BlazeSudio.graphicsCore import Core, Ix, Clock, Col, Op, Font
     import math
     header_opts = ['point', 'line', 'arc', 'circle', 'rect', 'rotated rect', 'polygon', 'eraser', 'combiner', 'help']
     types = [collisions.Point, collisions.Line, collisions.Arc, collisions.Circle, collisions.Rect, collisions.RotatedRect, collisions.Polygon, collisions.NoShape]
@@ -103,7 +103,7 @@ def main():
                 curObj.startAng, curObj.endAng = dir[0], dir[2]
         return curObj
 
-    clock = AvgClock()
+    clock = Clock()
     while Ix.handleBasic():
         playMode = Ix.Keys.mAlt
         if not playMode:

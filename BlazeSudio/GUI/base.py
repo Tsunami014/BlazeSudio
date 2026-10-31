@@ -1,5 +1,5 @@
 from BlazeSudio.graphicsCore.miscOps import Fill, Crop
-from BlazeSudio.graphicsCore.stuff import Col, AvgClock
+from BlazeSudio.graphicsCore.stuff import Col, Clock
 from BlazeSudio.graphicsCore.base import Op, OpList, IDENTITY, Trans
 from BlazeSudio.graphicsCore.core import Core, _CoreCls
 from BlazeSudio.graphicsCore._basey import Base
@@ -16,7 +16,7 @@ __all__ = [
 
 class _UITyping(_CoreCls):
     bgcol: Col.colourType
-    clock: AvgClock
+    clock: Clock
     cursor: Any|bool
     def __call__(self, other: 'Element') -> Self: ...
     def Run(self, maxfps: float = None, *, quit_after: bool = True, fps_title: bool = False):
@@ -44,7 +44,7 @@ class _UIBase:
             inst = super().__new__(cls)
             cls.__instance = inst
             inst.bgcol = Col.Background
-            inst.clock = AvgClock()
+            inst.clock = Clock()
             inst.cursor = True
 
             cls.elm = None

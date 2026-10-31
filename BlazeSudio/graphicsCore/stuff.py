@@ -4,97 +4,90 @@ import time
 
 __all__ = ['Clock', 'AvgClock', 'Col']
 
-class Clock():
-    def __init__(self):
+class Clock:
+    __slots__ = ['secs', 'dt', '_lastTime', '_frameTimes']
+    def __init__(self, secs: float = 5):
+        """
+        Counts the FPS and delta time between ticks, optionally enforcing a maximum FPS
+
+        Args:
+            secs: The number of seconds to average the fps over (or 0 to disable average FPS). Defaults to 5
+        """
         self.dt = 0
         """The amount of seconds since the last tick"""
         self._lastTime = None
 
-    def tick(self, maxfps: float = None):
-        """
-        Ticks the clock, updating FPS count and optionally enforcing a maximum FPS.
-
-        Args:
-            maxfps: The maximum fps the application should run at. Defaults to None (don't enforce)
-        """
-        t = time.perf_counter()
-        slept = False
-        if self._lastTime is not None:
-            delta = t - self._lastTime
-            if maxfps is not None:
-                target_dt = 1.0 / maxfps
-                target = target_dt - delta - 0.001
-                if target > 0.1:
-                    slept = True
-                    time.sleep(target)
-                    t = time.perf_counter()
-                    delta = t - self._lastTime
-            self.dt = delta
-        if maxfps is not None and not slept:
-            time.sleep(0)
-        self._lastTime = t
-
-    def get_fps(self):
-        """
-        Returns the number of frames per second instantly
-        """
-        return 0 if self.dt == 0 else 1.0 / self.dt
-
-class AvgClock(Clock):
-    def __init__(self, secs: float = 5):
-        """
-        An average Clock, averaging the fps over a set time.
-
-        Args:
-            secs: The number of seconds to average the fps over. Defaults to 5
-        """
         self.secs = secs
+        """The amount of seconds to average the framerate over (or 0 to disable average FPS)"""
         self._frameTimes = deque()
-        super().__init__()
 
-    def tick(self, maxfps: float = None):
+    def tick(self, maxfps: float|None = None):
         """
-        Ticks the clock, updating FPS count and optionally enforcing a maximum FPS.
+        Ticks the clock and optionally enforces a maximum FPS.
 
         Args:
             maxfps: The maximum fps the application should run at. Defaults to None (don't enforce)
+
+        Returns:
+            The time that passed since last frame (self.dt)
         """
-        super().tick(maxfps)
-        # record this tick
-        self._frameTimes.append(self._lastTime)
-        # drop any frames older than time s
-        cutoff = self._lastTime - self.secs
-        while self._frameTimes and self._frameTimes[0] < cutoff:
-            self._frameTimes.popleft()
+        if maxfps is not None and maxfps <= 0:
+            raise ValueError(
+                "Max FPS must be > 0!!"
+            )
+        t = time.perf_counter()
+        if self._lastTime is not None:
+            if maxfps is not None:
+                deadline = self._lastTime + 1.0 / maxfps
+                remaining = deadline - time.perf_counter()
+                if remaining > 0.005:
+                    time.sleep(remaining - 0.002)
+                while time.perf_counter() < deadline: # For accuracy
+                    pass
+                t = time.perf_counter()
+            self.dt = t - self._lastTime
+
+        if self.secs > 0:
+            self._frameTimes.append(t)
+            # Drop old frame times
+            cutoff = t - self.secs
+            while self._frameTimes and self._frameTimes[0] < cutoff:
+                self._frameTimes.popleft()
+        else:
+            self._frameTimes.clear()
+
+        self._lastTime = t
+        return self.dt
 
     def get_fps(self):
         """
         Returns the average FPS over the last secs seconds.
         """
         count = len(self._frameTimes)
-        if count == 0:
-            return 0
-        time = self._lastTime - self._frameTimes[0]
-        return count / time if time > 0 else 0
+        if count < 2:
+            return self.get_fps_inst()
+        diff = self._lastTime - self._frameTimes[0]
+        return (count - 1) / diff if diff > 0 else 0
 
     def get_fps_inst(self):
         """
-        Returns the number of frames per second instantly
+        Returns the immediate number of frames per second
         """
-        return super().get_fps()
+        return 0 if self.dt == 0 else 1.0 / self.dt
+
 
 def _rgb(*args): # To be able to see the colours here
     return *args, 255
 class Col:
     """
     A Colour is an rgb tuple.
-    
+
     This class gives some helper functions for creating these tuples based off of different colour types.
     """
     colourType = Tuple[int, int, int, int]
     _RGBHEXFMT = "#{0:02x}{1:02x}{2:02x}"
     # TODO: Different hex values (e.g. rgba hex or 3 char hex)
-    
+
     @overload
     def __new__(cls, hex: str): ...
     @overload
@@ -247,4 +240,3 @@ class Col:
     Primary = _rgb(136, 107, 89)
     Secondary = _rgb(129, 95, 100)
     Accent = _rgb(87, 90, 75)
-

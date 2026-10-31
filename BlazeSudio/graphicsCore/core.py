@@ -20,17 +20,13 @@ class _CoreCls:
             return
         self._init = True
 
-        self._mainWin = sdl2.SDL_CreateWindow(b"Blaze Sudio game",
-                            sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED, 800, 500,
-                            sdl2.SDL_WINDOW_SHOWN)
-        self._renderer = sdl2.SDL_CreateRenderer(self._mainWin, -1,
-            sdl2.SDL_RENDERER_ACCELERATED)
-        self._texture = sdl2.SDL_CreateTexture(self._renderer, _PIXFMT, sdl2.SDL_TEXTUREACCESS_STREAMING, 800, 500)
-
         self._arr = None
         self._sze = (800, 500)
         self.op: Op|None = None
         self.smooth = False
+        self._vsync = True
+
+        self._rebuild(True)
 
     def Quit(self):
         """
@@ -116,28 +112,50 @@ class _CoreCls:
         if self.resizable == new:
             return
         # Rebuild entire window because otherwise it won't work :(
+        self._rebuild(False, new)
 
-        w, h = ctypes.c_int(), ctypes.c_int()
-        x, y = ctypes.c_int(), ctypes.c_int()
-        sdl2.SDL_GetWindowSize(self._mainWin, ctypes.byref(w), ctypes.byref(h))
-        sdl2.SDL_GetWindowPosition(self._mainWin, ctypes.byref(x), ctypes.byref(y))
-        flags = sdl2.SDL_GetWindowFlags(self._mainWin)
-        if new:
-            flags |= sdl2.SDL_WINDOW_RESIZABLE
+    @property
+    def vsync(self) -> bool:
+        """
+        If True, the frame rate will be capped at whatever the refresh rate of the monitor is
+        If False, the program will run as fast as possible and chew up CPU displaying frames that won't even be rendered because the monitor can't display that fast
+
+        Defaults to True
+        """
+        return self._vsync
+    @vsync.setter
+    def vsync(self, new: bool):
+        if self._vsync == new:
+            return
+        self._vsync = new
+        self._rebuild()
+
+    def _rebuild(self, init = False, newresizable = None):
+        if not init:
+            w, h = ctypes.c_int(), ctypes.c_int()
+            x, y = ctypes.c_int(), ctypes.c_int()
+            sdl2.SDL_GetWindowSize(self._mainWin, ctypes.byref(w), ctypes.byref(h))
+            sdl2.SDL_GetWindowPosition(self._mainWin, ctypes.byref(x), ctypes.byref(y))
+            flags = sdl2.SDL_GetWindowFlags(self._mainWin)
+            if newresizable is True:
+                flags |= sdl2.SDL_WINDOW_RESIZABLE
+            elif newresizable is False:
+                flags &= ~sdl2.SDL_WINDOW_RESIZABLE
+
+            sdl2.SDL_DestroyTexture(self._texture)
+            sdl2.SDL_DestroyRenderer(self._renderer)
+            sdl2.SDL_DestroyWindow(self._mainWin)
+
+            self._mainWin = sdl2.SDL_CreateWindow(
+                sdl2.SDL_GetWindowTitle(self._mainWin) or b"Blaze Sudio game",
+                x.value, y.value, w.value, h.value, flags
+            )
         else:
-            flags &= ~sdl2.SDL_WINDOW_RESIZABLE
+            self._mainWin = sdl2.SDL_CreateWindow(b"Blaze Sudio game",
+                sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED, *self._sze, sdl2.SDL_WINDOW_SHOWN)
 
-        sdl2.SDL_DestroyTexture(self._texture)
-        sdl2.SDL_DestroyRenderer(self._renderer)
-        sdl2.SDL_DestroyWindow(self._mainWin)
-
-
-        self._mainWin = sdl2.SDL_CreateWindow(
-            sdl2.SDL_GetWindowTitle(self._mainWin) or b"Blaze Sudio game", 
-            x.value, y.value, w.value, h.value, flags
-        )
-        self._renderer = sdl2.SDL_CreateRenderer(
-            self._mainWin, -1, sdl2.SDL_RENDERER_ACCELERATED
+        self._renderer = sdl2.SDL_CreateRenderer(self._mainWin, -1,
+            sdl2.SDL_RENDERER_ACCELERATED | (sdl2.SDL_RENDERER_PRESENTVSYNC if self._vsync else 0)
         )
         self._texture = sdl2.SDL_CreateTexture(
             self._renderer, _PIXFMT, sdl2.SDL_TEXTUREACCESS_STREAMING, *self._sze
