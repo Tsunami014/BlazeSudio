@@ -11,10 +11,12 @@ def main():
 
     FONT = Font.SysFonts.default()
     header_sze = FONT.lineheight+20
-    MOD_SPEED = 1
-    SPEED = 0.08
-    gravity_amnt = 0.03
-    friction_amnt = 0.001
+    MOD_SPEED = 130 # Units per second
+    BOUNCE_SPEED = 2 # Bounciness change per second
+    SPEED = 1800 # Acceleration in pixels per second squared
+    gravity_amnt = 1000 # Pixels per second squared
+    friction_amnt = 400 # Pixels per second squared
+    vellLimit = 2400 # Pixels per second
     typ = 0
     curObj: collisions.Shape = collisions.Point(0, 0)
     objs = collisions.Shapes()
@@ -104,6 +106,7 @@ def main():
         return curObj
 
     clock = Clock()
+    dt = 0
     while Ix.handleBasic():
         playMode = Ix.Keys.mAlt
         if not playMode:
@@ -200,35 +203,35 @@ Press any key/mouse to close this window""", Col.Black, prevWid))
                                     if Ix.MouseEvent(ev, Ix.EvTyp.MouseDown) or Ix.KeyEvent(ev, Ix.EvTyp.KeyDown):
                                         run2 = False
                                         break
-                                clock.tick(60)
+                                dt = clock.tick(60)
                             typ = oldtyp
 
             if Ix.Keys["up"]:
-                dir[1] -= MOD_SPEED
+                dir[1] -= MOD_SPEED*dt
             if Ix.Keys["down"]:
-                dir[1] += MOD_SPEED
+                dir[1] += MOD_SPEED*dt
             if Ix.Keys["left"]:
-                dir[0] -= MOD_SPEED
+                dir[0] -= MOD_SPEED*dt
             if Ix.Keys["right"]:
-                dir[0] += MOD_SPEED
+                dir[0] += MOD_SPEED*dt
             if Ix.Keys[","]:
-                dir[2] -= MOD_SPEED
+                dir[2] -= MOD_SPEED*dt
             if Ix.Keys["."]:
-                dir[2] += MOD_SPEED
+                dir[2] += MOD_SPEED*dt
 
         if Ix.Keys["w"]:
-            vel[1] -= SPEED
+            vel[1] -= SPEED*dt
         if Ix.Keys["s"]:
-            vel[1] += SPEED
+            vel[1] += SPEED*dt
         if Ix.Keys["a"]:
-            vel[0] -= SPEED
+            vel[0] -= SPEED*dt
         if Ix.Keys["d"]:
-            vel[0] += SPEED
+            vel[0] += SPEED*dt
 
         if Ix.Keys["["]:
-            curObj.bounciness = max(0.1, round(curObj.bounciness-0.05, 3))
+            curObj.bounciness = max(0.1, round(curObj.bounciness-BOUNCE_SPEED*dt, 3))
         if Ix.Keys["]"]:
-            curObj.bounciness = min(1.5, round(curObj.bounciness+0.05, 3))
+            curObj.bounciness = min(1.5, round(curObj.bounciness+BOUNCE_SPEED*dt, 3))
 
         if (not playMode) and objs.collides(curObj):
             if curObj.isContaining(objs):
@@ -262,11 +265,10 @@ Press any key/mouse to close this window""", Col.Black, prevWid))
                     gravity = [0, gravity_amnt]
             else:
                 gravity = [0, 0]
-            vel = [vel[0] + gravity[0], vel[1] + gravity[1]]
-            vellLimits = [10, 10]
-            vel = [min(max(vel[0], -vellLimits[0]), vellLimits[0]), min(max(vel[1], -vellLimits[1]), vellLimits[1])]
+            vel = [vel[0] + gravity[0]*dt, vel[1] + gravity[1]*dt]
+            vel = [min(max(vel[0], -vellLimit), vellLimit), min(max(vel[1], -vellLimit), vellLimit)]
             if not Ix.Keys['l']:
-                friction = [friction_amnt, friction_amnt]
+                friction = [friction_amnt*dt, friction_amnt*dt]
             else:
                 friction = [0, 0]
             def fric_eff(x, fric):
@@ -276,7 +278,9 @@ Press any key/mouse to close this window""", Col.Black, prevWid))
                     return x - fric
                 return 0
             vel = [fric_eff(vel[0], friction[0]), fric_eff(vel[1], friction[1])]
-            _, vel = curObj.handleCollisionsVel(vel, objs)
+            _, stepVel = curObj.handleCollisionsVel([vel[0]*dt, vel[1]*dt], objs)
+            if dt > 0:
+                vel = [stepVel[0]/dt, stepVel[1]/dt]
 
         else:
             pos = Ix.Mouse.pos
@@ -316,5 +320,5 @@ Press any key/mouse to close this window""", Col.Black, prevWid))
             ops += FONT.render(list(combineFs.keys())[combineTyp], Col.White) @ (0, header_sze+2)
         Core(ops)
         Core.rend()
-        clock.tick(60)
+        dt = clock.tick(60)
     Core.Quit()
