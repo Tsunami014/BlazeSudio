@@ -3,7 +3,7 @@ from .input import Input
 from .term import Term
 from .layouts import Lays
 from .base import UI, OpElm, Col
-from BlazeSudio.graphicsCore import Font
+from BlazeSudio.graphics import Font
 __all__ = [
     'UI',
     'Col',

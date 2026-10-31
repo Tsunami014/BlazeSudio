@@ -1,5 +1,5 @@
 from .base import Element, BaseO
-from BlazeSudio.graphicsCore.base import OpList, Vec2
+from BlazeSudio.graphics.base import OpList, Vec2
 from dataclasses import dataclass
 from typing import Self, Iterable
 from numbers import Number

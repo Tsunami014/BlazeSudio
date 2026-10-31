@@ -1,209 +1,463 @@
-from BlazeSudio.graphics.stacks import StackPart
-from BlazeSudio.graphics import options as GO
-import inspect
-from typing import Any, Iterable, TYPE_CHECKING
-from enum import Enum
+"""# Informative info about Op classes
 
-if TYPE_CHECKING:
-    from BlazeSudio.graphics.GUI import GraphicBase
+- `Op` - for drawing that modifies every pixel in the same way, e.g. fill
+    - `NormalisedOp` - for shapes and images that only affect a part of the output not all of it.
+- `Trans` - for modifications to groups of operations, e.g. rotate or fancy effects that apply to the whole screen
+    - `MatTrans` - for matrix transformations
+    - `Layer` - draws its ops onto a blank buffer that can have effects applied afterwards
+"""
+from . import _basey
+from typing import Self, overload
+from abc import ABC, abstractmethod
+from enum import IntEnum
+import numpy as np
 
 __all__ = [
-    'HiddenStatus', 
-    'Element', 
-    'ReturnState', 
-    'ReturnGroup'
+    'Anchors',
+    'IDENTITY',
+    'OpFlags',
+    'TransFlags',
+    'Trans',
+        'Vec2',
+        'MatTrans',
+        'Layer',
+    'Op',
+        'NoOp',
+        'NormalisedOp',
+        'OpList',
+        'TransOp'
 ]
 
-class HiddenStatus(Enum):
-    """Different states an Element can be in relation to drawing and updating"""
+class Anchors:
+    _nx = 'normalise_x'
+    _ny = 'normalise_y'
+    TopLeft =  {_nx: 0,   _ny: 0}
+    TopMid =   {_nx: 0.5, _ny: 0}
+    TopRight = {_nx: 1,   _ny: 0}
+    MidLeft =  {_nx: 0,   _ny: 0.5}
+    Middle =   {_nx: 0.5, _ny: 0.5}
+    MidMid =   Middle
+    MidRight = {_nx: 1,   _ny: 0.5}
+    BotLeft =  {_nx: 0,   _ny: 1}
+    BotMid =   {_nx: 0.5, _ny: 1}
+    BotRight = {_nx: 1,   _ny: 1}
 
-    SHOWING = 0
-    """Showing, runs normally"""
-    NOTUPDATING = 1
-    """Rendering, but doesn't update"""
-    HIDDEN = 2
-    """Not rendering, but still updating and still has size"""
-    GONE = 3
-    """Not rendering, has no size and doesn't update"""
+IDENTITY = np.array([
+    [1, 0, 0],
+    [0, 1, 0],
+    [0, 0, 1]
+], float)
 
-class Element:
-    NEXT_UID = [0]
-    type = None
-    G: 'GraphicBase'
-    def __init__(self, pos: GO.P___, size: Iterable[int|float]):
-        """
-        Base element class, do not directly use, but instead subclass to make your own Elements.
+class OpFlags(IntEnum):
+    """
+    Flags that make Operations act differently.
+    Only for manual use if you know what you're doing.
+    """
+    NoFlags = 0
+    """Has no flags. Is not special"""
+    List = 0b1
+    """Is an OpList"""
+    Trans = 0b10
+    """Is a TransOp"""
+    Normalised = 0b100
+    """Is a NormalisedOp"""
+    Reset = 0b1000
+    """Is a reset op. Every op before it will be ignored"""
 
-        Args:
-            pos (GO.P___): The position of this element on the screen. 
-            size (Iterable[number, number]): The size of this element.
-        """
-        self.pos: GO.P___ = pos
-        self.hiddenStatus = HiddenStatus.SHOWING
-        self.size = size
-        self.uid = self.NEXT_UID[0]
-        self.NEXT_UID[0] += 1
-        self._init2Ran = False
-    
-    def _init2(self):
-        if isinstance(self.pos, GO.POverride):
-            self.stackP = self.pos.copy()
-            self.stackP.setup(self, self.G)
-        else:
-            self.stackP = StackPart(self, self.G.stacks, self.pos, self.G.sizeOfScreen)
-    
-    def remove(self):
-        self.stackP.remove()
-        self.G.Stuff.remove(self)
-    
-    def change_pos(self, newPos):
-        self.stackP.remove()
-        self.pos = newPos
-        self.stackP = StackPart(self, self.G.stacks, newPos, self.size, self.G.sizeOfScreen)
-    
-    def UpdateDraw(self, mousePos, events, force_redraw=False):
-        if self.hiddenStatus == HiddenStatus.GONE:
-            return
-        
-        args = inspect.getfullargspec(self.update).args
-        ret = None
-        if len(args) == 4: # If includes the force_redraw arg then let it update again
-            ret = self.update(mousePos.copy(), events, force_redraw)
-        elif not force_redraw:
-            ret = self.update(mousePos.copy(), events)
-        
-        if isinstance(ret, (ReturnState, ReturnGroup)):
-            if ReturnState.STOP in ret:
-                return ret
+class TransFlags(IntEnum):
+    NoFlags = 0
+    """Has no flags. Is not special"""
+    Group = 0b1
+    """Is a TransGroup"""
+    Matrix = 0b10
+    """Is a matrix transformation"""
+    Layer = 0b100
+    """Is a layer transformation"""
 
-        if self.hiddenStatus in (HiddenStatus.SHOWING, HiddenStatus.NOTUPDATING):
-            args2 = inspect.getfullargspec(self.draw).args
-            if len(args2) == 2: # Includes mousepos
-                self.draw(mousePos) # We don't use mousePos anymore, no need to copy it this time
-            else:
-                self.draw()
-        
-        if ret:
-            return ret
-        return
-    
-    # Required subclass functions
-    def update(self, mousePos, events):
-        pass
 
-    def draw(self):
-        pass
-    
-    def get(self):
-        pass
-    
-    def set(self):
-        pass
-    
-    # Utility functions
-    def __eq__(self, other):
-        return self.uid == other
-    
-    def __hash__(self):
-        return hash(self.uid)
-    
-    def __getattribute__(self, name: str) -> Any:
-        if name == 'size' and 'size' in self.__dict__ and 'hiddenStatus' in self.__dict__ and self.hiddenStatus == HiddenStatus.GONE:
-            return (0, 0)
-        elif name == ('G', 'stackP') and 'G' not in self.__dict__:
-            raise AttributeError(
-                f"'{self.__class__.__name__}' object has no attribute '{name}'. This is because you are trying to run something that is trying to access this variable \
-when this object has not been initialised yet. Initialise this object first (by e.g. adding it to a `Collection`) before running whatever it was that made this error. \
-If you are a developer, try putting whatever code that requires this variable inside `_init2`."
-            )
-        else:
-            return super().__getattribute__(name)
-    
-    def __str__(self):
-        return f'<{self.__class__.__name__}({str(self.get())})>'
-    def __repr__(self): return str(self)
+class Trans(ABC):
+    __slots__ = []
+    flags = TransFlags.NoFlags
 
-class ReturnState(Enum):
-    # If nothing happpens, return None as usual
-    STOP = -1
-    """Stop updating any more elements before next frame"""
+    @abstractmethod
+    def apply(self, mat: np.ndarray, crop: tuple, defSmth: bool): ...
 
-    ABORT = 1
-    """Abort the Graphics screen"""
-    
-    CALL = 2
-    """Call the main graphic screen function on this"""
-    
-    REDRAW = 3
-    """Redraw this element on top of all the others in its layer. Used for buttons and such."""
+    def __pos__(self) -> Self: return self
+    def __add__(self, oth) -> 'Trans':
+        if not isinstance(oth, Trans):
+            oth = Vec2(*oth)
+        if self.flags & TransFlags.Group:
+            if oth.flags & TransFlags.Group:
+                return TransGroup(*self.membs, *oth.membs)
+            return TransGroup(*self.membs, oth)
+        if oth.flags & TransFlags.Group:
+            return TransGroup(self, *oth.membs)
+        if self.flags & TransFlags.Matrix and oth.flags & TransFlags.Matrix:
+            return MatTrans(oth.mat @ self.mat)
+        return TransGroup(self, oth)
 
-    REDRAW_HIGH = 4
-    """Redraws the element after all the other redraws to become the VERY top. Used for Frames, Grids and other layouts."""""
-
-    REDRAW_HIGHEST = 5
-    """Redraws the element after all the other higher redraws to become the *VERY VERY* top. Used for events, e.g. dropdowns, toasts and textboxes."""
-
-    DONTCALL = 6
-    """Don't call the graphic screen function on this element"""
-    
-    def __add__(self, otherState):
-        if not isinstance(otherState, (ReturnState, ReturnGroup)):
-            raise TypeError(
-                'Invalid type for add: %s! Must be a ReturnState or a ReturnGroup!'%str(type(otherState))
-            )
-        if isinstance(otherState, ReturnGroup):
-            otherState.append(self)
-            return otherState
-        return ReturnGroup(self, otherState)
-    
     def __iter__(self):
         return iter((self,))
-    
-    def __contains__(self, otherState):
-        if not isinstance(otherState, (ReturnState, int)):
-            raise TypeError(
-                'Invalid type for add: %s! Must be a ReturnState or int!'%str(type(otherState))
-            )
-        if isinstance(otherState, int):
-            return self.value == otherState
-        return self == otherState
+    def flat(self):
+        yield self
+    def flatten(self):
+        return list(self.flat())
 
-    def get(self):
-        return [self]
+class MatTrans(Trans, _basey.Base):
+    __slots__ = ['mat']
+    flags = TransFlags.Matrix
 
-class ReturnGroup:
-    def __init__(self, *states):
-        self.states = list(states)
-    
-    def append(self, otherState):
-        self.states.append(otherState)
-    
-    def get(self):
-        return self.states
-    
-    def __add__(self, otherState):
-        if not isinstance(otherState, (ReturnState, ReturnGroup)):
-            raise TypeError(
-                'Invalid type for add: %s! Must be a ReturnState or a ReturnGroup!'%str(type(otherState))
-            )
-        if isinstance(otherState, ReturnGroup):
-            self.states.extend(otherState.states)
-        else:
-            self.states.append(otherState)
-        return self
-    
+    def __init__(self, mat):
+        self.mat = np.array(mat, float)
+
+    def apply(self, mat: np.ndarray, crop, defSmth: bool):
+        return mat @ self.mat, crop, defSmth
+
+class Layer(Trans):
+    __slots__ = ['mat']
+    flags = TransFlags.Layer
+
+    @abstractmethod
+    def effect(self, mat: np.ndarray, defSmth: bool): ...
+
+    def apply(self, mat: np.ndarray, crop, defSmth: bool):
+        pass # TODO: This
+
+class Vec2(MatTrans):
+    __slots__ = ['pos']
+
+    @property
+    def mat(self) -> np.ndarray:
+        return np.array([
+            [1, 0, self.pos[0]],
+            [0, 1, self.pos[1]],
+            [0, 0, 1]
+        ], float)
+
+    @overload
+    def __init__(self, x: float, y: float): ...
+    @overload
+    def __init__(self, pos): ...
+    def __init__(self, *args):
+        match len(args):
+            case 1:
+                self.pos = args[0]
+            case 2:
+                self.pos = args
+            case _:
+                raise TypeError(
+                    f'Expected 1 or 2 arguments, found {len(args)}!'
+                )
+
+    @property
+    def x(self) -> float:
+        return self.pos[0]
+    @property
+    def y(self) -> float:
+        return self.pos[1]
+
     def __iter__(self):
-        return iter(self.states)
-    
-    def __contains__(self, otherState):
-        if not isinstance(otherState, (ReturnState, int)):
-            raise TypeError(
-                'Invalid type for add: %s! Must be a ReturnState or int!'%str(type(otherState))
-            )
-        if isinstance(otherState, int):
-            return otherState in [i.value for i in self.states]
-        return otherState in self.states
-    
-    def __str__(self):
-        return f'<ReturnGroup with states {self.states}>'
-    def __repr__(self): return str(self)
+        return iter(self.pos)
+    def __len__(self):
+        return 2
+    def __getitem__(self, it):
+        return self.pos[it]
+
+    def __neg__(self):
+        return Vec2(-self.pos[0], -self.pos[1])
+    def __abs__(self):
+        return Vec2(abs(self.pos[0]), abs(self.pos[1]))
+
+    def __add__(self, oth):
+        if isinstance(oth, Trans):
+            return super().__add__(oth)
+        if not hasattr(oth, '__len__'):
+            return Vec2(self.pos[0] + oth, self.pos[1] + oth)
+        return Vec2(self.pos[0] + oth[0], self.pos[1] + oth[1])
+    def __sub__(self, oth):
+        if not hasattr(oth, '__len__'):
+            return Vec2(self.pos[0] - oth, self.pos[1] - oth)
+        return Vec2(self.pos[0] - oth[0], self.pos[1] - oth[1])
+    def __mul__(self, oth):
+        if not hasattr(oth, '__len__'):
+            return Vec2(self.pos[0] * oth, self.pos[1] * oth)
+        return Vec2(self.pos[0] * oth[0], self.pos[1] * oth[1])
+    def __floordiv__(self, oth):
+        if not hasattr(oth, '__len__'):
+            return Vec2(self.pos[0] // oth, self.pos[1] // oth)
+        return Vec2(self.pos[0] // oth[0], self.pos[1] // oth[1])
+    def __div__(self, oth):
+        if not hasattr(oth, '__len__'):
+            return Vec2(self.pos[0] / oth, self.pos[1] / oth)
+        return Vec2(self.pos[0] / oth[0], self.pos[1] / oth[1])
+
+class TransGroup(Trans):
+    __slots__ = ['membs', '_fixed']
+    flags = TransFlags.Group
+    def __init__(self, *transs):
+        self.membs = list(transs)
+        self._fixed = False
+
+    def _unpack(self, li):
+        for it in li:
+            if it.flags & TransFlags.Group:
+                yield from self._unpack(it)
+            else:
+                yield it
+
+    def fix(self):
+        if self._fixed:
+            return
+        it = self._unpack(self.membs)
+        membs = []
+        m = next(it, None)
+        while m is not None:
+            m2 = m
+            while (nxt := next(it, None)) is not None and \
+                    m.flags & nxt.flags & TransFlags.Matrix:
+                m2 = MatTrans(nxt.mat @ m2.mat)
+                m = nxt
+            membs.append(m2)
+            m = nxt
+        self.membs = membs
+        self._fixed = True
+
+    def apply(self, *args):
+        if not self._fixed:
+            self.fix()
+        for m in self.membs[::-1]:
+            args = m.apply(*args)
+            if args is None:
+                return None
+        return args
+
+    def __iter__(self):
+        if not self._fixed:
+            self.fix()
+        return iter(self.membs)
+    def flat(self):
+        if not self._fixed:
+            self.fix()
+        for m in self.membs:
+            yield from m.flat()
+
+
+class Op(ABC, _basey.Base):
+    __slots__ = ['flags']
+
+    @abstractmethod
+    def apply(self, mat: np.ndarray, arr: np.ndarray, crop, defSmth: bool): ...
+
+    def frozen(self) -> Self:
+        """Get the frozen verson of this operation"""
+        return self
+    def freeze(self) -> Self:
+        """Freezes this operation and returns it"""
+        return self
+
+    def __pos__(self) -> Self: return self
+    def __add__(self, oth) -> 'OpList':
+        if oth.flags & OpFlags.List:
+            return OpList(self, *oth.ops)
+        return OpList(self, oth)
+
+    def __matmul__(self, oth) -> 'TransOp':
+        if oth is None:
+            return TransOp(self.frozen())
+        if not isinstance(oth, Trans):
+            oth = Vec2(*oth)
+        return TransOp(self.frozen(), oth)
+
+    def _op(self, mat, mxsze) -> Self: # For GUI integration
+        return self
+
+    def __iter__(self):
+        return iter((self,))
+    def flat(self):
+        yield self
+    def flatten(self):
+        return list(self.flat())
+
+class NoOp(Op):
+    __slots__ = []
+    def __init__(self):
+        self.flags = OpFlags.NoFlags
+
+    def apply(self, mat, arr, crop, defSmth):
+        pass
+
+class NormalisedBase:
+    def rect(self):
+        """Returns a tuple in the format (topleft_x, topleft_y, width, height)"""
+        return None, None, None, None
+    @property
+    def rpos(self):
+        """Get the position as of self.rect"""
+        p = self.rect()[:2]
+        if p[0] is None:
+            return None
+        return Vec2(p)
+    @property
+    def rsze(self):
+        """Get the size as of self.rect"""
+        s = self.rect()[2:]
+        if s[0] is None:
+            return None
+        return Vec2(s)
+    def getNormalisedPos(self, normalise_x: float = 0, normalise_y: float = 0):
+        """Get the true position of a normalised point."""
+        x, y, wid, hei = self.rect()
+        if x is None:
+            return None, None
+        return Vec2(x + wid * normalise_x, y + hei * normalise_y)
+
+class NormalisedOp(Op, NormalisedBase):
+    def __init__(self, *, normalise_x = None, normalise_y = None):
+        self.flags = OpFlags.Normalised
+        if normalise_x is not None and normalise_y is not None:
+            ox, oy = self.getNormalisedPos(normalise_x, normalise_y)
+            if normalise_x is None:
+                ox = 0
+            if normalise_y is None:
+                oy = 0
+            self._translate(-ox, -oy)
+
+    @abstractmethod
+    def _translate(self, x, y): ...
+
+class OpList(Op, NormalisedBase):
+    __slots__ = ['ops', '_fixed', 'flags']
+    def __init__(self, *ops):
+        self.ops = ops
+        self._fixed = False
+        self.flags = OpFlags.List
+
+    def rect(self):
+        """
+        Get the rect (x, y, width, height) that surrounds all ops in this list.
+
+        If any operation is not a NormalisedOp, will return (None, None, None, None)
+        """
+        if not self._fixed:
+            self.fix()
+        if not self.flags & OpFlags.Normalised:
+            return None, None, None, None
+        rs = [
+            (x, y, x+w, y+h) for x, y, w, h in
+                (o.rect() for o in self.ops)
+        ]
+        topLeft = [
+            min(i[0] for i in rs),
+            min(i[1] for i in rs),
+        ]
+        botRight = [
+            max(i[2] for i in rs),
+            max(i[3] for i in rs),
+        ]
+        return *topLeft, botRight[0]-topLeft[0], botRight[1]-topLeft[1]
+
+    def _unpack(self, li):
+        for it in li:
+            if it.flags & OpFlags.List:
+                yield from self._unpack(it)
+            else:
+                yield it
+
+    def fix(self):
+        if self._fixed:
+            return
+        ops = list(self._unpack(self.ops))
+        self.flags &= ~OpFlags.Reset # Remove the reset flag
+        for idx, o in enumerate(ops[::-1]):
+            if o.flags & OpFlags.Reset:
+                self.ops = ops[-1-idx:]
+                self.flags |= OpFlags.Reset # Add the reset flag
+                break # We're going backwards
+        else:
+            self.ops = ops
+        if all(i.flags & OpFlags.Normalised for i in ops):
+            self.flags |= OpFlags.Normalised
+        else:
+            self.flags &= ~OpFlags.Normalised
+        self._fixed = True
+
+    def frozen(self) -> 'OpList':
+        """Get an op list that is the frozen version of this"""
+        if not self._fixed:
+            self.fix()
+        nl = OpList(*self.ops)
+        nl._fixed = True # We did that just then, no need to do it twice
+        nl.flags = self.flags & ~OpFlags.List # Every flag except List
+        return nl
+    def freeze(self) -> Self:
+        """Freezes this op list and returns it"""
+        if not self._fixed:
+            self.fix()
+        self.flags = self.flags & ~OpFlags.List
+        return self
+
+    def apply(self, mat: np.ndarray, arr: np.ndarray, crop, defSmth):
+        if not self._fixed:
+            self.fix() # Lazily fix it so it won't every new addition
+        for op in self.ops:
+            op.apply(mat, arr, crop, defSmth)
+
+    def __add__(self, oth) -> 'OpList':
+        if not self.flags & OpFlags.List:
+            if oth.flags & OpFlags.List:
+                return OpList(self, *oth.ops)
+            return OpList(self, oth)
+        if oth.flags & OpFlags.List:
+            return OpList(*self.ops, *oth.ops)
+        return OpList(*self.ops, oth)
+
+    def __iter__(self):
+        if not self._fixed:
+            self.fix()
+        return iter(self.ops)
+    def flat(self):
+        if not self._fixed:
+            self.fix()
+        for o in self.ops:
+            yield from o.flat()
+
+class TransOp(Op, _basey.Base, NormalisedBase):
+    __slots__ = ['op', 'trans']
+    def __new__(cls, op: Op, trans: Trans = None):
+        if op.flags & OpFlags.Trans:
+            if trans is None:
+                return op
+            if op.trans is None:
+                return TransOp(op.op, trans)
+            return TransOp(op.op, op.trans + trans)
+        return super().__new__(cls)
+    def __init__(self, op: Op, trans: Trans = None):
+        self.op = op
+        self.trans = trans
+        self.flags = op.flags | OpFlags.Trans
+
+    def apply(self, mat: np.ndarray, arr: np.ndarray, crop, defSmth):
+        if self.trans is not None:
+            args = self.trans.apply(mat, crop, defSmth)
+            if args is not None:
+                self.op.apply(args[0], arr, *args[1:])
+        else:
+            self.op.apply(mat, arr, crop, defSmth)
+
+    def __iter__(self):
+        return iter(self.op)
+    def flat(self):
+        yield from self.op.flat()
+
+    def rect(self):
+        """Returns a tuple in the format (topleft_x, topleft_y, width, height)"""
+        if self.trans is None:
+            return self.op.rect()
+        args = self.trans.apply(IDENTITY, (float("-inf"), float("-inf"), float("inf"), float("inf")), False)
+        if args is None:
+            return None, None, None, None
+        r = self.op.rect()
+        if r[0] is None:
+            return None, None, None, None
+        box = self._warpbbx(args[0], (r[0], r[1], r[2]+r[0],r[3]+r[1]), (0,0,0,0))
+        return box[0], box[1], box[2]-box[0], box[3]-box[1]

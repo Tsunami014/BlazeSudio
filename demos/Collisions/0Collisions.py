@@ -2,7 +2,7 @@
 
 def main():
     from BlazeSudio import collisions
-    from BlazeSudio.graphicsCore import Core, Ix, Clock, Col, Op, Font
+    from BlazeSudio.graphics import Core, Ix, Clock, Col, Op, Font
     import math
     header_opts = ['point', 'line', 'arc', 'circle', 'rect', 'rotated rect', 'polygon', 'eraser', 'combiner', 'help']
     types = [collisions.Point, collisions.Line, collisions.Arc, collisions.Circle, collisions.Rect, collisions.RotatedRect, collisions.Polygon, collisions.NoShape]

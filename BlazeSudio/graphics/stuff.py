@@ -1,248 +1,242 @@
-import pygame
+from typing import Tuple, overload
+from collections import deque
+import time
 
-__all__ = [
-    'Things',
-    'Stuff',
-    'Layers',
-    'Collection',
-]
+__all__ = ['Clock', 'AvgClock', 'Col']
 
-# Stuff is an organisated dictionary of Things
-# A Layer is a list that can be filled with Stuff
-# A Collection is a collection of Layers of Stuff
+class Clock:
+    __slots__ = ['secs', 'dt', '_lastTime', '_frameTimes']
+    def __init__(self, secs: float = 5):
+        """
+        Counts the FPS and delta time between ticks, optionally enforcing a maximum FPS
 
-def handle_events():
-    evs = pygame.event.get()
-    cont = True
-    for ev in evs:
-        if ev.type == pygame.QUIT:
-            cont = False
-            break
-        elif ev.type == pygame.KEYDOWN and ev.key == pygame.K_ESCAPE:
-            cont = False
-            break
-    return evs, cont
+        Args:
+            secs: The number of seconds to average the fps over (or 0 to disable average FPS). Defaults to 5
+        """
+        self.dt = 0
+        """The amount of seconds since the last tick"""
+        self._lastTime = None
 
-class Things(list):
-    def __init__(self, parent, data=()):
-        self.parent = parent
-        super().__init__((self._checkIt(i) for i in data))
-    
-    def _checkIt(self, it):
-        if not it._init2Ran:
-            it.G = self.parent
-            it._init2()
-            it._init2Ran = True
-        return it
-    
-    def append(self, it):
-        super().append(self._checkIt(it))
-    
-    def appendRaw(self, it):
-        super().append(it)
-    
-    def extend(self, its):
-        super().extend((self._checkIt(i) for i in its))
-    
-    def extendRaw(self, its):
-        super().extend(its)
-    
-    def insert(self, index, it):
-        super().insert(index, self._checkIt(it))
-    
-    def insertRaw(self, index, it):
-        super().insert(index, it)
-    
-    def __iadd__(self, its):
-        self.extend(its)
-        return self
+        self.secs = secs
+        """The amount of seconds to average the framerate over (or 0 to disable average FPS)"""
+        self._frameTimes = deque()
 
-    def iaddRaw(self, its):
-        self.extendRaw(its)
-        return self
-    
-    def __add__(self, its):
-        new_data = list(self)
-        extra = [self._checkIt(i) for i in its]
-        new_data.extend(extra)
-        return Things(self.parent, new_data)
-    
-    def addRaw(self, its):
-        new_data = list(self)
-        new_data.extend(its)
-        return Things(self.parent, new_data)
-    
-    def __getitem__(self, key):
-        result = super().__getitem__(key)
-        if isinstance(key, slice):
-            return Things(self.parent, result)
-        return result
-    
-    def __setitem__(self, key, value):
-        if isinstance(key, slice):
-            transformed = [self._checkIt(v) for v in value]
-            super().__setitem__(key, transformed)
-        else:
-            super().__setitem__(key, value(self.parent))
-    
-    def setitemRaw(self, key, value):
-        super().__setitem__(key, value)
+    def tick(self, maxfps: float|None = None):
+        """
+        Ticks the clock and optionally enforces a maximum FPS.
 
-class Stuff:
-    def __init__(self, parent, categories=None):
-        self.parent = parent
-        if categories is not None:
-            self.categories = categories
-        else:
-            self.categories = {}
-    
-    def clear(self, ignores=[]):
-        self.categories = {i: (Things(self.parent) if i not in ignores else self.categories[i]) for i in self.categories}
+        Args:
+            maxfps: The maximum fps the application should run at. Defaults to None (don't enforce)
 
-    def copy(self):
-        return Stuff(self.parent, self.categories.copy())
-    
-    def get(self):
-        li = []
-        for i in self.categories:
-            li.extend(self.categories[i])
-        return li
-    
-    def update(self, mousePos, events):
-        returns = {}
-        for i in self.categories:
-            for j in self.categories[i]:
-                returns[j] = j.UpdateDraw(mousePos.copy(), events)
-                if returns[j] and -1 in returns[j]:
-                    return
-        return returns
-    
-    def add(self, _name):
-        if _name not in self.categories:
-            self.categories[_name] = Things(self.parent)
-    
-    def add_many(self, _names):
-        self.categories.update({i: Things(self.parent) for i in _names if i not in self.categories})
-    
-    def remove(self, obj):
-        for i in self.categories:
-            if obj in self.categories[i]:
-                self.categories[i].remove(obj)
-    
-    def __iter__(self):
-        outl = []
-        for i in self.categories.values():
-            outl.extend(i)
-        return iter(outl)
-    
-    def __len__(self):
-        ln = 0
-        for i in self.categories:
-            ln += len(self.categories[i])
-        return ln
-    
-    def __getitem__(self, _key):
-        return self.categories[_key]
-    
-    def __setitem__(self, _key, _value):
-        if _key not in self.categories:
-            raise KeyError(
-                f'Category {_key} does not exist!'
+        Returns:
+            The time that passed since last frame (self.dt)
+        """
+        if maxfps is not None and maxfps <= 0:
+            raise ValueError(
+                "Max FPS must be > 0!!"
             )
-        if not isinstance(_value, Things):
-            self.categories[_key] = Things(self.parent, _value)
+        t = time.perf_counter()
+        if self._lastTime is not None:
+            if maxfps is not None:
+                deadline = self._lastTime + 1.0 / maxfps
+                remaining = deadline - time.perf_counter()
+                if remaining > 0.005:
+                    time.sleep(remaining - 0.002)
+                while time.perf_counter() < deadline: # For accuracy
+                    pass
+                t = time.perf_counter()
+            self.dt = t - self._lastTime
+
+        if self.secs > 0:
+            self._frameTimes.append(t)
+            # Drop old frame times
+            cutoff = t - self.secs
+            while self._frameTimes and self._frameTimes[0] < cutoff:
+                self._frameTimes.popleft()
         else:
-            self.categories[_key] = _value
-    
-    def __str__(self):
-        return '<Stuff with %i objects>'%len(self)
-    def __repr__(self): return str(self)
+            self._frameTimes.clear()
 
-class Layers(list):
-    def __init__(self, parent, data=()):
-        self.parent = parent
-        super().__init__(data)
-    
-    def __getitem__(self, _idx):
-        if not isinstance(_idx, int):
-            raise TypeError(
-                'Index must be an integer!'
-            )
-        if _idx >= len(self):
-            self.extend([Stuff(self.parent) for _ in range(_idx - len(self) + 1)])
-        
-        return super().__getitem__(_idx)
+        self._lastTime = t
+        return self.dt
 
-    def copy(self):
-        return Layers(self.parent, iter(self))
+    def get_fps(self):
+        """
+        Returns the average FPS over the last secs seconds.
+        """
+        count = len(self._frameTimes)
+        if count < 2:
+            return self.get_fps_inst()
+        diff = self._lastTime - self._frameTimes[0]
+        return (count - 1) / diff if diff > 0 else 0
 
-    def __str__(self):
-        return f'<Layers {super().__str__()}>'
-    def __repr__(self):
-        return f'<Layers {super().__repr__()}>'
+    def get_fps_inst(self):
+        """
+        Returns the immediate number of frames per second
+        """
+        return 0 if self.dt == 0 else 1.0 / self.dt
 
-class Collection:
-    def __init__(self, parent, layers=None):
-        self.parent = parent
-        if layers is None:
-            self.layers = Layers(self.parent, [Stuff(self.parent)])
-        else:
-            self.layers = layers
-    
-    def getall(self):
-        alls = []
-        for i in self.layers:
-            alls.extend(i.get())
-        return alls
-    
-    def remove(self, obj):
-        for i in self.layers:
-            if obj in i:
-                i.remove(obj)
-    
-    def clear(self, ignores=[]):
-        for i in self.layers:
-            i.clear(ignores)
-    
-    def copy(self):
-        return Collection(self.parent, Layers(self.parent, [i.copy() for i in self.layers]))
-    
-    def insert_layer(self, pos=None) -> Stuff:
-        if pos is None:
-            pos = len(self.layers)
-        s = Stuff(self.parent)
-        self.layers.insert(pos, s)
-        return s
-    
-    def __len__(self):
-        return sum(len(i) for i in self.layers)
 
-    def __iter__(self):
-        for i in self.layers:
-            for j in i.get():
-                yield j
-    
-    def __getitem__(self, _name):
-        for i in self.layers:
-            try:
-                return i[_name]
-            except KeyError:
-                pass
-        raise KeyError(
-            f'Item {_name} does not exist in any layer!'
+def _rgb(*args): # To be able to see the colours here
+    return *args, 255
+class Col:
+    """
+    A Colour is an rgb tuple.
+
+    This class gives some helper functions for creating these tuples based off of different colour types.
+    """
+    colourType = Tuple[int, int, int, int]
+    _RGBHEXFMT = "#{0:02x}{1:02x}{2:02x}"
+    # TODO: Different hex values (e.g. rgba hex or 3 char hex)
+
+    @overload
+    def __new__(cls, hex: str): ...
+    @overload
+    def __new__(cls, r: int, g: int, b: int, a: int = 255): ...
+    def __new__(cls, *args):
+        if len(args) == 1:
+            return cls.hex(args[0])
+        return cls.rgb(*args)
+
+    @classmethod
+    def rgb(cls, r: int, g: int, b: int, a: int = 255) -> colourType:
+        return (r, g, b, a)
+    @classmethod
+    def rgba(cls, r: int, g: int, b: int, a: int) -> colourType:
+        return (r, g, b, a)
+    @classmethod
+    def hex(cls, hex: str) -> colourType:
+        val = int(hex.lstrip("#"), 16)
+        r = (val >> 16) & 0xFF
+        g = (val >> 8) & 0xFF
+        b = val & 0xFF
+        return (r, g, b, 255)
+    @classmethod
+    def hsv(cls, h: int, s: int, v: int, a: int = 255) -> colourType:
+        if s == 0.0:
+            return v, v, v
+
+        h /= 60.0 # Sector 0 to 5
+        i = int(h)
+        f = h - i # Factorial part of h
+        p = v * (1.0 - s)
+        q = v * (1.0 - s * f)
+        t = v * (1.0 - s * (1.0 - f))
+
+        if i == 0:
+            return (v, t, p, a)
+        if i == 1:
+            return (q, v, p, a)
+        if i == 2:
+            return (p, v, t, a)
+        if i == 3:
+            return (p, q, v, a)
+        if i == 4:
+            return (t, p, v, a)
+        return (v, p, q, a)
+    @classmethod
+    def hsva(cls, h: int, s: int, v: int, a: int) -> colourType:
+        return cls.hsv(h, s, v, a)
+    @classmethod
+    def to_rgb(cls, col: colourType) -> Tuple[int, int, int]:
+        return col[:3]
+    @classmethod
+    def to_rgba(cls, col: colourType) -> Tuple[int, int, int, int]:
+        return col
+    @classmethod
+    def to_hex(cls, col: colourType, upper=True) -> str:
+        def clamp(x):
+            assert 0 <= x <= 255, "RGB value must be between 0-255!"
+            return x
+        o = cls._RGBHEXFMT.format(clamp(col[0]), clamp(col[1]), clamp(col[2]))
+        if upper:
+            return o.upper()
+        return o
+    @classmethod
+    def to_hsv(cls, col: colourType) -> Tuple[int, int, int]:
+        r, g, b = col[0] / 255.0, col[1] / 255.0, col[2] / 255.0
+        mx = max(r, g, b)
+        mn = min(r, g, b)
+        diff = mx - mn
+
+        v = mx
+        s = 0 if mx == 0 else diff / mx
+        h = 0
+        if diff != 0:
+            if mx == r:
+                h = (60 * ((g - b) / diff) + 360) % 360
+            elif mx == g:
+                h = (60 * ((b - r) / diff) + 120) % 360
+            elif mx == b:
+                h = (60 * ((r - g) / diff) + 240) % 360
+
+        return (h, s, v)
+    @classmethod
+    def to_hsva(cls, col: colourType) -> Tuple[int, int, int, int]:
+        return (*cls.to_hsv(col), col[3])
+
+    @classmethod
+    def add_alpha(cls, col: colourType, a: int) -> colourType:
+        return (col[0], col[1], col[2], max(min(col[3]+a, 255), 0))
+    @classmethod
+    def add_rgb(cls, col: colourType, r: int, g: int, b: int, a: int = 0) -> colourType:
+        clamp = lambda val: max(min(val, 255), 0)
+        return (clamp(col[0]+r), clamp(col[1]+g), clamp(col[2]+b), clamp(col[3]+a))
+    @classmethod
+    def add_rgba(cls, col: colourType, r: int, g: int, b: int, a) -> colourType:
+        return cls.add_rgba(col, r, g, b, a)
+    @classmethod
+    def add_hsv(cls, col: colourType, h: int, s: int, v: int, a: int = 0) -> colourType:
+        clamp = lambda val, mx: max(min(val, mx), 0)
+        oh, os, ov = cls.to_hsv(col)
+        return cls.hsv(
+            clamp(oh+h, 360),
+            clamp(os+s, 100),
+            clamp(ov+v, 100),
+            clamp(col[3]+a, 255),
         )
-    
-    def __setitem__(self, _name, _value):
-        for i in self.layers:
-            try:
-                i[_name] = _value
-                return
-            except KeyError:
-                pass
-        raise KeyError(
-            f'Item {_name} does not exist in any layer!'
-        )
-    
-    def __str__(self):
-        return f'<Collection {self.layers}>'
-    def __repr__(self): return str(self)
+    @classmethod
+    def add_hsva(cls, col: colourType, h: int, s: int, v: int, a: int) -> colourType:
+        return cls.add_hsv(col, h, s, v, a)
+
+    @classmethod
+    def lighten(cls, col: colourType, amnt: int):
+        """Increase the brightness of the colour by amnt (0-255)"""
+        return cls.add_rgb(col, amnt, amnt, amnt)
+    @classmethod
+    def darken(cls, col: colourType, amnt: int):
+        """Decrease the brightness of the colour by amnt (0-255)"""
+        return cls.add_rgb(col, -amnt, -amnt, -amnt)
+
+    TrueBlack = (0, 0, 0, 255)
+    TrueGrey = (125, 125, 125, 255)
+    TrueWhite = (255, 255, 255, 255)
+    Transparent = (0, 0, 0, 0)
+
+    Red = _rgb(237, 175, 184)
+    Orange = _rgb(252, 208, 161)
+    Yellow = _rgb(241, 227, 190)
+    Green = _rgb(165, 201, 154)
+    Blue = _rgb(145, 217, 250)
+    Indigo = _rgb(187, 201, 252)
+    Purple = _rgb(214, 194, 223)
+    White = _rgb(250, 249, 240)
+    LightGrey = _rgb(181, 182, 186)
+    Grey = _rgb(121, 123, 132)
+    Black = _rgb(35, 26, 28)
+
+    @classmethod
+    def Rainbow(cls):
+        while True:
+            yield cls.Red
+            yield cls.Orange
+            yield cls.Yellow
+            yield cls.Green
+            yield cls.Blue
+            yield cls.Indigo
+            yield cls.Purple
+            yield cls.Grey
+
+    Background = _rgb(250, 252, 252)
+    Primary = _rgb(136, 107, 89)
+    Secondary = _rgb(129, 95, 100)
+    Accent = _rgb(87, 90, 75)

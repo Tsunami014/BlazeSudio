@@ -1,4 +1,4 @@
-from BlazeSudio.graphicsCore.miscOps import _ImageBase
+from BlazeSudio.graphics.miscOps import _ImageBase
 from .base import WrapJoints, FindBounds
 from ._core import draw_quad, c_direction, c_rotate, ray_polygon_closest_hit, closest_point_on_segments
 

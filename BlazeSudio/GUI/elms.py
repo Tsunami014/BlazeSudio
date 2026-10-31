@@ -1,5 +1,5 @@
 from .base import UIElement, BaseO, Col
-from BlazeSudio.graphicsCore import Draw, Font
+from BlazeSudio.graphics import Draw, Font
 from typing import Iterable
 
 __all__ = [

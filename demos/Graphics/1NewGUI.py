@@ -1,6 +1,6 @@
 """New GUI [graphics]"""
 def main():
-    from BlazeSudio.graphicsCore import Draw
+    from BlazeSudio.graphics import Draw
     from BlazeSudio.GUI import OpElm
     from BlazeSudio.GUI import UI, Lays, Elms, Font, Input, Col, Term
     Font.SysFonts.set_default(italic=True)

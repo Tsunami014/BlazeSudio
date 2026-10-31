@@ -1,9 +1,9 @@
-from BlazeSudio.graphicsCore.miscOps import Fill, Crop
-from BlazeSudio.graphicsCore.stuff import Col, Clock
-from BlazeSudio.graphicsCore.base import Op, OpList, IDENTITY, Trans
-from BlazeSudio.graphicsCore.core import Core, _CoreCls
-from BlazeSudio.graphicsCore._basey import Base
-from BlazeSudio.graphicsCore import Ix, Events, Mouse, Trans as T
+from BlazeSudio.graphics.miscOps import Fill, Crop
+from BlazeSudio.graphics.stuff import Col, Clock
+from BlazeSudio.graphics.base import Op, OpList, IDENTITY, Trans
+from BlazeSudio.graphics.core import Core, _CoreCls
+from BlazeSudio.graphics._basey import Base
+from BlazeSudio.graphics import Ix, Events, Mouse, Trans as T
 from typing import Self, Any
 
 __all__ = [

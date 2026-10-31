@@ -1,5 +1,5 @@
 from .core import checkShpType, ShpTyps, ShpGroups, Shape
-from BlazeSudio.graphicsCore import base, Draw
+from BlazeSudio.graphics import base, Draw
 
 __all__ = ['drawShape']
 

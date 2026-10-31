@@ -3,7 +3,7 @@ def main():
     import time
     import BlazeSudio.collisions as colls
     from BlazeSudio.utils.wrap import WrapJoints, FindBounds
-    from BlazeSudio.graphicsCore import Core, Ix, Clock, Col, Op, Draw, Font
+    from BlazeSudio.graphics import Core, Ix, Clock, Col, Op, Draw, Font
 
     Core.resize()
     clk = Clock()

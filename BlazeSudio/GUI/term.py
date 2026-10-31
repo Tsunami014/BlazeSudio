@@ -1,5 +1,5 @@
-from BlazeSudio.graphicsCore import Events, Col, Draw
-from BlazeSudio.graphicsCore.base import OpList
+from BlazeSudio.graphics import Events, Col, Draw
+from BlazeSudio.graphics.base import OpList
 from .base import UI, ElmWrapper, UIElement, Base, BaseO
 from .input import InputBox
 from .layouts import Lays

@@ -1,7 +1,7 @@
 from .base import UI, Element, UIElement, ElmWrapper, BaseO, Col
 from .elms import Text
-from BlazeSudio.graphicsCore.base import Vec2
-from BlazeSudio.graphicsCore import Mouse, Draw, Trans, Events, Ix
+from BlazeSudio.graphics.base import Vec2
+from BlazeSudio.graphics import Mouse, Draw, Trans, Events, Ix
 from typing import Callable, Iterable
 import time
 

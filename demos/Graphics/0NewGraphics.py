@@ -20,7 +20,7 @@ def main():
     import sys
     rot = 'rot' in sys.argv
 
-    from BlazeSudio.graphicsCore import Core, Ix, Clock, Col, Op, Font
+    from BlazeSudio.graphics import Core, Ix, Clock, Col, Op, Font
     Core.vsync = False
 
     fnt = Font.SysFonts.default()

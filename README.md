@@ -1,17 +1,18 @@
 This is still in development, but look forward to v4.0.0!
 
 ## Quicklinks
-| [Requirements](#system-requirements) | [Demos](#demos) | [Installation](#installation) |
-|:-:|:-:|:-:|
+| [Contents](#contents) | [Requirements](#system-requirements) | [Demos](#demos) | [Installation](#installation) | [Fun facts](#fun-facts) |
+|:-:|:-:|:-:|:-:|:-:|
 
 ## Contents
 Blaze Sudio is a game engine for Python containing;
 
 ### A graphics engine
-- Which is faster than Pygame! (Compiled with cython) It's even faster when not displaying anything, which is cool.
-- Uses an "operation stack", so instead of running each transformation on the surface one by one it applies all operations on the surface when displaying
-- And is more Pythonic than Pygame too, including type hints, docstrings and many magic methods
-- And comes with many GUI elements for ease of use!
+- Which is faster than Pygame! (Compiled with cython) It's even faster than Pygame when not displaying anything, which is cool.
+    - It uses vsync (but can be turned off), which caps the FPS at the monitor refresh rate so it doesn't draw frames that won't even be displayed, so this extra speed won't be visible unless you have a very fast monitor.
+- Uses an "operation stack", so instead of Pygame's approach of running each transformation on surfaces one by one, generating intermediate surfaces along the way, it applies all operations onto one output buffer at once! (Combining some operations too like transformations)
+- Is more Pythonic than Pygame, including type hints, docstrings and many magic methods!
+- Comes with many GUI elements for ease of use!
 
 ### A collision engine
 - Can collide various shapes (e.g. points, lines, circles, rectangles, etc.) efficiently (compiled with cython)
@@ -31,7 +32,8 @@ Yes, this project is extremely still in development. But v4.0.0 should be fully 
 
 ## System requirements
 - Python 3.11+
-- Linux or Windows (although I don't test on Windows, but I'll still fix anything *reasonable* if you find a problem)
+- Linux or Windows
+    - Although, I don't test on Windows - but feel free to make a PR if there's a problem
 
 ## Demos
 To run the demos;
@@ -66,8 +68,8 @@ pip install "Blaze-Sudio @ git+https://github.com/Tsunami014/Blaze-Sudio.git"
 
 ## Fun facts
 - This project was started before AI existed (back in ye olde 2023/2024, origins are debatable), and many features, including the whole physics engine and image wrapping, were created entirely by me without help from AI in any way (because it wasn't good enough to help at all).
-- The only module I even partially vibe coding was the graphics engine internals (for drawing shapes and stuff to numpy arrays). The rest is all mostly me.
-- I turn/will turn (not bothered to change this until I find it again lol) 18 in 2027. So I also made the physics engine etc. before I was/am an adult. Which is my greatest flex hehe
+- The only module I even partially vibe coded was the graphics engine internals (for drawing shapes and stuff to numpy arrays). The rest is all mostly me.
+- I turned/will turn (not bothered to change this until I find it again lol) 18 in 2027. So I also made the physics engine etc. before I was/am an adult. Which is my greatest flex hehe
 - Because this project is so old (in terms of my life), I changed coding styles a LOT during development, and because it's so big there's a chance you can find some places where my old code still is unfortunately
 - I tried to use as little external libraries as possible, mostly because I didn't want this to end up like some projects where it has to install a million different things. Also fits with the theme of 'making stuff all myself from scratch'.
 - This project will be renamed at some point before v4.0.0 releases to Apricot
